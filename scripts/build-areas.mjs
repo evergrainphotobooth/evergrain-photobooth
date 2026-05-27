@@ -48,14 +48,14 @@ const header = (depth) => {
   return `<header class="site-header">
   <div class="container">
     <nav class="nav" aria-label="Primary">
-      <a href="${up}index.html" class="nav__logo"><img src="${up}assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" /></a>
+      <a href="/" class="nav__logo"><img src="${up}assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" /></a>
       <ul class="nav__menu">
-        <li><a href="${up}our-story.html" class="nav__link">Our Story</a></li>
-        <li><a href="${up}the-booth.html" class="nav__link">The Booth</a></li>
-        <li><a href="${up}packages.html" class="nav__link">Packages</a></li>
-        <li><a href="${up}add-ons.html" class="nav__link">Add-Ons</a></li>
-        <li><a href="${up}gallery.html" class="nav__link">Gallery</a></li>
-        <li><a href="${up}faq.html" class="nav__link">FAQ</a></li>
+        <li><a href="/our-story" class="nav__link">Our Story</a></li>
+        <li><a href="/the-booth" class="nav__link">The Booth</a></li>
+        <li><a href="/packages" class="nav__link">Packages</a></li>
+        <li><a href="/add-ons" class="nav__link">Add-Ons</a></li>
+        <li><a href="/gallery" class="nav__link">Gallery</a></li>
+        <li><a href="/faq" class="nav__link">FAQ</a></li>
       </ul>
       <div class="nav__actions">
         <button type="button" class="nav__cart" data-cart-toggle aria-label="Open Package List">
@@ -82,13 +82,13 @@ const footer = (depth) => {
         <img src="${up}assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" />
         <p class="footer__tagline">A photobooth experience built around the camera — never around the gimmick.</p>
       </div>
-      <div><h4>Explore</h4><ul class="footer__list"><li><a href="${up}our-story.html">Our Story</a></li><li><a href="${up}the-booth.html">The Booth</a></li><li><a href="${up}packages.html">Packages</a></li><li><a href="${up}add-ons.html">Add-Ons</a></li></ul></div>
-      <div><h4>Resources</h4><ul class="footer__list"><li><a href="${up}gallery.html">Gallery</a></li><li><a href="${up}faq.html">FAQ</a></li><li><a href="#inquiry">Request a Quote</a></li><li><a href="${up}areas-we-serve/index.html">Areas We Serve</a></li></ul></div>
+      <div><h4>Explore</h4><ul class="footer__list"><li><a href="/our-story">Our Story</a></li><li><a href="/the-booth">The Booth</a></li><li><a href="/packages">Packages</a></li><li><a href="/add-ons">Add-Ons</a></li></ul></div>
+      <div><h4>Resources</h4><ul class="footer__list"><li><a href="/gallery">Gallery</a></li><li><a href="/faq">FAQ</a></li><li><a href="#inquiry">Request a Quote</a></li><li><a href="/areas-we-serve">Areas We Serve</a></li></ul></div>
       <div><h4>Contact</h4><ul class="footer__list"><li><a href="mailto:hello@evergrainphotobooth.com">hello@evergrainphotobooth.com</a></li><li><a href="tel:+13235550100">(323) 555-0100</a></li><li>Los Angeles, CA</li></ul></div>
     </div>
     <div class="footer__bottom">
       <span>© <span data-year>2025</span> Evergrain Photobooth. All rights reserved.</span>
-      <span><a href="${up}privacy-policy.html">Privacy Policy</a> · <a href="${up}terms.html">Terms &amp; Conditions</a></span>
+      <span><a href="/privacy-policy">Privacy Policy</a> · <a href="/terms">Terms &amp; Conditions</a></span>
     </div>
   </div>
 </footer>
@@ -128,7 +128,6 @@ const scripts = (depth) => {
 // -------- Reusable section: Packages (3 cards) --------
 
 const packagesSection = (locationLabel, depth) => {
-  const up = "../".repeat(depth);
   return `<section class="section section--linen-warm">
     <div class="container">
       <div class="reveal text-center" style="max-width:680px;margin: 0 auto var(--space-lg);">
@@ -194,7 +193,7 @@ const packagesSection = (locationLabel, depth) => {
         </article>
       </div>
 
-      <p class="compare-note"><a href="${up}packages.html">See full feature comparison →</a></p>
+      <p class="compare-note"><a href="/packages">See full feature comparison →</a></p>
     </div>
   </section>
 `;
@@ -203,7 +202,6 @@ const packagesSection = (locationLabel, depth) => {
 // -------- Reusable section: Add-on carousel (13 cards) --------
 
 const addonsSection = (depth) => {
-  const up = "../".repeat(depth);
   const addons = [
     { id: "welcome-screen", name: "Custom Welcome / Tap-to-Start Screen", price: "$50", meta: "flat", copy: "Your name, date, monogram, or logo on the start screen." },
     { id: "rear-display", name: "Custom Rear Display / Branded Visuals", price: "$75", meta: "flat", copy: "A reel that plays behind the booth all night." },
@@ -235,7 +233,7 @@ const addonsSection = (depth) => {
       <div class="reveal" style="margin-bottom: var(--space-lg);">
         <span class="eyebrow">Customize it</span>
         <h2 class="display">Popular add-ons.</h2>
-        <p style="color:var(--bark); max-width:60ch;">All thirteen of our add-ons — swipe through and tap to drop any into your Package List. <a href="${up}add-ons.html" style="border-bottom:1px solid var(--brass); color:var(--evergreen);">View full details →</a></p>
+        <p style="color:var(--bark); max-width:60ch;">All thirteen of our add-ons — swipe through and tap to drop any into your Package List. <a href="/add-ons" style="border-bottom:1px solid var(--brass); color:var(--evergreen);">View full details →</a></p>
       </div>
 
       <div class="addon-carousel-wrap reveal">
@@ -269,12 +267,12 @@ const breadcrumb = (items) => {
 function buildIndex() {
   const depth = 1;
   const crumbs = breadcrumb([
-    { label: "Home", href: "../index.html" },
+    { label: "Home", href: "/" },
     { label: "Areas We Serve" }
   ]);
 
   const cards = data.regions.map(r => `
-        <a class="region-card reveal" href="${r.slug}.html">
+        <a class="region-card reveal" href="/areas-we-serve/${r.slug}">
           <div class="region-card__image">
             <img src="https://picsum.photos/seed/${r.slug}/900/600" alt="${r.name}" loading="lazy" />
           </div>
@@ -322,13 +320,13 @@ function buildIndex() {
 function buildRegion(region) {
   const depth = 1;
   const crumbs = breadcrumb([
-    { label: "Home", href: "../index.html" },
-    { label: "Areas We Serve", href: "index.html" },
+    { label: "Home", href: "/" },
+    { label: "Areas We Serve", href: "/areas-we-serve" },
     { label: region.name }
   ]);
 
   const cards = region.neighborhoods.map(n => `
-        <a class="neighborhood-card reveal" href="${region.slug}/${n.slug}.html">
+        <a class="neighborhood-card reveal" href="/areas-we-serve/${region.slug}/${n.slug}">
           <div class="neighborhood-card__image">
             <img src="https://picsum.photos/seed/${region.slug}-${n.slug}/600/750" alt="${n.name}" loading="lazy" />
           </div>
@@ -385,11 +383,10 @@ ${addonsSection(depth)}
 
 function buildNeighborhood(region, n) {
   const depth = 2;
-  const up = "../../";
   const crumbs = breadcrumb([
-    { label: "Home", href: `${up}index.html` },
-    { label: "Areas We Serve", href: `${up}areas-we-serve/index.html` },
-    { label: region.name, href: `${up}areas-we-serve/${region.slug}.html` },
+    { label: "Home", href: "/" },
+    { label: "Areas We Serve", href: "/areas-we-serve" },
+    { label: region.name, href: `/areas-we-serve/${region.slug}` },
     { label: n.name }
   ]);
 
@@ -461,7 +458,7 @@ ${addonsSection(depth)}
           <div class="faq-item__body"><p>Yes — custom welcome screens, photo templates, rear-display reels, and backdrops are all add-ons in our Package List. Designed with you, built around your event.</p></div>
         </details>
       </div>
-      <p class="text-center" style="margin-top:var(--space-lg);"><a href="${up}faq.html" class="link-arrow">View full FAQ</a></p>
+      <p class="text-center" style="margin-top:var(--space-lg);"><a href="/faq" class="link-arrow">View full FAQ</a></p>
     </div>
   </section>
 

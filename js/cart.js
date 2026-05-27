@@ -9,13 +9,6 @@ const STORAGE_KEY = "evergrain-package-list";
 const Cart = {
   state: { package: null, addons: [] },
 
-  /* Returns the relative prefix needed to reach the repo root from the
-     current page, e.g. "", "../", or "../../" — based on URL depth. */
-  basePath() {
-    const segments = location.pathname.split("/").filter(s => s && !s.endsWith(".html"));
-    return "../".repeat(segments.length);
-  },
-
   load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -125,14 +118,12 @@ const Cart = {
 
     const { package: pkg, addons } = this.state;
 
-    const base = this.basePath();
-
     if (!pkg && addons.length === 0) {
       body.innerHTML = `
         <div class="cart__empty">
           <p>Your Package List is empty.</p>
           <p style="font-size:0.9rem;">Start by choosing a package, then customize with add-ons.</p>
-          <a href="${base}packages.html" class="btn btn--primary btn--sm">Browse Packages</a>
+          <a href="/packages" class="btn btn--primary btn--sm">Browse Packages</a>
         </div>`;
       if (footerEl) footerEl.style.display = "none";
       return;
@@ -147,7 +138,7 @@ const Cart = {
         <div class="cart__section">
           <div class="cart__section-label">
             <span>Package</span>
-            <a href="${base}packages.html" style="color:var(--brass);font-size:0.7rem;letter-spacing:0.18em;">Change</a>
+            <a href="/packages" style="color:var(--brass);font-size:0.7rem;letter-spacing:0.18em;">Change</a>
           </div>
           <div class="cart__item">
             <div>
@@ -163,7 +154,7 @@ const Cart = {
         <div class="cart__section">
           <div class="cart__section-label"><span>Package</span></div>
           <p style="font-size:0.9rem;color:var(--bark);margin:0 0 0.75rem;">No package selected yet.</p>
-          <a href="${base}packages.html" class="btn btn--outline btn--sm">Choose a Package</a>
+          <a href="/packages" class="btn btn--outline btn--sm">Choose a Package</a>
         </div>`;
     }
 
@@ -172,7 +163,7 @@ const Cart = {
         <div class="cart__section">
           <div class="cart__section-label">
             <span>Add-Ons (${addons.length})</span>
-            <a href="${base}add-ons.html" style="color:var(--brass);font-size:0.7rem;letter-spacing:0.18em;">Edit</a>
+            <a href="/add-ons" style="color:var(--brass);font-size:0.7rem;letter-spacing:0.18em;">Edit</a>
           </div>`;
       addons.forEach(a => {
         html += `
@@ -309,7 +300,7 @@ const Cart = {
     if (!this.state.package && this.state.addons.length === 0) {
       summaryEl.innerHTML = `
         <h4>Your Package List</h4>
-        <p style="margin:0;font-size:0.95rem;color:var(--bark);">No items added yet — feel free to submit the form below, or <a href="${this.basePath()}packages.html">browse our packages</a> first.</p>`;
+        <p style="margin:0;font-size:0.95rem;color:var(--bark);">No items added yet — feel free to submit the form below, or <a href="/packages">browse our packages</a> first.</p>`;
       return;
     }
 

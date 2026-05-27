@@ -34,13 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* --- Highlight active nav link --- */
-  const path = location.pathname.split("/").pop() || "index.html";
+  /* --- Highlight active nav link (clean-URL aware) --- */
+  // Normalize current path: strip .html, strip trailing /index, default to "/"
+  let path = location.pathname.replace(/\.html$/, "").replace(/\/index$/, "");
+  if (path === "") path = "/";
   document.querySelectorAll(".nav__link").forEach(link => {
     const href = link.getAttribute("href");
-    if (href === path || (path === "" && href === "index.html")) {
-      link.classList.add("is-active");
-    }
+    if (href && href === path) link.classList.add("is-active");
   });
 
   /* --- FAQ: single-open accordion behaviour --- */

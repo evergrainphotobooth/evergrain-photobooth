@@ -14,9 +14,7 @@
   const placeholder = document.querySelector("[data-inquiry-placeholder]");
   if (!placeholder) return;
 
-  // Climb to repo root from any depth (root, /areas-we-serve/, or /areas-we-serve/{region}/)
-  const segments = location.pathname.split("/").filter(s => s && !s.endsWith(".html"));
-  const base = "../".repeat(segments.length);
+  // All inter-page links use clean root-relative URLs; no depth math needed.
 
   // Master data — keep in sync with packages.html + add-ons.html
   const PACKAGES = [
@@ -181,7 +179,7 @@
 
       <div>
         <button type="submit" class="btn btn--primary">Send Inquiry</button>
-        <p class="form__help" style="margin-top: var(--space-sm);">By submitting, you agree to our <a href="${base}privacy-policy.html">Privacy Policy</a>.</p>
+        <p class="form__help" style="margin-top: var(--space-sm);">By submitting, you agree to our <a href="/privacy-policy">Privacy Policy</a>.</p>
       </div>
     </form>
   </div>

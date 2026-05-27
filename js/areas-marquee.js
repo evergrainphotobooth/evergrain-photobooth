@@ -26,9 +26,9 @@
   // Build one full set of links (region label + neighborhoods), then duplicate for seamless loop.
   const items = [];
   REGIONS.forEach(r => {
-    items.push(`<a class="areas-marquee__item areas-marquee__item--region" href="/areas-we-serve/${r.slug}.html">${r.name}</a>`);
+    items.push(`<a class="areas-marquee__item areas-marquee__item--region" href="/areas-we-serve/${r.slug}">${r.name}</a>`);
     r.neighborhoods.forEach(n => {
-      items.push(`<a class="areas-marquee__item" href="/areas-we-serve/${r.slug}/${n}.html">${toTitle(n)}</a>`);
+      items.push(`<a class="areas-marquee__item" href="/areas-we-serve/${r.slug}/${n}">${toTitle(n)}</a>`);
     });
   });
   const oneSet = items.join("");
