@@ -824,3 +824,84 @@
   font-size: 1.25rem;
   color: var(--evergreen);
 }
+
+/* ---------- Areas Marquee (above footer on every page) ---------- */
+.areas-marquee {
+  background: var(--evergreen-dark);
+  color: var(--champagne);
+  overflow: hidden;
+  border-block: 1px solid rgba(244, 237, 224, 0.08);
+  padding-block: 0.9rem;
+  position: relative;
+}
+.areas-marquee__label {
+  display: block;
+  text-align: center;
+  font-family: var(--font-eyebrow);
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  margin-bottom: 0.65rem;
+}
+.areas-marquee__track {
+  display: flex;
+  width: max-content;
+  gap: 2.5rem;
+  animation: marquee-scroll 120s linear infinite;
+  will-change: transform;
+}
+.areas-marquee:hover .areas-marquee__track {
+  animation-play-state: paused;
+}
+.areas-marquee__item {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--champagne);
+  text-decoration: none;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  transition: color var(--dur-fast);
+  position: relative;
+  padding-right: 2.5rem;
+}
+.areas-marquee__item:hover {
+  color: var(--linen);
+}
+.areas-marquee__item::after {
+  content: "·";
+  position: absolute;
+  right: 0;
+  color: rgba(244, 237, 224, 0.35);
+  font-weight: 400;
+  pointer-events: none;
+}
+.areas-marquee__item:last-child::after { content: none; }
+.areas-marquee__item--region {
+  color: var(--brass-light);
+  font-style: italic;
+  text-transform: uppercase;
+  font-family: var(--font-eyebrow);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.areas-marquee__item--region:hover { color: var(--brass); }
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .areas-marquee__track {
+    animation: none;
+    /* Center-align when motion is off so users still see content */
+    justify-content: flex-start;
+    overflow-x: auto;
+    width: 100%;
+    padding-inline: 1rem;
+  }
+}

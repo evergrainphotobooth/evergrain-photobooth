@@ -1,0 +1,525 @@
+#!/usr/bin/env node
+/* =========================================================
+   Evergrain Photobooth — Area page generator
+   Reads data/areas.json. Writes:
+     - areas-we-serve/index.html                (8 region grid)
+     - areas-we-serve/{region}.html             (parent: neighborhood grid)
+     - areas-we-serve/{region}/{nhood}.html     (neighborhood: full city page)
+   Re-run anytime data or templates change.
+   ========================================================= */
+
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, "..");
+const OUT = join(ROOT, "areas-we-serve");
+
+const data = JSON.parse(readFileSync(join(ROOT, "data", "areas.json"), "utf8"));
+
+// -------- Shared chunks (navbar, footer, cart aside, marquee placeholder) --------
+
+const head = (title, description, depth) => {
+  const up = "../".repeat(depth);
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${title}</title>
+<meta name="description" content="${description}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="${up}css/style.css" />
+<link rel="stylesheet" href="${up}css/components.css" />
+<link rel="stylesheet" href="${up}css/pages.css" />
+<link rel="icon" type="image/png" href="${up}assets/logos/FullLogo_Green.png" />
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+`;
+};
+
+const header = (depth) => {
+  const up = "../".repeat(depth);
+  return `<header class="site-header">
+  <div class="container">
+    <nav class="nav" aria-label="Primary">
+      <a href="${up}index.html" class="nav__logo"><img src="${up}assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" /></a>
+      <ul class="nav__menu">
+        <li><a href="${up}our-story.html" class="nav__link">Our Story</a></li>
+        <li><a href="${up}the-booth.html" class="nav__link">The Booth</a></li>
+        <li><a href="${up}packages.html" class="nav__link">Packages</a></li>
+        <li><a href="${up}add-ons.html" class="nav__link">Add-Ons</a></li>
+        <li><a href="${up}gallery.html" class="nav__link">Gallery</a></li>
+        <li><a href="${up}faq.html" class="nav__link">FAQ</a></li>
+      </ul>
+      <div class="nav__actions">
+        <button type="button" class="nav__cart" data-cart-toggle aria-label="Open Package List">
+          <span>List</span><span class="nav__cart-count" data-count="0">0</span>
+        </button>
+        <button type="button" class="nav__toggle" aria-label="Toggle navigation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h18M3 12h18M3 17h18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+`;
+};
+
+const footer = (depth) => {
+  const up = "../".repeat(depth);
+  return `<div data-marquee-placeholder></div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__logo">
+        <img src="${up}assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" />
+        <p class="footer__tagline">A photobooth experience built around the camera — never around the gimmick.</p>
+      </div>
+      <div><h4>Explore</h4><ul class="footer__list"><li><a href="${up}our-story.html">Our Story</a></li><li><a href="${up}the-booth.html">The Booth</a></li><li><a href="${up}packages.html">Packages</a></li><li><a href="${up}add-ons.html">Add-Ons</a></li></ul></div>
+      <div><h4>Resources</h4><ul class="footer__list"><li><a href="${up}gallery.html">Gallery</a></li><li><a href="${up}faq.html">FAQ</a></li><li><a href="#inquiry">Request a Quote</a></li><li><a href="${up}areas-we-serve/index.html">Areas We Serve</a></li></ul></div>
+      <div><h4>Contact</h4><ul class="footer__list"><li><a href="mailto:hello@evergrainphotobooth.com">hello@evergrainphotobooth.com</a></li><li><a href="tel:+13235550100">(323) 555-0100</a></li><li>Los Angeles, CA</li></ul></div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2025</span> Evergrain Photobooth. All rights reserved.</span>
+      <span><a href="${up}privacy-policy.html">Privacy Policy</a> · <a href="${up}terms.html">Terms &amp; Conditions</a></span>
+    </div>
+  </div>
+</footer>
+`;
+};
+
+const cartAside = `
+<div class="cart-overlay" data-cart-overlay></div>
+<aside class="cart" data-cart aria-label="Your Package List" role="dialog" aria-modal="true">
+  <div class="cart__header">
+    <h2 class="cart__title">Your Package List</h2>
+    <button type="button" class="cart__close" data-cart-close aria-label="Close">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M6 18L18 6"/></svg>
+    </button>
+  </div>
+  <div class="cart__body" data-cart-body></div>
+  <div class="cart__footer" data-cart-footer>
+    <div class="cart__total"><span class="cart__total-label">Estimated Total</span><span class="cart__total-amount" data-cart-total>$0</span></div>
+    <a href="#inquiry" class="btn btn--primary btn--block" data-cart-checkout>Request a Quote</a>
+    <p class="cart__note"><button type="button" data-cart-clear style="background:none;border:0;color:var(--bark);cursor:pointer;font:inherit;text-decoration:underline;">Clear list</button> · Final pricing confirmed after consult.</p>
+  </div>
+</aside>
+`;
+
+const scripts = (depth) => {
+  const up = "../".repeat(depth);
+  return `<script src="${up}js/inquiry-section.js"></script>
+<script src="${up}js/areas-marquee.js"></script>
+<script src="${up}js/cart.js"></script>
+<script src="${up}js/script.js"></script>
+<script src="${up}js/animations.js"></script>
+</body>
+</html>
+`;
+};
+
+// -------- Reusable section: Packages (3 cards) --------
+
+const packagesSection = (locationLabel, depth) => {
+  const up = "../".repeat(depth);
+  return `<section class="section section--linen-warm">
+    <div class="container">
+      <div class="reveal text-center" style="max-width:680px;margin: 0 auto var(--space-lg);">
+        <span class="eyebrow">Pick a package</span>
+        <h2 class="display">Three tiers — all available in ${locationLabel}.</h2>
+        <p style="color:var(--bark);">Pick one, then layer in extras below. Your selection slides in from the right as a Package List.</p>
+      </div>
+
+      <div class="packages">
+        <article class="package reveal" data-package-card="candid" data-name="The Candid" data-price="750" data-desc="3-hour minimum · DSLR quality · unlimited digital · prints + gallery">
+          <h2 class="package__name">The Candid</h2>
+          <p class="package__tagline">A clean, classic photobooth — done right.</p>
+          <div class="package__price">
+            <span class="package__price-amount"><sup>$</sup>750</span>
+            <div class="package__price-meta">3-hour minimum · $150 / hr</div>
+          </div>
+          <ul class="package__features">
+            <li>Handcrafted wooden, open-air booth</li>
+            <li>DSLR-quality unlimited photos</li>
+            <li>Instant digital sharing (text, email, AirDrop, QR)</li>
+            <li>2 × 6 or 4 × 6 prints · standard backdrop</li>
+            <li>On-site attendant + online gallery</li>
+          </ul>
+          <button type="button" class="btn btn--outline package__cta" data-add-package>Add to List</button>
+          <div class="package__selected-indicator">✓ Added to your list</div>
+        </article>
+
+        <article class="package package--featured reveal" data-package-card="moment" data-name="The Moment" data-price="800" data-desc="3-hour minimum · customizable templates · premium backdrop">
+          <span class="package__tag">Most Popular</span>
+          <h2 class="package__name">The Moment</h2>
+          <p class="package__tagline">Our most-booked configuration.</p>
+          <div class="package__price">
+            <span class="package__price-amount"><sup>$</sup>800</span>
+            <div class="package__price-meta">3-hour minimum · $150 / hr</div>
+          </div>
+          <ul class="package__features">
+            <li>Everything in The Candid</li>
+            <li>Customizable photo templates</li>
+            <li>Premium backdrop</li>
+            <li>Customized rear screen display</li>
+            <li>Custom Tap-To-Start screen</li>
+          </ul>
+          <button type="button" class="btn btn--brass package__cta" data-add-package>Add to List</button>
+          <div class="package__selected-indicator" style="color:var(--champagne);">✓ Added to your list</div>
+        </article>
+
+        <article class="package reveal" data-package-card="glam" data-name="The Glam" data-price="1050" data-desc="4-hour minimum · premium props · B&amp;W + color modes">
+          <h2 class="package__name">The Glam</h2>
+          <p class="package__tagline">A fully bespoke build, end to end.</p>
+          <div class="package__price">
+            <span class="package__price-amount"><sup>$</sup>1,050</span>
+            <div class="package__price-meta">4-hour minimum · $100 / hr</div>
+          </div>
+          <ul class="package__features">
+            <li>Everything in The Moment</li>
+            <li>Premium prop bundle</li>
+            <li>B&amp;W filter + color mode</li>
+            <li>2nd custom photo template</li>
+            <li>Includes 4-hour minimum coverage</li>
+          </ul>
+          <button type="button" class="btn btn--outline package__cta" data-add-package>Add to List</button>
+          <div class="package__selected-indicator">✓ Added to your list</div>
+        </article>
+      </div>
+
+      <p class="compare-note"><a href="${up}packages.html">See full feature comparison →</a></p>
+    </div>
+  </section>
+`;
+};
+
+// -------- Reusable section: Add-on carousel (13 cards) --------
+
+const addonsSection = (depth) => {
+  const up = "../".repeat(depth);
+  const addons = [
+    { id: "welcome-screen", name: "Custom Welcome / Tap-to-Start Screen", price: "$50", meta: "flat", copy: "Your name, date, monogram, or logo on the start screen." },
+    { id: "rear-display", name: "Custom Rear Display / Branded Visuals", price: "$75", meta: "flat", copy: "A reel that plays behind the booth all night." },
+    { id: "custom-template", name: "Custom Photo Template", price: "$50", meta: "flat", copy: "Designed with you, built around your event." },
+    { id: "postcard-print", name: "Postcard Print Upgrade (4 × 6)", price: "$50", meta: "flat", copy: "Larger, glossier, designed to be kept." },
+    { id: "bw-color-filter", name: "B&amp;W + Color Filter Set", price: "$100", meta: "flat", copy: "Switch between modes at the booth, all night." },
+    { id: "premium-props", name: "Premium Prop Bundle", price: "$50", meta: "flat", copy: "Curated, on-brand, never tacky." },
+    { id: "premium-backdrop", name: "Premium Backdrop", price: "$50", meta: "flat", copy: "An upgrade from our standard library." },
+    { id: "ivory-backdrop", name: "Ivory Draped Backdrop", price: "$200", meta: "flat", copy: "Soft fabric, romantic for weddings." },
+    { id: "hunter-green-backdrop", name: "Hunter Green Draped Backdrop", price: "$200", meta: "flat", copy: "Editorial, moody — an Evergrain favorite." },
+    { id: "photo-guestbook", name: "Photo Guestbook", price: "$125", meta: "flat", copy: "A hardbound book guests sign next to their photo strip. The keepsake of the night." },
+    { id: "magnet-sleeves", name: "Magnet Sleeves", price: "$100", meta: "flat", copy: "Slip every print into a magnet sleeve. Onto every fridge in town." },
+    { id: "extra-time", name: "Extra Time", price: "$150", meta: "/ hour", copy: "Add coverage day-of or in advance." },
+    { id: "early-setup", name: "Early Setup", price: "$100", meta: "/ hour", copy: "Need us in place earlier than usual? We'll be there." }
+  ];
+
+  const cards = addons.map(a => `
+          <article class="addon" data-addon-card="${a.id}" data-name="${a.name.replace(/&amp;/g, "&")}" data-price="${a.price.replace(/[^0-9]/g, "")}" data-desc="${a.copy.replace(/"/g, "&quot;")}">
+            <div class="addon__header">
+              <h3 class="addon__name">${a.name}</h3>
+              <div><span class="addon__price">${a.price}</span><span class="addon__price-meta">${a.meta}</span></div>
+            </div>
+            <p class="addon__copy">${a.copy}</p>
+            <button type="button" class="addon__toggle" data-toggle-addon>Add to List</button>
+          </article>`).join("");
+
+  return `<section class="section">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: var(--space-lg);">
+        <span class="eyebrow">Customize it</span>
+        <h2 class="display">Popular add-ons.</h2>
+        <p style="color:var(--bark); max-width:60ch;">All thirteen of our add-ons — swipe through and tap to drop any into your Package List. <a href="${up}add-ons.html" style="border-bottom:1px solid var(--brass); color:var(--evergreen);">View full details →</a></p>
+      </div>
+
+      <div class="addon-carousel-wrap reveal">
+        <button class="addon-carousel__arrow addon-carousel__arrow--prev" type="button" data-carousel-prev aria-label="Scroll add-ons left">‹</button>
+        <button class="addon-carousel__arrow addon-carousel__arrow--next" type="button" data-carousel-next aria-label="Scroll add-ons right">›</button>
+        <div class="addon-carousel" data-carousel>${cards}
+        </div>
+      </div>
+    </div>
+  </section>
+`;
+};
+
+// -------- Breadcrumb --------
+
+const breadcrumb = (items) => {
+  // items: [{ label, href? }] — last item has no href (current page)
+  const parts = items.map((it, i) => {
+    const isLast = i === items.length - 1;
+    const sep = i > 0 ? ` <span class="breadcrumb__sep">›</span> ` : "";
+    if (isLast || !it.href) {
+      return `${sep}<span class="breadcrumb__current" aria-current="page">${it.label}</span>`;
+    }
+    return `${sep}<a class="breadcrumb__link" href="${it.href}">${it.label}</a>`;
+  }).join("");
+  return `<nav class="breadcrumb" aria-label="Breadcrumb"><div class="container">${parts}</div></nav>`;
+};
+
+// -------- INDEX PAGE: list of 8 regions --------
+
+function buildIndex() {
+  const depth = 1;
+  const crumbs = breadcrumb([
+    { label: "Home", href: "../index.html" },
+    { label: "Areas We Serve" }
+  ]);
+
+  const cards = data.regions.map(r => `
+        <a class="region-card reveal" href="${r.slug}.html">
+          <div class="region-card__image">
+            <img src="https://picsum.photos/seed/${r.slug}/900/600" alt="${r.name}" loading="lazy" />
+          </div>
+          <div class="region-card__body">
+            <span class="eyebrow">${r.neighborhoods.length} neighborhoods</span>
+            <h2 class="region-card__title">${r.name}</h2>
+            <p class="region-card__tagline">${r.tagline}</p>
+            <span class="link-arrow">Explore ${r.name}</span>
+          </div>
+        </a>`).join("");
+
+  const html = head("Areas We Serve — Evergrain Photobooth", "Luxury DSLR photobooth rental across Greater Los Angeles, Orange County, and the Ventura edge. See all the neighborhoods we serve.", depth)
+    + header(depth)
+    + crumbs
+    + `<main id="main">
+  <section class="page-hero topo-bg topo-bg--strong">
+    <div class="container">
+      <div style="max-width:760px;">
+        <span class="eyebrow eyebrow--light">From the coast to the canyons</span>
+        <h1>Areas we serve.</h1>
+        <p class="lede">From the Westside to the Inland Empire edge, we travel for the events that take photography seriously. Pick your region below to see the neighborhoods we cover and book directly.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="region-grid">${cards}
+      </div>
+    </div>
+  </section>
+
+  <div data-inquiry-placeholder></div>
+</main>
+`
+    + footer(depth)
+    + cartAside
+    + scripts(depth);
+
+  writeFileSync(join(OUT, "index.html"), html);
+}
+
+// -------- PARENT REGION PAGE --------
+
+function buildRegion(region) {
+  const depth = 1;
+  const crumbs = breadcrumb([
+    { label: "Home", href: "../index.html" },
+    { label: "Areas We Serve", href: "index.html" },
+    { label: region.name }
+  ]);
+
+  const cards = region.neighborhoods.map(n => `
+        <a class="neighborhood-card reveal" href="${region.slug}/${n.slug}.html">
+          <div class="neighborhood-card__image">
+            <img src="https://picsum.photos/seed/${region.slug}-${n.slug}/600/750" alt="${n.name}" loading="lazy" />
+          </div>
+          <div class="neighborhood-card__overlay">
+            <h3 class="neighborhood-card__title">${n.name}</h3>
+            <p class="neighborhood-card__blurb">${n.blurb}</p>
+          </div>
+        </a>`).join("");
+
+  const html = head(`${region.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental across ${region.name}. ${region.tagline}`, depth)
+    + header(depth)
+    + crumbs
+    + `<main id="main">
+  <section class="page-hero topo-bg topo-bg--strong">
+    <div class="container">
+      <div style="max-width:760px;">
+        <span class="eyebrow eyebrow--light">Areas We Serve · California</span>
+        <h1>${region.name}.</h1>
+        <p class="lede">${region.hero}</p>
+        <div style="margin-top: var(--space-lg);">
+          <a href="#inquiry" class="btn btn--brass">Request a quote for ${region.name}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: var(--space-lg);">
+        <span class="eyebrow">${region.neighborhoods.length} neighborhoods</span>
+        <h2 class="display">Pick your neighborhood.</h2>
+        <p style="color:var(--bark); max-width:60ch;">${region.tagline} Tap any neighborhood for area-specific details and booking.</p>
+      </div>
+      <div class="neighborhood-grid">${cards}
+      </div>
+    </div>
+  </section>
+
+${packagesSection(region.name, depth)}
+
+${addonsSection(depth)}
+
+  <div data-inquiry-placeholder></div>
+</main>
+`
+    + footer(depth)
+    + cartAside
+    + scripts(depth);
+
+  writeFileSync(join(OUT, `${region.slug}.html`), html);
+}
+
+// -------- NEIGHBORHOOD PAGE --------
+
+function buildNeighborhood(region, n) {
+  const depth = 2;
+  const up = "../../";
+  const crumbs = breadcrumb([
+    { label: "Home", href: `${up}index.html` },
+    { label: "Areas We Serve", href: `${up}areas-we-serve/index.html` },
+    { label: region.name, href: `${up}areas-we-serve/${region.slug}.html` },
+    { label: n.name }
+  ]);
+
+  const html = head(`${n.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental in ${n.name}, ${region.name}. ${n.blurb}`, depth)
+    + header(depth)
+    + crumbs
+    + `<main id="main">
+  <section class="page-hero topo-bg topo-bg--strong">
+    <div class="container">
+      <div style="max-width:760px;">
+        <span class="eyebrow eyebrow--light">${region.name}</span>
+        <h1>${n.name}.</h1>
+        <p class="lede">${n.blurb}</p>
+        <div style="margin-top: var(--space-lg);">
+          <a href="#inquiry" class="btn btn--brass">Request a quote for ${n.name}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: var(--space-lg);">
+        <span class="eyebrow">Glimpses</span>
+        <h2 class="display">${n.name} in frames.</h2>
+        <p style="color:var(--bark); max-width:60ch;">A mix of place and process — we'll replace these with your client photos as we shoot more in the area.</p>
+      </div>
+      <div class="city-carousel-wrap">
+        <button class="city-carousel__arrow city-carousel__arrow--prev" data-carousel-prev aria-label="Previous">‹</button>
+        <div class="city-carousel" data-carousel>
+          ${Array.from({length: 6}, (_, i) => `<div class="city-carousel__item"><img src="https://picsum.photos/seed/${n.slug}-${i+1}/600/750" alt="${n.name} event" loading="lazy" /></div>`).join("\n          ")}
+        </div>
+        <button class="city-carousel__arrow city-carousel__arrow--next" data-carousel-next aria-label="Next">›</button>
+      </div>
+    </div>
+  </section>
+
+${packagesSection(n.name, depth)}
+
+${addonsSection(depth)}
+
+  <section class="section section--evergreen topo-bg topo-bg--inverted">
+    <div class="container">
+      <div class="testimonial reveal">
+        <span class="eyebrow eyebrow--light">From a ${n.name} client</span>
+        <p class="testimonial__quote" style="color:var(--linen);">"The booth fit perfectly — the prints became the favor everyone took home. Our guests are still talking about it."</p>
+        <p class="testimonial__author" style="color:var(--champagne);">A recent ${n.name} client</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="reveal text-center" style="margin-bottom: var(--space-lg);">
+        <span class="eyebrow">For ${n.name} events</span>
+        <h2 class="display">A few quick answers.</h2>
+      </div>
+      <div class="faq">
+        <details class="faq-item reveal">
+          <summary class="faq-item__summary">Do you serve ${n.name}?</summary>
+          <div class="faq-item__body"><p>Yes — ${n.name} is well within our ${region.name} service area. Travel is included in our standard pricing for this neighborhood.</p></div>
+        </details>
+        <details class="faq-item reveal">
+          <summary class="faq-item__summary">How early do you arrive for setup?</summary>
+          <div class="faq-item__body"><p>We arrive 60–90 minutes before your start time. Setup is on us — not your clock. If your venue needs us even earlier, our Early Setup add-on covers it.</p></div>
+        </details>
+        <details class="faq-item reveal">
+          <summary class="faq-item__summary">Can we customize for our event?</summary>
+          <div class="faq-item__body"><p>Yes — custom welcome screens, photo templates, rear-display reels, and backdrops are all add-ons in our Package List. Designed with you, built around your event.</p></div>
+        </details>
+      </div>
+      <p class="text-center" style="margin-top:var(--space-lg);"><a href="${up}faq.html" class="link-arrow">View full FAQ</a></p>
+    </div>
+  </section>
+
+  <div data-inquiry-placeholder></div>
+</main>
+`
+    + footer(depth)
+    + cartAside
+    + scripts(depth);
+
+  const dir = join(OUT, region.slug);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, `${n.slug}.html`), html);
+}
+
+// -------- Cleanup old California city files (12 files at root of areas-we-serve) --------
+
+function cleanupOldCities() {
+  const oldSlugs = [
+    "destination", "glendale", "long-beach", "los-angeles", "orange-county",
+    "palm-springs", "pasadena", "riverside", "san-bernardino", "san-diego",
+    "santa-barbara", "ventura"
+  ];
+  for (const slug of oldSlugs) {
+    const p = join(OUT, `${slug}.html`);
+    try {
+      const st = statSync(p);
+      if (st.isFile()) {
+        rmSync(p);
+        console.log(`  - removed ${slug}.html`);
+      }
+    } catch { /* not there, fine */ }
+  }
+}
+
+// -------- Run --------
+
+mkdirSync(OUT, { recursive: true });
+
+console.log("Cleaning old California city pages…");
+cleanupOldCities();
+
+console.log("Generating areas-we-serve/index.html…");
+buildIndex();
+
+let regionCount = 0;
+let neighborhoodCount = 0;
+for (const region of data.regions) {
+  buildRegion(region);
+  regionCount++;
+  for (const n of region.neighborhoods) {
+    buildNeighborhood(region, n);
+    neighborhoodCount++;
+  }
+}
+
+console.log(`\nDone. Generated:`);
+console.log(`  - 1 index page`);
+console.log(`  - ${regionCount} region pages`);
+console.log(`  - ${neighborhoodCount} neighborhood pages`);
+console.log(`  Total: ${1 + regionCount + neighborhoodCount} HTML files`);

@@ -1,0 +1,162 @@
+{
+  "regions": [
+    {
+      "slug": "central-los-angeles",
+      "name": "Central Los Angeles",
+      "tagline": "The cultural core.",
+      "hero": "From Hollywood Boulevard to the Arts District, this is where Los Angeles is loudest, oldest, and most itself. Our booth slips into rooftop weddings, design-week parties, and brand activations across the heart of the city.",
+      "neighborhoods": [
+        { "slug": "hollywood", "name": "Hollywood", "blurb": "Iconic backdrops, premiere-night energy, and venues built for the spotlight." },
+        { "slug": "los-feliz", "name": "Los Feliz", "blurb": "Walkable streets, vintage charm, and intimate gatherings under string lights." },
+        { "slug": "silver-lake", "name": "Silver Lake", "blurb": "Creative weddings, Sunset Junction parties, and the kind of crowd that knows good light." },
+        { "slug": "echo-park", "name": "Echo Park", "blurb": "Lakeside ceremonies, warehouse receptions, and a community that brings the energy." },
+        { "slug": "koreatown", "name": "Koreatown", "blurb": "Hidden ballrooms, late-night celebrations, and venues with serious art-deco bones." },
+        { "slug": "downtown-los-angeles", "name": "Downtown Los Angeles", "blurb": "Rooftop venues, historic lofts, and the kind of skyline that becomes the photo backdrop itself." },
+        { "slug": "westlake", "name": "Westlake", "blurb": "MacArthur Park gatherings and historic venues with stories in every brick." },
+        { "slug": "little-tokyo", "name": "Little Tokyo", "blurb": "Cultural events, lantern-lit weddings, and venues that pair beautifully with our wooden booth." },
+        { "slug": "arts-district", "name": "Arts District", "blurb": "Warehouse weddings, brand launches, and concrete-walled venues that beg for our walnut warmth." },
+        { "slug": "chinatown", "name": "Chinatown", "blurb": "Plaza parties, gallery openings, and weddings with red-lantern color stories." },
+        { "slug": "mid-wilshire", "name": "Mid-Wilshire", "blurb": "Museum-row galas and modernist venues with serious architectural pedigree." },
+        { "slug": "larchmont", "name": "Larchmont", "blurb": "Small-town feel inside the city — perfect for backyard weddings and family-style events." },
+        { "slug": "hancock-park", "name": "Hancock Park", "blurb": "Historic estate weddings under century-old trees, with all the old-Hollywood quiet." },
+        { "slug": "thai-town", "name": "Thai Town", "blurb": "Festival nights, community gatherings, and weddings full of color and texture." },
+        { "slug": "little-armenia", "name": "Little Armenia", "blurb": "Multigenerational celebrations and weddings with the warmth that defines this corner of the city." },
+        { "slug": "virgil-village", "name": "Virgil Village", "blurb": "Quiet weddings, intimate dinners, and the new-east-side crowd that knows good design." }
+      ]
+    },
+    {
+      "slug": "westside-los-angeles",
+      "name": "Westside Los Angeles",
+      "tagline": "Coastal light. Modern venues.",
+      "hero": "From the sand in Venice to the canyons above Brentwood, the Westside is where modern California unfolds — clean lines, ocean breeze, and design-led venues that our booth was made for.",
+      "neighborhoods": [
+        { "slug": "santa-monica", "name": "Santa Monica", "blurb": "Beachfront weddings, hotel rooftops, and the kind of golden hour that lasts all evening." },
+        { "slug": "venice", "name": "Venice", "blurb": "Canal-side ceremonies, Abbot Kinney shop launches, and the most photogenic crowd on the Westside." },
+        { "slug": "marina-del-rey", "name": "Marina del Rey", "blurb": "Yacht-club weddings and waterfront receptions with that quiet Pacific calm." },
+        { "slug": "beverly-hills", "name": "Beverly Hills", "blurb": "Hotel ballrooms, garden estates, and the polished glamour the booth lifts beautifully." },
+        { "slug": "west-hollywood", "name": "West Hollywood", "blurb": "Rooftop celebrations, brand parties, and venues built for late nights done right." },
+        { "slug": "culver-city", "name": "Culver City", "blurb": "Studio events, modern lofts, and the creative-industry crowd that shows up for great prints." },
+        { "slug": "century-city", "name": "Century City", "blurb": "Corporate galas, hotel ballrooms, and high-rise events with serious city views." },
+        { "slug": "brentwood", "name": "Brentwood", "blurb": "Estate weddings under sycamores and intimate gatherings with old-California restraint." },
+        { "slug": "pacific-palisades", "name": "Pacific Palisades", "blurb": "Cliffside ceremonies, ocean-view receptions, and weddings that feel coastal without being kitschy." },
+        { "slug": "playa-vista", "name": "Playa Vista", "blurb": "Tech-campus launches, modern venues, and the design-savvy crowd we love serving." },
+        { "slug": "westwood", "name": "Westwood", "blurb": "University events, hotel galas, and brick-walled venues with academic charm." },
+        { "slug": "sawtelle", "name": "Sawtelle", "blurb": "Cultural celebrations, restaurant takeovers, and the kind of intimate scale that suits our booth." }
+      ]
+    },
+    {
+      "slug": "san-fernando-valley",
+      "name": "San Fernando Valley",
+      "tagline": "Backyards, soundstages, and ranch venues.",
+      "hero": "From Studio City to Calabasas, the Valley brings big backyards, hidden ranches, and a relaxed-but-elevated style of celebration. Our walnut booth feels right at home under string lights and sycamores.",
+      "neighborhoods": [
+        { "slug": "studio-city", "name": "Studio City", "blurb": "Industry parties, restaurant takeovers, and weddings with that Ventura Blvd polish." },
+        { "slug": "north-hollywood", "name": "North Hollywood", "blurb": "Arts district events, theater receptions, and venues with creative-industry bones." },
+        { "slug": "sherman-oaks", "name": "Sherman Oaks", "blurb": "Hilltop estates, country-club weddings, and family gatherings that go all night." },
+        { "slug": "encino", "name": "Encino", "blurb": "Backyard weddings, bar mitzvahs, and the kind of multi-generational events we live for." },
+        { "slug": "tarzana", "name": "Tarzana", "blurb": "Garden ceremonies and intimate receptions tucked into the south Valley." },
+        { "slug": "woodland-hills", "name": "Woodland Hills", "blurb": "Country-club galas, golf-resort receptions, and big-family weddings that fill the night." },
+        { "slug": "reseda", "name": "Reseda", "blurb": "Community celebrations and weddings with that easy Valley warmth." },
+        { "slug": "van-nuys", "name": "Van Nuys", "blurb": "Warehouse weddings, brand activations, and the makers' crowd that appreciates good craft." },
+        { "slug": "panorama-city", "name": "Panorama City", "blurb": "Cultural celebrations, quinces, and weddings full of music and color." },
+        { "slug": "porter-ranch", "name": "Porter Ranch", "blurb": "Hilltop estates, master-planned venues, and weddings with North Valley views." },
+        { "slug": "burbank", "name": "Burbank", "blurb": "Studio activations, premiere parties, and weddings near the lot." },
+        { "slug": "glendale", "name": "Glendale", "blurb": "Historic Brand Park weddings, Armenian celebrations, and venues with serious old-California character." },
+        { "slug": "san-fernando", "name": "San Fernando", "blurb": "Mission-era venues and weddings with deep family roots." },
+        { "slug": "calabasas", "name": "Calabasas", "blurb": "Vineyard-style estates, hilltop ceremonies, and venues that take photographs seriously." }
+      ]
+    },
+    {
+      "slug": "san-gabriel-valley",
+      "name": "San Gabriel Valley",
+      "tagline": "Historic estates and family celebrations.",
+      "hero": "From Pasadena's craftsman estates to Claremont's college-town charm, the San Gabriel Valley delivers some of the most thoughtful, family-rooted celebrations in Southern California. Our booth fits right in.",
+      "neighborhoods": [
+        { "slug": "pasadena", "name": "Pasadena", "blurb": "Craftsman estates, Old Town venues, and weddings with that Tournament-of-Roses pedigree." },
+        { "slug": "arcadia", "name": "Arcadia", "blurb": "Arboretum weddings, country-club galas, and family-style celebrations that go for hours." },
+        { "slug": "monrovia", "name": "Monrovia", "blurb": "Historic-downtown venues, intimate gatherings, and weddings with quiet character." },
+        { "slug": "alhambra", "name": "Alhambra", "blurb": "Multigenerational weddings and cultural celebrations with serious heart." },
+        { "slug": "san-gabriel", "name": "San Gabriel", "blurb": "Mission-era charm, family-style banquet halls, and weddings with deep tradition." },
+        { "slug": "monterey-park", "name": "Monterey Park", "blurb": "Cantonese and Taiwanese wedding banquets done at scale, with style." },
+        { "slug": "rosemead", "name": "Rosemead", "blurb": "Family celebrations, quinces, and multi-course wedding banquets." },
+        { "slug": "temple-city", "name": "Temple City", "blurb": "Quiet residential venues and family-rooted weddings." },
+        { "slug": "el-monte", "name": "El Monte", "blurb": "Community celebrations, quinces, and weddings with serious family pride." },
+        { "slug": "west-covina", "name": "West Covina", "blurb": "Suburban venues, country-club receptions, and big-family weddings." },
+        { "slug": "covina", "name": "Covina", "blurb": "Historic downtown weddings and family celebrations with old-California warmth." },
+        { "slug": "glendora", "name": "Glendora", "blurb": "Citrus-country estates and weddings under heritage oaks." },
+        { "slug": "azusa", "name": "Azusa", "blurb": "Foothills weddings, family celebrations, and venues with mountain views." },
+        { "slug": "san-dimas", "name": "San Dimas", "blurb": "Equestrian-country weddings and family-style celebrations." },
+        { "slug": "la-verne", "name": "La Verne", "blurb": "College-town weddings, vineyard estates, and gatherings with quiet polish." },
+        { "slug": "rowland-heights", "name": "Rowland Heights", "blurb": "Cultural wedding banquets and family celebrations with serious scale." },
+        { "slug": "hacienda-heights", "name": "Hacienda Heights", "blurb": "Hilltop estates and multigenerational family weddings." },
+        { "slug": "diamond-bar", "name": "Diamond Bar", "blurb": "Country-club weddings, master-planned venues, and family galas." },
+        { "slug": "claremont", "name": "Claremont", "blurb": "College-town weddings under century-old trees and intimate garden ceremonies." }
+      ]
+    },
+    {
+      "slug": "southeast-los-angeles",
+      "name": "Southeast Los Angeles",
+      "tagline": "Big-hearted celebrations, close-knit communities.",
+      "hero": "From Downey to Cerritos, this is where the biggest family weddings, quinceañeras, and multi-generational celebrations happen. Our booth shows up for the late-night dance floor and the family portrait alike.",
+      "neighborhoods": [
+        { "slug": "downey", "name": "Downey", "blurb": "Big-family weddings, quinces, and the kind of dance floor that runs past midnight." },
+        { "slug": "whittier", "name": "Whittier", "blurb": "Historic-downtown venues and family weddings with serious roots." },
+        { "slug": "norwalk", "name": "Norwalk", "blurb": "Community celebrations and weddings that feel like the whole neighborhood showed up." },
+        { "slug": "cerritos", "name": "Cerritos", "blurb": "Modern venues, performing-arts-center events, and weddings with crisp suburban polish." },
+        { "slug": "lakewood", "name": "Lakewood", "blurb": "Family-style weddings and community celebrations." },
+        { "slug": "bellflower", "name": "Bellflower", "blurb": "Multigenerational family events and weddings full of music." },
+        { "slug": "pico-rivera", "name": "Pico Rivera", "blurb": "Family weddings, quinces, and celebrations rooted in this corner of LA." },
+        { "slug": "montebello", "name": "Montebello", "blurb": "Hillside weddings, family celebrations, and venues with serious character." },
+        { "slug": "paramount", "name": "Paramount", "blurb": "Community-rooted celebrations and weddings that pack the dance floor." }
+      ]
+    },
+    {
+      "slug": "south-bay",
+      "name": "South Bay",
+      "tagline": "Beach towns, sunset light.",
+      "hero": "From Manhattan Beach to Long Beach, the South Bay delivers sandy ceremonies, harbor-side receptions, and that golden-hour glow that makes every print look intentional.",
+      "neighborhoods": [
+        { "slug": "long-beach", "name": "Long Beach", "blurb": "Harbor-side weddings, hotel rooftops, and aquarium galas with serious skyline drama." },
+        { "slug": "manhattan-beach", "name": "Manhattan Beach", "blurb": "Beach-club weddings, oceanfront receptions, and weddings that lean into the golden hour." },
+        { "slug": "hermosa-beach", "name": "Hermosa Beach", "blurb": "Pier-side celebrations and beach-volleyball-courtyard weddings." },
+        { "slug": "redondo-beach", "name": "Redondo Beach", "blurb": "Harbor weddings, historic-pier events, and family beach gatherings." },
+        { "slug": "torrance", "name": "Torrance", "blurb": "Country-club weddings, hotel galas, and family celebrations across the South Bay." },
+        { "slug": "el-segundo", "name": "El Segundo", "blurb": "Tech-campus activations, small-downtown weddings, and modern brand launches." },
+        { "slug": "palos-verdes-estates", "name": "Palos Verdes Estates", "blurb": "Cliffside ceremonies, ocean-view weddings, and estates with serious old-California pedigree." },
+        { "slug": "san-pedro", "name": "San Pedro", "blurb": "Harbor-front weddings, warehouse venues, and weddings with maritime character." }
+      ]
+    },
+    {
+      "slug": "orange-county",
+      "name": "Orange County",
+      "tagline": "Coastal estates, modern venues.",
+      "hero": "From Newport Harbor to the Anaheim Convention Center, Orange County delivers some of the most polished weddings and largest brand activations in Southern California. We travel the 5 happily.",
+      "neighborhoods": [
+        { "slug": "anaheim", "name": "Anaheim", "blurb": "Convention-center activations, hotel ballrooms, and big-scale family weddings." },
+        { "slug": "irvine", "name": "Irvine", "blurb": "Master-planned venues, corporate galas, and weddings with modern California polish." },
+        { "slug": "santa-ana", "name": "Santa Ana", "blurb": "Historic-downtown weddings, artist-studio venues, and culturally rich celebrations." },
+        { "slug": "fullerton", "name": "Fullerton", "blurb": "College-town weddings, downtown venues, and family-rooted celebrations." },
+        { "slug": "orange", "name": "Orange", "blurb": "Historic Old Towne weddings and intimate garden ceremonies." },
+        { "slug": "costa-mesa", "name": "Costa Mesa", "blurb": "Modern venues, design-district activations, and weddings with serious creative direction." },
+        { "slug": "huntington-beach", "name": "Huntington Beach", "blurb": "Beachfront weddings, surf-town receptions, and California-casual celebrations." },
+        { "slug": "newport-beach", "name": "Newport Beach", "blurb": "Yacht-club weddings, oceanfront estates, and the most polished celebrations on the coast." },
+        { "slug": "garden-grove", "name": "Garden Grove", "blurb": "Banquet-hall weddings, cultural celebrations, and family events at scale." },
+        { "slug": "brea", "name": "Brea", "blurb": "Country-club weddings and family-rooted celebrations." },
+        { "slug": "yorba-linda", "name": "Yorba Linda", "blurb": "Estate weddings and quiet, family-driven celebrations." },
+        { "slug": "tustin", "name": "Tustin", "blurb": "Historic-hangar weddings and modern venues with serious architectural presence." }
+      ]
+    },
+    {
+      "slug": "ventura-county-edge",
+      "name": "Ventura County Edge",
+      "tagline": "Hill country, just past the city line.",
+      "hero": "From Thousand Oaks to Simi Valley, the Ventura edge gives weddings room to breathe — vineyard estates, oak-shaded ceremonies, and venues with that quiet Conejo polish.",
+      "neighborhoods": [
+        { "slug": "thousand-oaks", "name": "Thousand Oaks", "blurb": "Oak-shaded estates, family ranches, and weddings with that Conejo Valley quiet." },
+        { "slug": "agoura-hills", "name": "Agoura Hills", "blurb": "Country-club weddings, vineyard estates, and intimate ceremonies in the hills." },
+        { "slug": "westlake-village", "name": "Westlake Village", "blurb": "Lakefront weddings, resort ballrooms, and elegant family celebrations." },
+        { "slug": "simi-valley", "name": "Simi Valley", "blurb": "Ranch weddings, hilltop estates, and family-rooted celebrations." }
+      ]
+    }
+  ]
+}

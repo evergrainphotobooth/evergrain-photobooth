@@ -14,8 +14,9 @@
   const placeholder = document.querySelector("[data-inquiry-placeholder]");
   if (!placeholder) return;
 
-  // Pages under /areas-we-serve/ need to climb one level for the privacy link
-  const base = location.pathname.includes("/areas-we-serve/") ? "../" : "";
+  // Climb to repo root from any depth (root, /areas-we-serve/, or /areas-we-serve/{region}/)
+  const segments = location.pathname.split("/").filter(s => s && !s.endsWith(".html"));
+  const base = "../".repeat(segments.length);
 
   // Master data — keep in sync with packages.html + add-ons.html
   const PACKAGES = [

@@ -9,9 +9,11 @@ const STORAGE_KEY = "evergrain-package-list";
 const Cart = {
   state: { package: null, addons: [] },
 
-  /* Pages under /areas-we-serve/ need to climb one level for internal links */
+  /* Returns the relative prefix needed to reach the repo root from the
+     current page, e.g. "", "../", or "../../" — based on URL depth. */
   basePath() {
-    return location.pathname.includes("/areas-we-serve/") ? "../" : "";
+    const segments = location.pathname.split("/").filter(s => s && !s.endsWith(".html"));
+    return "../".repeat(segments.length);
   },
 
   load() {
