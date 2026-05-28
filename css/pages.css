@@ -636,9 +636,12 @@ a.area-pill:hover {
 
 .addons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-md);
   margin-top: var(--space-xl);
+}
+@media (max-width: 640px) {
+  .addons { grid-template-columns: 1fr; }
 }
 
 /* Category-grouped add-ons (Branded Touch Points, Print Upgrades, etc.) */
@@ -1147,12 +1150,12 @@ a.area-pill:hover {
 .region-carousel {
   display: flex;
   gap: var(--space-lg);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  overflow-x: hidden; /* user scroll disabled — arrow buttons drive navigation */
+  scroll-snap-type: x mandatory; /* programmatic scrollBy still snaps to cards */
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding-block: var(--space-sm);
-  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 .region-carousel::-webkit-scrollbar { display: none; }
 .region-carousel .region-card {

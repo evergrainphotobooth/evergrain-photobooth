@@ -104,7 +104,7 @@
 .btn--primary:hover::before { transform: translateY(0); }
 .btn--primary:hover {
   background: var(--evergreen);
-  color: var(--white);
+  color: var(--char); /* dark text on brass ink-wipe — passes WCAG AA */
   border-color: var(--brass);
 }
 
