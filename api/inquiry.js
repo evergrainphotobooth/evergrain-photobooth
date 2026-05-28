@@ -88,7 +88,7 @@ export default async function handler(req, res) {
           from: INQUIRY_FROM_EMAIL,
           to: [INQUIRY_TO_EMAIL],
           reply_to: payload.email,
-          subject: `New Inquiry — ${payload.name} for ${payload.eventDate}`,
+          subject: `New Inquiry — ${payload.name} for ${formatDate(payload.eventDate)}`,
           html: renderEmail(payload),
         }),
       });
@@ -99,6 +99,23 @@ export default async function handler(req, res) {
   }
 
   return res.status(200).json({ ok: true });
+}
+
+/* ---------- Date + time formatting ---------- */
+function formatDate(iso) {
+  if (!iso) return "";
+  const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return iso;
+  return `${m[2]}/${m[3]}/${m[1]}`; // MM/DD/YYYY
+}
+function formatTime(hhmm) {
+  if (!hhmm) return "";
+  const m = String(hhmm).match(/^(\d{1,2}):(\d{2})/);
+  if (!m) return hhmm;
+  const h = parseInt(m[1], 10);
+  const period = h >= 12 ? "PM" : "AM";
+  const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${hour12}:${m[2]} ${period} PST`;
 }
 
 /* ---------- Email template ---------- */
@@ -116,8 +133,8 @@ function renderEmail(p) {
     <table style="width:100%;border-collapse:collapse;">
       ${row("Email", p.email)}
       ${row("Phone", p.phone)}
-      ${row("Event Date", p.eventDate)}
-      ${row("Event Start", p.eventStartTime)}
+      ${row("Event Date", formatDate(p.eventDate))}
+      ${row("Event Start", formatTime(p.eventStartTime))}
       ${row("Event Type", p.eventType)}
       ${row("Venue City", p.venueCity)}
       ${row("Venue Address", p.venueAddress)}

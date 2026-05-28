@@ -79,17 +79,17 @@
       <div class="form__row form__row--2">
         <div class="form__field">
           <label class="form__label" for="phone">Phone *</label>
-          <input class="form__input" type="tel" id="phone" name="phone" required autocomplete="tel" />
+          <input class="form__input" type="tel" id="phone" name="phone" required autocomplete="tel" inputmode="tel" placeholder="(XXX) XXX-XXXX" maxlength="14" />
         </div>
         <div class="form__field">
-          <label class="form__label" for="eventDate">Event Date *</label>
+          <label class="form__label" for="eventDate">Event Date <span style="text-transform:none;letter-spacing:0;color:var(--bark);font-weight:400;font-size:0.85rem;">(MM/DD/YYYY)</span> *</label>
           <input class="form__input" type="date" id="eventDate" name="eventDate" required />
         </div>
       </div>
 
       <div class="form__row form__row--2">
         <div class="form__field">
-          <label class="form__label" for="eventStartTime">Event Start Time</label>
+          <label class="form__label" for="eventStartTime">Event Start Time <span style="text-transform:none;letter-spacing:0;color:var(--bark);font-weight:400;font-size:0.85rem;">(PST · Los Angeles)</span></label>
           <input class="form__input" type="time" id="eventStartTime" name="eventStartTime" />
         </div>
         <div class="form__field">

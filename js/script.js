@@ -87,6 +87,21 @@ document.addEventListener("DOMContentLoaded", () => {
   */
   const form = document.querySelector("[data-inquiry-form]");
   if (form) {
+    // Live phone formatter — strips non-digits, caps at 10, formats as (XXX) XXX-XXXX
+    const phoneInput = form.querySelector("[name='phone']");
+    if (phoneInput) {
+      const formatPhone = (raw) => {
+        const d = raw.replace(/\D/g, "").slice(0, 10);
+        if (!d) return "";
+        if (d.length <= 3) return `(${d}`;
+        if (d.length <= 6) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+        return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+      };
+      phoneInput.addEventListener("input", e => {
+        e.target.value = formatPhone(e.target.value);
+      });
+    }
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const successEl = form.querySelector(".form__success");
@@ -112,6 +127,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const missing = required.filter(([k]) => !data[k]).map(([, l]) => l);
       if (missing.length) {
         errorEl.textContent = `Please fill in: ${missing.join(", ")}.`;
+        errorEl.classList.add("is-visible");
+        return;
+      }
+
+      // Phone must be 10 digits (formatted by the live formatter)
+      const phoneDigits = (data.phone || "").replace(/\D/g, "");
+      if (phoneDigits.length !== 10) {
+        errorEl.textContent = "Phone number must be 10 digits — please double-check.";
         errorEl.classList.add("is-visible");
         return;
       }
