@@ -827,11 +827,12 @@
 
 /* ---------- Areas Marquee (above footer on every page) ---------- */
 .areas-marquee {
-  background: var(--evergreen-dark);
-  color: var(--champagne);
+  background: var(--char);
+  color: rgba(217, 201, 168, 0.5);
   overflow: hidden;
-  border-block: 1px solid rgba(244, 237, 224, 0.08);
-  padding-block: 0.9rem;
+  border-top: 1px solid rgba(92, 74, 53, 0.35);
+  border-bottom: none;
+  padding-block: 1.1rem;
   position: relative;
 }
 .areas-marquee__label {
@@ -841,14 +842,15 @@
   font-size: 0.7rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--brass-light);
-  margin-bottom: 0.65rem;
+  color: rgba(164, 122, 42, 0.7);
+  margin-bottom: 0.85rem;
 }
 .areas-marquee__track {
   display: flex;
+  align-items: center;
   width: max-content;
-  gap: 2.5rem;
-  animation: marquee-scroll 120s linear infinite;
+  gap: 1.5rem;
+  animation: marquee-scroll 240s linear infinite;
   will-change: transform;
 }
 .areas-marquee:hover .areas-marquee__track {
@@ -857,15 +859,15 @@
 .areas-marquee__item {
   flex: 0 0 auto;
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 300;
-  color: var(--champagne);
+  color: rgba(217, 201, 168, 0.55);
   text-decoration: none;
   letter-spacing: -0.005em;
   white-space: nowrap;
   transition: color var(--dur-fast);
   position: relative;
-  padding-right: 2.5rem;
+  padding-right: 1.5rem;
 }
 .areas-marquee__item:hover {
   color: var(--linen);
@@ -873,22 +875,33 @@
 .areas-marquee__item::after {
   content: "·";
   position: absolute;
-  right: 0;
-  color: rgba(244, 237, 224, 0.35);
+  right: 0.35rem;
+  color: rgba(92, 74, 53, 0.7);
   font-weight: 400;
   pointer-events: none;
 }
-.areas-marquee__item:last-child::after { content: none; }
 .areas-marquee__item--region {
-  color: var(--brass-light);
-  font-style: italic;
-  text-transform: uppercase;
-  font-family: var(--font-eyebrow);
-  font-size: 0.78rem;
-  letter-spacing: 0.22em;
-  font-weight: 600;
+  /* Same font as child cities, bold, with pill border */
+  font-family: var(--font-display);
+  font-style: normal;
+  text-transform: none;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  color: var(--champagne);
+  border: 1px solid rgba(164, 122, 42, 0.45);
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  margin-right: 0.5rem;
+  margin-left: 1rem;
+  transition: color var(--dur-fast), border-color var(--dur-fast), background-color var(--dur-fast);
 }
-.areas-marquee__item--region:hover { color: var(--brass); }
+.areas-marquee__item--region::after { content: none; }
+.areas-marquee__item--region:hover {
+  color: var(--linen);
+  border-color: var(--brass-light);
+  background-color: rgba(164, 122, 42, 0.12);
+}
 
 @keyframes marquee-scroll {
   from { transform: translateX(0); }

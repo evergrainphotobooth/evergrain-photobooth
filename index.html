@@ -154,7 +154,10 @@
         <h2 class="display">Areas we serve.</h2>
         <p class="lede">Based in Los Angeles, available across Greater LA, Orange County, and the Ventura edge. Pick a region to see the neighborhoods we cover.</p>
       </div>
-      <div class="region-grid">
+      <div class="region-carousel-wrap">
+        <button class="region-carousel__arrow region-carousel__arrow--prev" type="button" data-carousel-prev aria-label="Scroll regions left">‹</button>
+        <button class="region-carousel__arrow region-carousel__arrow--next" type="button" data-carousel-next aria-label="Scroll regions right">›</button>
+        <div class="region-carousel" data-carousel>
         <a class="region-card reveal" href="/areas-we-serve/central-los-angeles">
           <div class="region-card__image"><img src="https://picsum.photos/seed/central-los-angeles/900/600" alt="Central Los Angeles" loading="lazy" /></div>
           <div class="region-card__body">
@@ -227,6 +230,7 @@
             <span class="link-arrow">Explore Ventura Edge</span>
           </div>
         </a>
+        </div>
       </div>
     </div>
   </section>

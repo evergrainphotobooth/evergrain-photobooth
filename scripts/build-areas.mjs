@@ -249,8 +249,9 @@ const addonsSection = (depth) => {
 
 // -------- Breadcrumb --------
 
-const breadcrumb = (items) => {
-  // items: [{ label, href? }] — last item has no href (current page)
+const breadcrumb = (items, modifier = "") => {
+  // items: [{ label, href? }] — last item has no href (current page).
+  // modifier: extra class (e.g. "breadcrumb--hero") for placement inside the hero.
   const parts = items.map((it, i) => {
     const isLast = i === items.length - 1;
     const sep = i > 0 ? ` <span class="breadcrumb__sep">›</span> ` : "";
@@ -259,17 +260,20 @@ const breadcrumb = (items) => {
     }
     return `${sep}<a class="breadcrumb__link" href="${it.href}">${it.label}</a>`;
   }).join("");
-  return `<nav class="breadcrumb" aria-label="Breadcrumb"><div class="container">${parts}</div></nav>`;
+  const cls = `breadcrumb${modifier ? " " + modifier : ""}`;
+  return modifier === "breadcrumb--hero"
+    ? `<nav class="${cls}" aria-label="Breadcrumb">${parts}</nav>`
+    : `<nav class="${cls}" aria-label="Breadcrumb"><div class="container">${parts}</div></nav>`;
 };
 
 // -------- INDEX PAGE: list of 8 regions --------
 
 function buildIndex() {
   const depth = 1;
-  const crumbs = breadcrumb([
+  const heroCrumbs = breadcrumb([
     { label: "Home", href: "/" },
     { label: "Areas We Serve" }
-  ]);
+  ], "breadcrumb--hero");
 
   const cards = data.regions.map(r => `
         <a class="region-card reveal" href="/areas-we-serve/${r.slug}">
@@ -286,12 +290,11 @@ function buildIndex() {
 
   const html = head("Areas We Serve — Evergrain Photobooth", "Luxury DSLR photobooth rental across Greater Los Angeles, Orange County, and the Ventura edge. See all the neighborhoods we serve.", depth)
     + header(depth)
-    + crumbs
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
     <div class="container">
       <div style="max-width:760px;">
-        <span class="eyebrow eyebrow--light">From the coast to the canyons</span>
+        ${heroCrumbs}
         <h1>Areas we serve.</h1>
         <p class="lede">From the Westside to the Inland Empire edge, we travel for the events that take photography seriously. Pick your region below to see the neighborhoods we cover and book directly.</p>
       </div>
@@ -319,11 +322,11 @@ function buildIndex() {
 
 function buildRegion(region) {
   const depth = 1;
-  const crumbs = breadcrumb([
+  const heroCrumbs = breadcrumb([
     { label: "Home", href: "/" },
     { label: "Areas We Serve", href: "/areas-we-serve" },
     { label: region.name }
-  ]);
+  ], "breadcrumb--hero");
 
   const cards = region.neighborhoods.map(n => `
         <a class="neighborhood-card reveal" href="/areas-we-serve/${region.slug}/${n.slug}">
@@ -338,12 +341,11 @@ function buildRegion(region) {
 
   const html = head(`${region.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental across ${region.name}. ${region.tagline}`, depth)
     + header(depth)
-    + crumbs
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
     <div class="container">
       <div style="max-width:760px;">
-        <span class="eyebrow eyebrow--light">Areas We Serve · California</span>
+        ${heroCrumbs}
         <h1>${region.name}.</h1>
         <p class="lede">${region.hero}</p>
         <div style="margin-top: var(--space-lg);">
@@ -383,21 +385,20 @@ ${addonsSection(depth)}
 
 function buildNeighborhood(region, n) {
   const depth = 2;
-  const crumbs = breadcrumb([
+  const heroCrumbs = breadcrumb([
     { label: "Home", href: "/" },
     { label: "Areas We Serve", href: "/areas-we-serve" },
     { label: region.name, href: `/areas-we-serve/${region.slug}` },
     { label: n.name }
-  ]);
+  ], "breadcrumb--hero");
 
   const html = head(`${n.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental in ${n.name}, ${region.name}. ${n.blurb}`, depth)
     + header(depth)
-    + crumbs
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
     <div class="container">
       <div style="max-width:760px;">
-        <span class="eyebrow eyebrow--light">${region.name}</span>
+        ${heroCrumbs}
         <h1>${n.name}.</h1>
         <p class="lede">${n.blurb}</p>
         <div style="margin-top: var(--space-lg);">
