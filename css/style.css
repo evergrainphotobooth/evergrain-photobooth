@@ -272,8 +272,9 @@ p { margin: 0 0 var(--space-md); max-width: 65ch; }
 
 .skip-link {
   position: absolute;
-  top: -40px;
+  top: 0;
   left: 0;
+  transform: translateY(-200%); /* fully off-screen regardless of element height */
   background: var(--evergreen);
   color: var(--linen);
   padding: var(--space-sm) var(--space-md);
@@ -282,8 +283,9 @@ p { margin: 0 0 var(--space-md); max-width: 65ch; }
   font-size: var(--fs-eyebrow);
   text-transform: uppercase;
   letter-spacing: 0.18em;
+  transition: transform 200ms var(--ease-out);
 }
-.skip-link:focus { top: 0; }
+.skip-link:focus { transform: translateY(0); }
 
 /* ----- Grid systems used across pages ----- */
 .grid {
