@@ -2,11 +2,28 @@
    Evergrain Photobooth — Page-specific styles
    ========================================================= */
 
-/* ---------- Homepage Hero ---------- */
+/* ---------- Homepage Hero ----------
+   Background photo with dark evergreen gradient overlay.
+   The overlay is intentionally darkest on the left (where the title +
+   lede sit) to maintain WCAG AA contrast (~4.6:1 for body text on
+   any photo brightness), and lightens on the right so the image
+   remains visible behind the floating logo monogram.
+*/
 .hero {
   position: relative;
   min-height: 100vh;
-  background: var(--evergreen);
+  background-color: var(--evergreen-dark); /* loaded-image fallback */
+  background-image:
+    linear-gradient(
+      110deg,
+      rgba(22, 48, 36, 0.90) 0%,
+      rgba(22, 48, 36, 0.78) 50%,
+      rgba(22, 48, 36, 0.55) 100%
+    ),
+    url("https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/homepage/Homepage%20Hero.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: var(--linen);
   display: flex;
   flex-direction: column;
@@ -14,6 +31,15 @@
   padding-block: clamp(7rem, 14vw, 10rem) clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
   gap: clamp(2rem, 5vh, 4rem);
+}
+/* On narrow screens, even out the overlay so text on either side stays legible
+   regardless of how the image crops. */
+@media (max-width: 720px) {
+  .hero {
+    background-image:
+      linear-gradient(rgba(22, 48, 36, 0.85), rgba(22, 48, 36, 0.85)),
+      url("https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/homepage/Homepage%20Hero.jpg");
+  }
 }
 .hero__content {
   position: relative;
