@@ -217,6 +217,74 @@ a.area-pill:hover {
 }
 
 /* ---------- Our Story page ---------- */
+.story-prose {
+  max-width: 56ch;
+  margin: 0 auto;
+}
+.story-prose p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--char);
+  margin-bottom: var(--space-md);
+  max-width: none;
+}
+.story-prose p:last-child { margin-bottom: 0; }
+.story-prose strong { font-weight: 600; }
+.story-prose em {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+}
+.story-signoff {
+  margin-top: var(--space-lg);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--bark);
+}
+
+/* Editorial image mosaic — 7 images in a varied grid */
+.story-mosaic {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-md);
+  margin-block: var(--space-2xl);
+}
+.story-mosaic__item {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--linen-warm);
+  position: relative;
+}
+.story-mosaic__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms var(--ease-out);
+}
+.story-mosaic__item:hover img { transform: scale(1.03); }
+
+/* Specific cell sizing for editorial rhythm */
+.story-mosaic__item--1 { grid-column: span 4; aspect-ratio: 16 / 11; }
+.story-mosaic__item--2 { grid-column: span 2; aspect-ratio: 3 / 4; }
+.story-mosaic__item--3 { grid-column: span 2; aspect-ratio: 1 / 1; }
+.story-mosaic__item--4 { grid-column: span 2; aspect-ratio: 1 / 1; }
+.story-mosaic__item--5 { grid-column: span 2; aspect-ratio: 1 / 1; }
+.story-mosaic__item--6 { grid-column: span 3; aspect-ratio: 4 / 3; }
+.story-mosaic__item--7 { grid-column: span 3; aspect-ratio: 4 / 3; }
+
+@media (max-width: 800px) {
+  .story-mosaic { grid-template-columns: repeat(2, 1fr); }
+  .story-mosaic__item--1,
+  .story-mosaic__item--2,
+  .story-mosaic__item--3,
+  .story-mosaic__item--4,
+  .story-mosaic__item--5,
+  .story-mosaic__item--6,
+  .story-mosaic__item--7 { grid-column: span 1; }
+  .story-mosaic__item--1 { grid-column: 1 / -1; aspect-ratio: 16 / 11; }
+}
+
 .story-timeline {
   display: grid;
   gap: var(--space-xl);

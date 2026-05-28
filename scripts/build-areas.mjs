@@ -81,10 +81,17 @@ const footer = (depth) => {
       <div class="footer__logo">
         <img src="${up}assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" />
         <p class="footer__tagline">A photobooth experience built around the camera — never around the gimmick.</p>
+        <ul class="footer__social" aria-label="Social media">
+          <li><a href="https://www.instagram.com/evergrainphotobooth/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.75" fill="currentColor" stroke="none"/></svg></a></li>
+          <li><a href="https://www.yelp.com/biz/evergrain-photobooth-los-angeles" target="_blank" rel="noopener noreferrer" aria-label="Yelp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.6 14.6v6.7c0 .4-.2.7-.5.9-.3.1-.7.1-.9-.1l-3-2.6a.9.9 0 0 1-.3-1l1.5-3.7c.2-.4.6-.6 1-.5l1.6.4c.4.1.6.4.6.8zm.9-3.1l3.7-1.5c.4-.2.6-.6.5-1l-.4-1.6c-.1-.4-.4-.6-.8-.6h-6.7c-.4 0-.7.2-.9.5-.1.3-.1.7.1.9l2.6 3c.3.3.6.4 1 .3zm.9 3.1c0-.4.2-.7.6-.8l1.6-.4c.4-.1.8.1 1 .5l2.5 3.7c.2.3.2.7 0 1l-2 2.7c-.2.3-.5.4-.9.4s-.7-.2-.9-.5l-2-3.4c-.2-.3-.2-.6 0-.9.1-.1.1-.2.1-.3v-2zm-.9-7.6V2.7c0-.5.4-.9.9-.9.2 0 .3 0 .4.1l3.3 2c.4.2.5.6.4 1l-2.5 3.7c-.2.4-.7.5-1 .3l-1.1-.6a.9.9 0 0 1-.4-.7zm-3.8 4.4l-3.7-1.5c-.3-.1-.6-.4-.6-.8s.2-.7.5-.9l3.4-2c.4-.2.9-.1 1.1.3l1.5 2.5c.2.3.1.7-.2 1l-1.1.9c-.3.3-.6.4-.9.5z"/></svg></a></li>
+          <li><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.128 22 16.991 22 12z"/></svg></a></li>
+          <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.61 16a6.34 6.34 0 0 0 10.86 4.43V10.81a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.65-.24z"/></svg></a></li>
+          <li><a href="https://www.pinterest.com/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 0 0-4.37 23.17c-.1-.94-.2-2.38.04-3.4.22-.92 1.4-5.84 1.4-5.84s-.36-.72-.36-1.78c0-1.66.97-2.9 2.17-2.9 1.02 0 1.51.77 1.51 1.69 0 1.03-.66 2.57-1 4-.28 1.19.6 2.16 1.78 2.16 2.13 0 3.77-2.25 3.77-5.5 0-2.87-2.07-4.88-5.02-4.88-3.42 0-5.43 2.57-5.43 5.22 0 1.03.4 2.14.9 2.75.1.12.11.22.08.34l-.33 1.36c-.05.21-.18.26-.4.16-1.5-.7-2.43-2.89-2.43-4.65 0-3.78 2.75-7.26 7.92-7.26 4.16 0 7.39 2.96 7.39 6.92 0 4.13-2.6 7.46-6.22 7.46-1.21 0-2.36-.63-2.75-1.38l-.75 2.85c-.27 1.04-1 2.35-1.49 3.15A12 12 0 1 0 12 0z"/></svg></a></li>
+        </ul>
       </div>
       <div><h4>Explore</h4><ul class="footer__list"><li><a href="/our-story">Our Story</a></li><li><a href="/the-booth">The Booth</a></li><li><a href="/packages">Packages</a></li><li><a href="/add-ons">Add-Ons</a></li></ul></div>
       <div><h4>Resources</h4><ul class="footer__list"><li><a href="/gallery">Gallery</a></li><li><a href="/faq">FAQ</a></li><li><a href="#inquiry">Request a Quote</a></li><li><a href="/areas-we-serve">Areas We Serve</a></li></ul></div>
-      <div><h4>Contact</h4><ul class="footer__list"><li><a href="mailto:hello@evergrainphotobooth.com">hello@evergrainphotobooth.com</a></li><li><a href="tel:+13235550100">(323) 555-0100</a></li><li>Los Angeles, CA</li></ul></div>
+      <div><h4>Contact</h4><ul class="footer__list"><li><a href="mailto:evergrainphotobooth@gmail.com">evergrainphotobooth@gmail.com</a></li><li><a href="tel:+16265608330">(626) 560-8330</a></li><li>Los Angeles, CA</li></ul></div>
     </div>
     <div class="footer__bottom">
       <span>© <span data-year>2025</span> Evergrain Photobooth. All rights reserved.</span>
@@ -137,30 +144,30 @@ const packagesSection = (locationLabel, depth) => {
       </div>
 
       <div class="packages">
-        <article class="package reveal" data-package-card="candid" data-name="The Candid" data-price="750" data-desc="3-hour minimum · DSLR quality · unlimited digital · prints + gallery">
+        <article class="package reveal" data-package-card="candid" data-name="The Candid" data-price="600" data-desc="3-hour minimum · DSLR quality · unlimited digital · prints + gallery">
           <h2 class="package__name">The Candid</h2>
           <p class="package__tagline">A clean, classic photobooth — done right.</p>
           <div class="package__price">
-            <span class="package__price-amount"><sup>$</sup>750</span>
+            <span class="package__price-amount"><sup>$</sup>600</span>
             <div class="package__price-meta">3-hour minimum · $150 / hr</div>
           </div>
           <ul class="package__features">
             <li>Handcrafted wooden, open-air booth</li>
             <li>DSLR-quality unlimited photos</li>
             <li>Instant digital sharing (text, email, AirDrop, QR)</li>
-            <li>2 × 6 or 4 × 6 prints · standard backdrop</li>
+            <li>2×6 or 4×6 prints · standard backdrop</li>
             <li>On-site attendant + online gallery</li>
           </ul>
           <button type="button" class="btn btn--outline package__cta" data-add-package>Add to List</button>
           <div class="package__selected-indicator">✓ Added to your list</div>
         </article>
 
-        <article class="package package--featured reveal" data-package-card="moment" data-name="The Moment" data-price="800" data-desc="3-hour minimum · customizable templates · premium backdrop">
+        <article class="package package--featured reveal" data-package-card="moment" data-name="The Moment" data-price="750" data-desc="3-hour minimum · customizable templates · premium backdrop">
           <span class="package__tag">Most Popular</span>
           <h2 class="package__name">The Moment</h2>
           <p class="package__tagline">Our most-booked configuration.</p>
           <div class="package__price">
-            <span class="package__price-amount"><sup>$</sup>800</span>
+            <span class="package__price-amount"><sup>$</sup>750</span>
             <div class="package__price-meta">3-hour minimum · $150 / hr</div>
           </div>
           <ul class="package__features">
@@ -206,14 +213,10 @@ const addonsSection = (depth) => {
     { id: "welcome-screen", name: "Custom Welcome / Tap-to-Start Screen", price: "$50", meta: "flat", copy: "Your name, date, monogram, or logo on the start screen." },
     { id: "rear-display", name: "Custom Rear Display / Branded Visuals", price: "$75", meta: "flat", copy: "A reel that plays behind the booth all night." },
     { id: "custom-template", name: "Custom Photo Template", price: "$50", meta: "flat", copy: "Designed with you, built around your event." },
-    { id: "postcard-print", name: "Postcard Print Upgrade (4 × 6)", price: "$50", meta: "flat", copy: "Larger, glossier, designed to be kept." },
+    { id: "postcard-print", name: "Postcard Print Upgrade (4×6)", price: "$50", meta: "flat", copy: "Larger, glossier, designed to be kept." },
     { id: "bw-color-filter", name: "B&amp;W + Color Filter Set", price: "$100", meta: "flat", copy: "Switch between modes at the booth, all night." },
     { id: "premium-props", name: "Premium Prop Bundle", price: "$50", meta: "flat", copy: "Curated, on-brand, never tacky." },
     { id: "premium-backdrop", name: "Premium Backdrop", price: "$50", meta: "flat", copy: "An upgrade from our standard library." },
-    { id: "ivory-backdrop", name: "Ivory Draped Backdrop", price: "$200", meta: "flat", copy: "Soft fabric, romantic for weddings." },
-    { id: "hunter-green-backdrop", name: "Hunter Green Draped Backdrop", price: "$200", meta: "flat", copy: "Editorial, moody — an Evergrain favorite." },
-    { id: "photo-guestbook", name: "Photo Guestbook", price: "$125", meta: "flat", copy: "A hardbound book guests sign next to their photo strip. The keepsake of the night." },
-    { id: "magnet-sleeves", name: "Magnet Sleeves", price: "$100", meta: "flat", copy: "Slip every print into a magnet sleeve. Onto every fridge in town." },
     { id: "extra-time", name: "Extra Time", price: "$150", meta: "/ hour", copy: "Add coverage day-of or in advance." },
     { id: "early-setup", name: "Early Setup", price: "$100", meta: "/ hour", copy: "Need us in place earlier than usual? We'll be there." }
   ];
@@ -233,7 +236,7 @@ const addonsSection = (depth) => {
       <div class="reveal" style="margin-bottom: var(--space-lg);">
         <span class="eyebrow">Customize it</span>
         <h2 class="display">Popular add-ons.</h2>
-        <p style="color:var(--bark); max-width:60ch;">All thirteen of our add-ons — swipe through and tap to drop any into your Package List. <a href="/add-ons" style="border-bottom:1px solid var(--brass); color:var(--evergreen);">View full details →</a></p>
+        <p style="color:var(--bark); max-width:60ch;">All nine of our add-ons — swipe through and tap to drop any into your Package List. <a href="/add-ons" style="border-bottom:1px solid var(--brass); color:var(--evergreen);">View full details →</a></p>
       </div>
 
       <div class="addon-carousel-wrap reveal">
@@ -408,36 +411,9 @@ function buildNeighborhood(region, n) {
     </div>
   </section>
 
-  <section class="section section--tight">
-    <div class="container">
-      <div class="reveal" style="margin-bottom: var(--space-lg);">
-        <span class="eyebrow">Glimpses</span>
-        <h2 class="display">${n.name} in frames.</h2>
-        <p style="color:var(--bark); max-width:60ch;">A mix of place and process — we'll replace these with your client photos as we shoot more in the area.</p>
-      </div>
-      <div class="city-carousel-wrap">
-        <button class="city-carousel__arrow city-carousel__arrow--prev" data-carousel-prev aria-label="Previous">‹</button>
-        <div class="city-carousel" data-carousel>
-          ${Array.from({length: 6}, (_, i) => `<div class="city-carousel__item"><img src="https://picsum.photos/seed/${n.slug}-${i+1}/600/750" alt="${n.name} event" loading="lazy" /></div>`).join("\n          ")}
-        </div>
-        <button class="city-carousel__arrow city-carousel__arrow--next" data-carousel-next aria-label="Next">›</button>
-      </div>
-    </div>
-  </section>
-
 ${packagesSection(n.name, depth)}
 
 ${addonsSection(depth)}
-
-  <section class="section section--evergreen topo-bg topo-bg--inverted">
-    <div class="container">
-      <div class="testimonial reveal">
-        <span class="eyebrow eyebrow--light">From a ${n.name} client</span>
-        <p class="testimonial__quote" style="color:var(--linen);">"The booth fit perfectly — the prints became the favor everyone took home. Our guests are still talking about it."</p>
-        <p class="testimonial__author" style="color:var(--champagne);">A recent ${n.name} client</p>
-      </div>
-    </div>
-  </section>
 
   <section class="section">
     <div class="container container--narrow">

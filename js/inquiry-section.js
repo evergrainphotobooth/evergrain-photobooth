@@ -18,25 +18,21 @@
 
   // Master data — keep in sync with packages.html + add-ons.html
   const PACKAGES = [
-    { id: "candid", name: "The Candid", price: 750,  desc: "3-hour minimum · DSLR quality · unlimited digital · prints + gallery" },
-    { id: "moment", name: "The Moment", price: 800,  desc: "3-hour minimum · customizable templates · premium backdrop · custom screens" },
+    { id: "candid", name: "The Candid", price: 600,  desc: "3-hour minimum · DSLR quality · unlimited digital · prints + gallery" },
+    { id: "moment", name: "The Moment", price: 750,  desc: "3-hour minimum · customizable templates · premium backdrop · custom screens" },
     { id: "glam",   name: "The Glam",   price: 1050, desc: "4-hour minimum · premium props · B&W + color modes · two custom templates" }
   ];
 
   const ADDONS = [
-    { id: "welcome-screen",        name: "Custom Welcome / Tap-to-Start Screen",   price: 50,  desc: "Your name, date, monogram, or logo on the start screen" },
-    { id: "rear-display",          name: "Custom Rear Display / Branded Visuals",  price: 75,  desc: "A reel that plays behind the booth all night" },
-    { id: "custom-template",       name: "Custom Photo Template",                  price: 50,  desc: "Designed with you, built around your event" },
-    { id: "postcard-print",        name: "Postcard Print Upgrade (4×6)",           price: 50,  desc: "Larger, glossier, designed to be kept" },
-    { id: "bw-color-filter",       name: "B&W + Color Filter Set",                 price: 100, desc: "Switch between modes at the booth, all night" },
-    { id: "premium-props",         name: "Premium Prop Bundle",                    price: 50,  desc: "Curated, on-brand, never tacky" },
-    { id: "premium-backdrop",      name: "Premium Backdrop",                       price: 50,  desc: "An upgrade from our standard library" },
-    { id: "ivory-backdrop",        name: "Ivory Draped Backdrop",                  price: 200, desc: "Soft fabric, romantic for weddings" },
-    { id: "hunter-green-backdrop", name: "Hunter Green Draped Backdrop",           price: 200, desc: "Editorial, moody — an Evergrain favorite" },
-    { id: "photo-guestbook",       name: "Photo Guestbook",                        price: 125, desc: "A hardbound book guests sign next to their photo strip" },
-    { id: "magnet-sleeves",        name: "Magnet Sleeves",                         price: 100, desc: "Slip every print into a magnet sleeve" },
-    { id: "extra-time",            name: "Extra Time",                             price: 150, desc: "Add coverage day-of or in advance" },
-    { id: "early-setup",           name: "Early Setup",                            price: 100, desc: "We'll be in place earlier than usual" }
+    { id: "welcome-screen",   name: "Custom Welcome / Tap-to-Start Screen",  price: 50,  desc: "Your name, date, monogram, or logo on the start screen" },
+    { id: "rear-display",     name: "Custom Rear Display / Branded Visuals", price: 75,  desc: "A reel that plays behind the booth all night" },
+    { id: "custom-template",  name: "Custom Photo Template",                 price: 50,  desc: "Designed with you, built around your event" },
+    { id: "postcard-print",   name: "Postcard Print Upgrade (4×6)",          price: 50,  desc: "Larger, glossier, designed to be kept" },
+    { id: "bw-color-filter",  name: "B&W + Color Filter Set",                price: 100, desc: "Switch between modes at the booth, all night" },
+    { id: "premium-props",    name: "Premium Prop Bundle",                   price: 50,  desc: "Curated, on-brand, never tacky" },
+    { id: "premium-backdrop", name: "Premium Backdrop",                      price: 50,  desc: "An upgrade from our standard library" },
+    { id: "extra-time",       name: "Extra Time",                            price: 150, desc: "Add coverage day-of or in advance" },
+    { id: "early-setup",      name: "Early Setup",                           price: 100, desc: "We'll be in place earlier than usual" }
   ];
 
   const esc = (s) => String(s)
