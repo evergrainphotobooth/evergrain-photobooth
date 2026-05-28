@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       event_type: payload.eventType,
       venue_city: payload.venueCity,
       venue_address: payload.venueAddress || null,
-      guests: payload.guests ? Number(payload.guests) : null,
+      guests: payload.guests || null,
       package_interest: payload.packageInterest || null,
       aesthetic: payload.aesthetic || null,
       interested_addons: Array.isArray(payload.interestedAddons) ? payload.interestedAddons : [],

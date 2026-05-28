@@ -114,7 +114,13 @@
         </div>
         <div class="form__field">
           <label class="form__label" for="guests">Estimated Guest Count</label>
-          <input class="form__input" type="number" min="0" id="guests" name="guests" placeholder="e.g. 120" />
+          <select class="form__select" id="guests" name="guests">
+            <option value="">Select one…</option>
+            <option value="50 & below">50 &amp; below</option>
+            <option value="51 - 100">51 – 100</option>
+            <option value="101 - 300">101 – 300</option>
+            <option value="300 & above">300 &amp; above</option>
+          </select>
         </div>
       </div>
 
