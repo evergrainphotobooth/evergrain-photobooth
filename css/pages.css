@@ -553,6 +553,58 @@ a.area-pill:hover {
   display: block;
 }
 
+/* ---------- Every Package Includes section (on /packages + area pages) ---------- */
+.every-package {
+  margin-top: var(--space-2xl);
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--linen-warm);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(92, 74, 53, 0.10);
+}
+.every-package__header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+.every-package__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--char);
+}
+.every-package__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  columns: 2;
+  column-gap: clamp(2rem, 5vw, 4rem);
+  max-width: 880px;
+  margin-inline: auto;
+}
+.every-package__list li {
+  padding: 0.65rem 0 0.65rem 1.8rem;
+  border-bottom: 1px solid rgba(92, 74, 53, 0.12);
+  font-size: 0.98rem;
+  position: relative;
+  break-inside: avoid;
+  color: var(--char);
+}
+.every-package__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 14px;
+  height: 8px;
+  border-left: 1.5px solid var(--brass);
+  border-bottom: 1.5px solid var(--brass);
+  transform: rotate(-45deg);
+}
+@media (max-width: 640px) {
+  .every-package__list { columns: 1; }
+}
+
 .compare-note {
   text-align: center;
   margin-top: var(--space-xl);

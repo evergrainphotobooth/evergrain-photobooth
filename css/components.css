@@ -370,6 +370,13 @@ body.has-sticky-banner .site-header {
   font-size: 0.95rem;
   opacity: 0.85;
 }
+/* Plain-text <li>s (e.g. "Los Angeles, CA") inherit the same size as
+   the links around them so the column doesn't have mismatched sizes. */
+.footer__list li {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+.footer__list li:has(a) { opacity: 1; }
 .footer__list a:hover { color: var(--brass-light); opacity: 1; }
 
 .footer__list--columns {
