@@ -159,6 +159,132 @@
   margin-top: var(--space-xl);
 }
 
+/* ---------- Homepage "How it works" edge-to-edge wave carousel ----------
+   - Track is 2x duplicated so the loop is seamless
+   - Carousel translates X 0 → -50% (one full set width) infinitely
+   - Each card bobs on translateY with its own --bob-delay so the
+     5 boxes form a traveling sine wave (one wavelength = 5 cards)
+   - No hover pause, no interaction — pure ambient motion
+*/
+.how-carousel {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  overflow: hidden;
+  /* Top + bottom padding gives the bob animation room without clipping */
+  padding-block: 2.5rem;
+  /* Soft edge fades to suggest "infinite" */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+}
+.how-carousel__track {
+  display: flex;
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+  width: max-content;
+  animation: how-carousel-scroll 60s linear infinite;
+  will-change: transform;
+}
+@keyframes how-carousel-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.how-card {
+  flex: 0 0 auto;
+  width: clamp(280px, 26vw, 340px);
+}
+/* Inner element handles the vertical bob so it doesn't fight the
+   parent track's translateX. Stacking transforms on different
+   elements composes cleanly at the rendering layer. */
+.how-card__bob {
+  background: var(--evergreen);
+  color: var(--linen);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(217, 201, 168, 0.10);
+  box-shadow: 0 18px 40px -20px rgba(26, 20, 16, 0.35);
+  animation: how-card-bob 5s ease-in-out infinite;
+  animation-delay: var(--bob-delay, 0s);
+  will-change: transform;
+}
+/* Subtle topographic texture on each card */
+.how-card__bob::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/img/topographic-bg.svg");
+  background-size: 220%;
+  background-position: center;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.how-card__icon-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  background: rgba(164, 122, 42, 0.16);
+  color: var(--brass-light);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-sm);
+}
+.how-card__icon {
+  width: 30px;
+  height: 30px;
+}
+.how-card__step {
+  font-family: var(--font-eyebrow);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  opacity: 0.7;
+}
+.how-card__title {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--linen);
+  margin: 0;
+  line-height: 1.05;
+}
+.how-card__copy {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--champagne);
+  opacity: 0.85;
+  margin: 0;
+  max-width: none;
+}
+
+@keyframes how-card-bob {
+  0%, 100% { transform: translateY(-8px); }
+  50%      { transform: translateY(18px); }
+}
+
+/* Honor user preference — kill the motion if requested */
+@media (prefers-reduced-motion: reduce) {
+  .how-carousel__track,
+  .how-card__bob {
+    animation: none;
+  }
+}
+
 /* ---------- Stats strip ---------- */
 .stats {
   display: grid;
