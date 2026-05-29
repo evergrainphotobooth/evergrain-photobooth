@@ -149,6 +149,16 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* Pages with a sticky subheader (e.g. /add-ons) need the navbar to
+   always be opaque so the subheader's lighter color doesn't show
+   through the otherwise-transparent nav at 0px scroll. */
+body.has-sticky-banner .site-header {
+  background: rgba(31, 67, 50, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-sm);
+}
+
 .nav {
   display: flex;
   align-items: center;
