@@ -24,9 +24,10 @@
   ];
 
   const ADDONS = [
-    { id: "welcome-screen",   name: "Custom Welcome / Tap-to-Start Screen",  price: 50,  desc: "Your name, date, monogram, or logo on the start screen" },
-    { id: "rear-display",     name: "Custom Rear Display / Branded Visuals", price: 75,  desc: "A reel that plays behind the booth all night" },
-    { id: "custom-template",  name: "Custom Photo Template",                 price: 50,  desc: "Designed with you, built around your event" },
+    { id: "welcome-screen",       name: "Custom Welcome / Tap-to-Start Screen",  price: 50,  desc: "Custom welcome screen guests see before their first photo" },
+    { id: "rear-display",         name: "Custom Rear Display / Branded Visuals", price: 50,  desc: "Looping slideshow or branded visual on the back of the booth" },
+    { id: "custom-template",      name: "Custom Photo Template",                 price: 100, desc: "One-of-a-kind photo strip layout designed around your event" },
+    { id: "additional-template",  name: "Additional Custom Photo Template",      price: 150, desc: "A second unique template design for the same event" },
     { id: "postcard-print",   name: "Postcard Print Upgrade (4×6)",          price: 50,  desc: "Larger, glossier, designed to be kept" },
     { id: "bw-color-filter",  name: "B&W + Color Filter Set",                price: 100, desc: "Switch between modes at the booth, all night" },
     { id: "premium-props",    name: "Premium Prop Bundle",                   price: 50,  desc: "Curated, on-brand, never tacky" },

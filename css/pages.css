@@ -693,6 +693,14 @@ a.area-pill:hover {
   margin-top: var(--space-xl);
 }
 
+/* Force exactly 2 columns for categories with 4 cards (Branded Touch Points). */
+.addons--2col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 640px) {
+  .addons--2col { grid-template-columns: 1fr; }
+}
+
 /* Pair two single-card categories side-by-side on desktop, so each
    category gets its own label + card in a half-row pane.
    Used for (Print Upgrades + Filters) and (Props + Backdrops). */
