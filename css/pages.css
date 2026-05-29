@@ -673,7 +673,6 @@ a.area-pill:hover {
 
 /* Category-grouped add-ons (Branded Touch Points, Print Upgrades, etc.) */
 .addon-category { margin-top: var(--space-xl); }
-.addon-category:first-of-type { margin-top: var(--space-md); }
 .addon-category__label {
   font-family: var(--font-eyebrow);
   font-size: 0.78rem;
