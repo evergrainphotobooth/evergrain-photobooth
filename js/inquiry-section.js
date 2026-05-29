@@ -28,12 +28,13 @@
     { id: "rear-display",         name: "Custom Rear Display / Branded Visuals", price: 50,  desc: "Looping slideshow or branded visual on the back of the booth" },
     { id: "custom-template",      name: "Custom Photo Template",                 price: 100, desc: "One-of-a-kind photo strip layout designed around your event" },
     { id: "additional-template",  name: "Additional Custom Photo Template",      price: 150, desc: "A second unique template design for the same event" },
-    { id: "postcard-print",   name: "Postcard Print Upgrade (4×6)",          price: 50,  desc: "Larger, glossier, designed to be kept" },
     { id: "bw-color-filter",  name: "B&W + Color Filter Set",                price: 100, desc: "Switch between modes at the booth, all night" },
-    { id: "premium-props",    name: "Premium Prop Bundle",                   price: 50,  desc: "Curated, on-brand, never tacky" },
+    { id: "glam-filter",      name: "Glam Filter",                           price: 150, desc: "Real-time skin-smoothing — softens blemishes, evens tone, whitens teeth" },
+    { id: "postcard-print",   name: "Postcard Print Upgrade (4×6)",          price: 50,  desc: "Larger, glossier, designed to be kept" },
+    { id: "premium-props",    name: "Premium Prop Bundle",                   price: 50,  desc: "Upgraded set of curated, on-trend, photogenic props" },
     { id: "premium-backdrop", name: "Premium Backdrop",                      price: 50,  desc: "An upgrade from our standard library" },
-    { id: "extra-time",       name: "Extra Time",                            price: 150, desc: "Add coverage day-of or in advance" },
-    { id: "early-setup",      name: "Early Setup",                           price: 100, desc: "We'll be in place earlier than usual" }
+    { id: "extra-time",       name: "Extra Time",                            price: 150, desc: "Keep the energy going — add hours so nothing goes uncaptured" },
+    { id: "early-setup",      name: "Early Setup",                           price: 100, desc: "Get us on-site earlier than our standard 60–90 minute window" }
   ];
 
   const esc = (s) => String(s)
