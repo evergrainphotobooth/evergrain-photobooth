@@ -636,9 +636,36 @@ a.area-pill:hover {
 
 .addons {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--space-md);
   margin-top: var(--space-xl);
+}
+
+/* Pair two single-card categories side-by-side on desktop, so each
+   category gets its own label + card in a half-row pane.
+   Used for (Print Upgrades + Filters) and (Props + Backdrops). */
+.addon-category-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+.addon-category-pair > .addon-category {
+  margin-top: 0;
+}
+/* Force the single card inside each pair-half to a single column
+   (it's already alone, but this overrides any wider auto-fit behavior). */
+.addon-category-pair .addons {
+  grid-template-columns: 1fr;
+}
+@media (max-width: 720px) {
+  .addon-category-pair {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .addon-category-pair > .addon-category + .addon-category {
+    margin-top: var(--space-xl);
+  }
 }
 @media (max-width: 640px) {
   .addons { grid-template-columns: 1fr; }
