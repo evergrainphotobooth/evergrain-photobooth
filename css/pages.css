@@ -184,7 +184,7 @@
   display: flex;
   gap: clamp(1.5rem, 2.5vw, 2.5rem);
   width: max-content;
-  animation: how-carousel-scroll 60s linear infinite;
+  animation: how-carousel-scroll 45s linear infinite;
   will-change: transform;
 }
 @keyframes how-carousel-scroll {
@@ -213,7 +213,7 @@
   overflow: hidden;
   border: 1px solid rgba(217, 201, 168, 0.10);
   box-shadow: 0 18px 40px -20px rgba(26, 20, 16, 0.35);
-  animation: how-card-bob 5s ease-in-out infinite;
+  animation: how-card-bob 3.5s ease-in-out infinite;
   animation-delay: var(--bob-delay, 0s);
   will-change: transform;
 }
@@ -273,8 +273,8 @@
 }
 
 @keyframes how-card-bob {
-  0%, 100% { transform: translateY(-8px); }
-  50%      { transform: translateY(18px); }
+  0%, 100% { transform: translateY(-22px); }
+  50%      { transform: translateY(32px); }
 }
 
 /* Honor user preference — kill the motion if requested */
