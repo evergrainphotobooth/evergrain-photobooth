@@ -712,9 +712,14 @@ a.area-pill:hover {
 }
 .addon-category-trio > .addon-category {
   margin-top: 0;
+  /* Make each column a flex column so the inner grid + card can grow
+     to fill the tallest sibling's height (boxes match heights). */
+  display: flex;
+  flex-direction: column;
 }
 .addon-category-trio .addons {
   grid-template-columns: 1fr;
+  flex: 1; /* grow to fill the remaining .addon-category height */
 }
 @media (max-width: 900px) {
   .addon-category-trio {
