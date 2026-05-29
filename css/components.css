@@ -357,6 +357,11 @@ body.has-sticky-banner .site-header {
   width: 15px;
   height: 15px;
 }
+/* TikTok app-icon style: cream rounded square + dark "d" glyph drawn
+   on top so it visually reads as a cut-out against the footer bg. */
+.footer__social .icon-tiktok path {
+  fill: var(--char);
+}
 .footer__list {
   list-style: none;
   padding: 0;
