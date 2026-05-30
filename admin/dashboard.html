@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard — Evergrain CMS</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/admin/admin.css" />
+<link rel="icon" type="image/png" href="/assets/logos/FullLogo_Green.png" />
+</head>
+<body>
+
+<div data-admin-shell data-page="dashboard" data-title="Dashboard"></div>
+
+<div data-admin-page-content hidden>
+
+    <div class="stats-grid">
+      <div class="stat-card stat-card--accent">
+        <div class="stat-card__label">New Inquiries</div>
+        <div class="stat-card__value" data-stat="new">—</div>
+        <div class="stat-card__delta">Awaiting your response</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">This Week</div>
+        <div class="stat-card__value" data-stat="thisWeek">—</div>
+        <div class="stat-card__delta">Last 7 days</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">Total Inquiries</div>
+        <div class="stat-card__value" data-stat="total">—</div>
+        <div class="stat-card__delta">All time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">Blog Posts</div>
+        <div class="stat-card__value" data-stat="blogPosts">0</div>
+        <div class="stat-card__delta">Phase 2 — coming soon</div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2 class="admin-card__title">Quick actions</h2>
+      <div class="flex" style="gap: 0.5rem; flex-wrap: wrap;">
+        <a href="/admin/inquiries" class="btn btn--primary">Review Inquiries</a>
+        <a href="/" class="btn btn--ghost" target="_blank" rel="noopener">View live site →</a>
+        <a href="https://supabase.com/dashboard/project/_/storage/buckets/media" class="btn btn--ghost" target="_blank" rel="noopener">Manage Assets →</a>
+      </div>
+    </div>
+
+</div>
+
+<script>
+  // Hydrate stats
+  fetch("/api/admin/stats").then(async r => {
+    if (!r.ok) return;
+    const data = await r.json();
+    const map = {
+      new: data.inquiries.new,
+      thisWeek: data.inquiries.thisWeek,
+      total: data.inquiries.total,
+      blogPosts: data.blogPosts,
+    };
+    Object.entries(map).forEach(([k, v]) => {
+      const el = document.querySelector(`[data-stat="${k}"]`);
+      if (el) el.textContent = v.toLocaleString();
+    });
+  });
+</script>
+<script src="/admin/admin-shell.js"></script>
+
+</body>
+</html>

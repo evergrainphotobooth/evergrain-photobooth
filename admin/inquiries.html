@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inquiries — Evergrain CMS</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/admin/admin.css" />
+<link rel="icon" type="image/png" href="/assets/logos/FullLogo_Green.png" />
+</head>
+<body>
+
+<div data-admin-shell data-page="inquiries" data-title="Inquiries"></div>
+
+<div data-admin-page-content hidden>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="filter-pill is-active" data-filter="all">All</button>
+      <button class="filter-pill" data-filter="new">New</button>
+      <button class="filter-pill" data-filter="contacted">Contacted</button>
+      <button class="filter-pill" data-filter="archived">Archived</button>
+      <span class="text-meta" style="margin-left:auto;" data-inquiry-count></span>
+    </div>
+
+    <!-- Table -->
+    <div data-inquiries-table>
+      <div class="empty-state"><span class="loading"></span></div>
+    </div>
+
+</div>
+
+<!-- Detail drawer -->
+<div class="drawer-overlay" data-drawer-overlay></div>
+<aside class="drawer" data-drawer aria-hidden="true">
+  <div class="drawer__header">
+    <h2 class="drawer__title" data-drawer-title>Inquiry</h2>
+    <button type="button" class="drawer__close" data-drawer-close aria-label="Close">×</button>
+  </div>
+  <div class="drawer__body" data-drawer-body>
+    <div class="empty-state"><span class="loading"></span></div>
+  </div>
+  <div class="drawer__footer" data-drawer-footer></div>
+</aside>
+
+<script>
+  const tableEl = document.querySelector("[data-inquiries-table]");
+  const countEl = document.querySelector("[data-inquiry-count]");
+  const drawer = document.querySelector("[data-drawer]");
+  const overlay = document.querySelector("[data-drawer-overlay]");
+  const drawerTitle = document.querySelector("[data-drawer-title]");
+  const drawerBody = document.querySelector("[data-drawer-body]");
+  const drawerFooter = document.querySelector("[data-drawer-footer]");
+
+  let currentFilter = "all";
+  let currentList = [];
+  let selectedId = null;
+
+  const fmtDate = (iso) => {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  };
+  const fmtDateTime = (iso) => {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    return d.toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+  };
+  const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  async function load() {
+    tableEl.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
+    const q = currentFilter === "all" ? "" : `?status=${currentFilter}`;
+    const r = await fetch(`/api/admin/inquiries${q}`);
+    if (!r.ok) {
+      tableEl.innerHTML = `<div class="empty-state"><h3>Couldn't load inquiries</h3><p>Try refreshing.</p></div>`;
+      return;
+    }
+    const { inquiries } = await r.json();
+    currentList = inquiries;
+    render();
+  }
+
+  function render() {
+    countEl.textContent = `${currentList.length} ${currentList.length === 1 ? "inquiry" : "inquiries"}`;
+    if (currentList.length === 0) {
+      tableEl.innerHTML = `<div class="empty-state"><h3>Nothing here yet.</h3><p>${currentFilter === "all" ? "No inquiries have come in." : `No ${currentFilter} inquiries.`}</p></div>`;
+      return;
+    }
+
+    const rows = currentList.map(r => `
+      <tr data-row-id="${r.id}" class="${r.id === selectedId ? "is-selected" : ""}">
+        <td><strong>${esc(r.name)}</strong><div class="text-meta">${esc(r.email)}</div></td>
+        <td>${esc(r.event_type || "—")}<div class="text-meta">${esc(r.venue_city || "")}</div></td>
+        <td>${fmtDate(r.event_date)}</td>
+        <td>${esc(r.selected_package || "—")}<div class="text-meta">${esc(r.estimated_total || "")}</div></td>
+        <td><span class="status-pill status-pill--${r.status || "new"}">${esc(r.status || "new")}</span></td>
+        <td class="text-meta">${fmtDateTime(r.created_at)}</td>
+      </tr>
+    `).join("");
+
+    tableEl.innerHTML = `
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Event</th>
+            <th>Date</th>
+            <th>Package</th>
+            <th>Status</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+
+    tableEl.querySelectorAll("tr[data-row-id]").forEach(tr => {
+      tr.addEventListener("click", () => openDetail(tr.getAttribute("data-row-id")));
+    });
+  }
+
+  // Filter pills
+  document.querySelectorAll("[data-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-filter]").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      currentFilter = btn.getAttribute("data-filter");
+      load();
+    });
+  });
+
+  /* ---------- Detail drawer ---------- */
+  async function openDetail(id) {
+    selectedId = id;
+    document.querySelectorAll("tr[data-row-id]").forEach(tr => tr.classList.toggle("is-selected", tr.getAttribute("data-row-id") === id));
+    drawer.classList.add("is-open");
+    overlay.classList.add("is-open");
+    drawer.setAttribute("aria-hidden", "false");
+    drawerBody.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
+    drawerFooter.innerHTML = "";
+
+    const r = await fetch(`/api/admin/inquiries?id=${encodeURIComponent(id)}`);
+    if (!r.ok) {
+      drawerBody.innerHTML = `<div class="empty-state"><h3>Couldn't load inquiry</h3></div>`;
+      return;
+    }
+    const { inquiry } = await r.json();
+    renderDetail(inquiry);
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove("is-open");
+    overlay.classList.remove("is-open");
+    drawer.setAttribute("aria-hidden", "true");
+    selectedId = null;
+    document.querySelectorAll("tr[data-row-id]").forEach(tr => tr.classList.remove("is-selected"));
+  }
+  document.querySelector("[data-drawer-close]").addEventListener("click", closeDrawer);
+  overlay.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+
+  function renderDetail(i) {
+    drawerTitle.textContent = i.name;
+
+    const row = (label, value, isLink) => value
+      ? `<div class="detail-row"><div class="detail-row__label">${esc(label)}</div><div class="detail-row__value">${isLink ? `<a href="${isLink}">${esc(value)}</a>` : esc(value)}</div></div>`
+      : "";
+
+    const addons = Array.isArray(i.interested_addons) ? i.interested_addons.join(", ") : "";
+
+    drawerBody.innerHTML = `
+      <div style="margin-bottom:1rem;"><span class="status-pill status-pill--${esc(i.status || "new")}">${esc(i.status || "new")}</span></div>
+
+      <div class="detail-section-title">Contact</div>
+      ${row("Email", i.email, `mailto:${i.email}?subject=${encodeURIComponent("Re: Your Evergrain inquiry")}`)}
+      ${row("Phone", i.phone, `tel:${i.phone}`)}
+
+      <div class="detail-section-title">Event</div>
+      ${row("Date", fmtDate(i.event_date))}
+      ${row("Start time", i.event_start_time)}
+      ${row("Type", i.event_type)}
+      ${row("Venue city", i.venue_city)}
+      ${row("Venue address", i.venue_address)}
+      ${row("Guests", i.guests)}
+      ${row("Aesthetic", i.aesthetic)}
+
+      <div class="detail-section-title">Package list</div>
+      ${row("Package", i.selected_package || i.package_interest)}
+      ${row("Add-ons", i.selected_addons || addons)}
+      ${row("Estimated total", i.estimated_total)}
+
+      ${i.message ? `<div class="detail-section-title">Message</div><div style="white-space:pre-wrap; line-height:1.55; padding: 0.5rem 0 0.85rem;">${esc(i.message)}</div>` : ""}
+
+      <div class="detail-section-title">Meta</div>
+      ${row("Submitted", fmtDateTime(i.created_at))}
+      ${row("Heard about us", i.referral)}
+
+      <div class="detail-section-title">Internal notes</div>
+      <textarea class="field__textarea" data-admin-notes placeholder="Private notes — only visible here.">${esc(i.admin_notes || "")}</textarea>
+      <button type="button" class="btn btn--ghost btn--sm" data-save-notes style="margin-top: 0.5rem;">Save notes</button>
+    `;
+
+    drawerFooter.innerHTML = `
+      <div class="flex" style="gap:0.4rem;">
+        ${i.status !== "contacted" ? `<button type="button" class="btn btn--brass btn--sm" data-set-status="contacted">Mark Contacted</button>` : ""}
+        ${i.status !== "new"       ? `<button type="button" class="btn btn--ghost btn--sm" data-set-status="new">Mark New</button>`        : ""}
+        ${i.status !== "archived"  ? `<button type="button" class="btn btn--danger btn--sm" data-set-status="archived">Archive</button>`    : ""}
+      </div>
+      <a href="mailto:${esc(i.email)}?subject=${encodeURIComponent("Re: Your Evergrain inquiry")}" class="btn btn--primary btn--sm">Reply via Email</a>
+    `;
+
+    // Wire status buttons
+    drawerFooter.querySelectorAll("[data-set-status]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        const newStatus = btn.getAttribute("data-set-status");
+        const r = await fetch("/api/admin/inquiries", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: i.id, status: newStatus }),
+        });
+        if (r.ok) {
+          await load();
+          openDetail(i.id); // re-render the drawer with fresh data
+        } else {
+          btn.disabled = false;
+          alert("Failed to update.");
+        }
+      });
+    });
+
+    // Wire notes save
+    drawerBody.querySelector("[data-save-notes]")?.addEventListener("click", async (e) => {
+      const notes = drawerBody.querySelector("[data-admin-notes]").value;
+      e.target.disabled = true;
+      e.target.textContent = "Saving…";
+      const r = await fetch("/api/admin/inquiries", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: i.id, admin_notes: notes }),
+      });
+      e.target.textContent = r.ok ? "Saved ✓" : "Failed";
+      setTimeout(() => { e.target.textContent = "Save notes"; e.target.disabled = false; }, 1200);
+    });
+  }
+
+  load();
+</script>
+<script src="/admin/admin-shell.js"></script>
+
+</body>
+</html>

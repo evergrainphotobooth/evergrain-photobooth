@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Assets — Evergrain CMS</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/admin/admin.css" />
+<link rel="icon" type="image/png" href="/assets/logos/FullLogo_Green.png" />
+</head>
+<body>
+
+<div data-admin-shell data-page="assets" data-title="Assets"></div>
+
+<div data-admin-page-content hidden>
+
+    <div class="admin-card">
+      <h2 class="admin-card__title">Supabase storage</h2>
+      <p style="margin: 0 0 1rem; font-size: 0.95rem; color: var(--gray-700);">
+        Your assets live in your Supabase Storage <code>media</code> bucket. Supabase doesn't allow embedding their dashboard inside an iframe (X-Frame-Options denies it), so for now use the link below — it opens in a new tab and gives you the full upload/edit/delete UI.
+      </p>
+      <p style="margin: 0 0 1.5rem; font-size: 0.9rem; color: var(--gray-500);">
+        Phase 2 will give you a brand-matched gallery here with drag-and-drop upload, rename, and copy-URL — no tab-switching.
+      </p>
+      <a href="https://supabase.com/dashboard/project/_/storage/buckets/media" target="_blank" rel="noopener" class="btn btn--primary">Open Supabase Storage →</a>
+    </div>
+
+    <div class="admin-card" style="margin-top: 1rem;">
+      <h2 class="admin-card__title">Folder structure</h2>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; line-height: 1.8;">
+        <li><code>media/images/homepage/</code> — hero, intro</li>
+        <li><code>media/images/the booth/</code> — booth product shots</li>
+        <li><code>media/images/our story/</code> — Cindy &amp; Hamilton story imagery</li>
+        <li><code>media/images/gallery/</code> — gallery page (Phase 2 — add here as you upload)</li>
+        <li><code>media/images/cities/</code> — city-specific photography for /areas-we-serve/</li>
+      </ul>
+    </div>
+
+</div>
+
+<script src="/admin/admin-shell.js"></script>
+
+</body>
+</html>
