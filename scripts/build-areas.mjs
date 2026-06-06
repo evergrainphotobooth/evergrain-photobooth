@@ -142,6 +142,34 @@ const scripts = (depth) => {
 
 // -------- Reusable section: Packages (3 cards) --------
 
+// Pull packages from the canonical data/services.json so area pages stay
+// in sync with the Packages page when admin edits in the CMS.
+import { readFileSync as _readFileSync } from "node:fs";
+const SERVICES_DATA = JSON.parse(_readFileSync("data/services.json", "utf8"));
+const _esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const _fmtPrice = (n) => Number(n).toLocaleString("en-US");
+
+const renderPackageCard = (p) => {
+  const articleClass = p.featured ? "package package--featured reveal" : "package reveal";
+  const ctaClass = p.featured ? "btn btn--brass" : "btn btn--outline";
+  const indicatorStyle = p.featured ? ` style="color:var(--champagne);"` : "";
+  const tag = p.featured && p.featuredTag ? `\n          <span class="package__tag">${_esc(p.featuredTag)}</span>` : "";
+  const features = p.features.map(f => `            <li>${_esc(f)}</li>`).join("\n");
+  return `        <article class="${articleClass}" data-package-card="${_esc(p.id)}" data-name="${_esc(p.name)}" data-price="${p.price}" data-desc="${_esc(p.shortDesc)}">${tag}
+          <h2 class="package__name">${_esc(p.name)}</h2>
+          <p class="package__tagline">${_esc(p.tagline)}</p>
+          <div class="package__price">
+            <span class="package__price-amount"><sup>$</sup>${_fmtPrice(p.price)}</span>
+            <div class="package__price-meta">${_esc(p.priceDescription)}</div>
+          </div>
+          <ul class="package__features">
+${features}
+          </ul>
+          <button type="button" class="${ctaClass} package__cta" data-add-package>Add to List</button>
+          <div class="package__selected-indicator"${indicatorStyle}>✓ Added to your list</div>
+        </article>`;
+};
+
 const packagesSection = (locationLabel, depth) => {
   return `<section class="section section--linen-warm">
     <div class="container">
@@ -152,67 +180,7 @@ const packagesSection = (locationLabel, depth) => {
       </div>
 
       <div class="packages">
-        <article class="package reveal" data-package-card="candid" data-name="The Candid" data-price="600" data-desc="3-hour minimum · DSLR quality · unlimited digital · prints + gallery">
-          <h2 class="package__name">The Candid</h2>
-          <p class="package__tagline">A clean, classic photobooth — done right.</p>
-          <div class="package__price">
-            <span class="package__price-amount"><sup>$</sup>600</span>
-            <div class="package__price-meta">3-hour minimum · $150 / hr</div>
-          </div>
-          <ul class="package__features">
-            <li>Handcrafted wooden, open-air photo booth</li>
-            <li>DSLR quality photos</li>
-            <li>Unlimited digital photos</li>
-            <li>Instant digital sharing (text, email, AirDrop, QR code)</li>
-            <li>Choice of 2×6 or 4×6 prints</li>
-            <li>Standard photo templates</li>
-            <li>Standard backdrop</li>
-            <li>Standard prop bundle</li>
-            <li>Custom felt letter board message</li>
-            <li>On-site attendant</li>
-            <li>Online gallery delivered after the event</li>
-            <li>Set-up &amp; tear down included</li>
-          </ul>
-          <button type="button" class="btn btn--outline package__cta" data-add-package>Add to List</button>
-          <div class="package__selected-indicator">✓ Added to your list</div>
-        </article>
-
-        <article class="package package--featured reveal" data-package-card="moment" data-name="The Moment" data-price="750" data-desc="3-hour minimum · customizable templates · premium backdrop">
-          <span class="package__tag">Most Popular</span>
-          <h2 class="package__name">The Moment</h2>
-          <p class="package__tagline">Our most-booked configuration.</p>
-          <div class="package__price">
-            <span class="package__price-amount"><sup>$</sup>750</span>
-            <div class="package__price-meta">3-hour minimum · $150 / hr</div>
-          </div>
-          <ul class="package__features">
-            <li>Everything in The Candid</li>
-            <li>Customizable photo templates</li>
-            <li>Customizable rear screen display</li>
-            <li>Customizable tap-to-start screen</li>
-            <li>Premium backdrop</li>
-            <li>Premium prop bundle</li>
-          </ul>
-          <button type="button" class="btn btn--brass package__cta" data-add-package>Add to List</button>
-          <div class="package__selected-indicator" style="color:var(--champagne);">✓ Added to your list</div>
-        </article>
-
-        <article class="package reveal" data-package-card="glam" data-name="The Glam" data-price="1050" data-desc="4-hour minimum · premium props · B&amp;W + color modes">
-          <h2 class="package__name">The Glam</h2>
-          <p class="package__tagline">A fully bespoke build, end to end.</p>
-          <div class="package__price">
-            <span class="package__price-amount"><sup>$</sup>1,050</span>
-            <div class="package__price-meta">4-hour minimum · $100 / hr</div>
-          </div>
-          <ul class="package__features">
-            <li>Everything in The Moment</li>
-            <li>B&amp;W Filter + color mode</li>
-            <li>2nd Customizable Photo Template</li>
-            <li>Glam Filter (skin smoothing &amp; teeth whitening)</li>
-          </ul>
-          <button type="button" class="btn btn--outline package__cta" data-add-package>Add to List</button>
-          <div class="package__selected-indicator">✓ Added to your list</div>
-        </article>
+${SERVICES_DATA.packages.map(renderPackageCard).join("\n\n")}
       </div>
 
       <!-- ===== EVERY PACKAGE INCLUDES ===== -->

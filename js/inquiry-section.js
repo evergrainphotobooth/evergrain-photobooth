@@ -16,26 +16,28 @@
 
   // All inter-page links use clean root-relative URLs; no depth math needed.
 
-  // Master data — keep in sync with packages.html + add-ons.html
+  // Master data — auto-generated from data/services.json by scripts/build-services.mjs
+  // CMS:INQUIRY_DATA:START
   const PACKAGES = [
-    { id: "candid", name: "The Candid", price: 600,  desc: "3-hour minimum · DSLR quality · unlimited digital · prints + gallery" },
-    { id: "moment", name: "The Moment", price: 750,  desc: "3-hour minimum · customizable templates · premium backdrop · custom screens" },
-    { id: "glam",   name: "The Glam",   price: 1050, desc: "4-hour minimum · premium props · B&W + color modes · two custom templates" }
+    { id: "candid", name: "The Candid", price: 600, desc: "3-hour minimum · DSLR quality · unlimited digital · prints + gallery" },
+    { id: "moment", name: "The Moment", price: 750, desc: "3-hour minimum · customizable templates · premium backdrop · custom screens" },
+    { id: "glam", name: "The Glam", price: 1050, desc: "4-hour minimum · premium props · B&W + color modes · two custom templates" }
   ];
 
   const ADDONS = [
-    { id: "welcome-screen",       name: "Custom Welcome / Tap-to-Start Screen",  price: 50,  desc: "Custom welcome screen guests see before their first photo" },
-    { id: "rear-display",         name: "Custom Rear Display / Branded Visuals", price: 50,  desc: "Looping slideshow or branded visual on the back of the booth" },
-    { id: "custom-template",      name: "Custom Photo Template",                 price: 100, desc: "One-of-a-kind photo strip layout designed around your event" },
-    { id: "additional-template",  name: "Additional Custom Photo Template",      price: 150, desc: "A second unique template design for the same event" },
-    { id: "bw-color-filter",  name: "B&W + Color Filter Set",                price: 100, desc: "Switch between modes at the booth, all night" },
-    { id: "glam-filter",      name: "Glam Filter",                           price: 150, desc: "Real-time skin-smoothing — softens blemishes, evens tone, whitens teeth" },
-    { id: "postcard-print",   name: "Postcard Print Upgrade (4×6)",          price: 50,  desc: "Larger, glossier, designed to be kept" },
-    { id: "premium-props",    name: "Premium Prop Bundle",                   price: 50,  desc: "Upgraded set of curated, on-trend, photogenic props" },
-    { id: "premium-backdrop", name: "Premium Backdrop",                      price: 50,  desc: "An upgrade from our standard library" },
-    { id: "extra-time",       name: "Extra Time",                            price: 150, desc: "Keep the energy going — add hours so nothing goes uncaptured" },
-    { id: "early-setup",      name: "Early Setup",                           price: 100, desc: "Get us on-site earlier than our standard 60–90 minute window" }
+    { id: "welcome-screen", name: "Custom Welcome / Tap-to-Start Screen", price: 50, desc: "Custom welcome screen guests see before their first photo" },
+    { id: "rear-display", name: "Custom Rear Display / Branded Visuals", price: 50, desc: "Looping slideshow or branded visual on the back of the booth" },
+    { id: "custom-template", name: "Custom Photo Template", price: 100, desc: "One-of-a-kind photo strip layout designed around your event" },
+    { id: "additional-template", name: "Additional Custom Photo Template", price: 150, desc: "A second unique template design for the same event" },
+    { id: "bw-color-filter", name: "B&W + Color Filter Set", price: 100, desc: "Switch between modes at the booth, all night" },
+    { id: "glam-filter", name: "Glam Filter", price: 150, desc: "Real-time skin-smoothing filter — softens blemishes, evens tone, whitens teeth" },
+    { id: "postcard-print", name: "Postcard Print Upgrade (4×6)", price: 50, desc: "Larger, glossier, designed to be kept" },
+    { id: "premium-props", name: "Premium Prop Bundle", price: 50, desc: "Upgraded set of curated, on-trend, photogenic props" },
+    { id: "premium-backdrop", name: "Premium Backdrop", price: 50, desc: "An upgrade from our standard library" },
+    { id: "extra-time", name: "Extra Time", price: 150, desc: "Keep the energy going — add hours so nothing goes uncaptured" },
+    { id: "early-setup", name: "Early Setup", price: 100, desc: "Get us on-site earlier than our standard 60–90 minute window" }
   ];
+  // CMS:INQUIRY_DATA:END
 
   const esc = (s) => String(s)
     .replace(/&/g, "&amp;")

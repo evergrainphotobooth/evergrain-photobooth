@@ -2,5 +2,12 @@
   "name": "evergrain-photobooth",
   "version": "1.0.0",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "build:services": "node scripts/build-services.mjs",
+    "build:areas": "node scripts/build-areas.mjs",
+    "build:seo": "node scripts/seo-insert.mjs && node scripts/generate-sitemap.mjs",
+    "build": "npm run build:services && npm run build:areas && npm run build:seo",
+    "vercel-build": "npm run build"
+  }
 }

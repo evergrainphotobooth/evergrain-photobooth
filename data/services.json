@@ -1,0 +1,194 @@
+{
+  "packages": [
+    {
+      "id": "candid",
+      "name": "The Candid",
+      "tagline": "A clean, classic photobooth — done right.",
+      "price": 600,
+      "priceDescription": "3-hour minimum · $150 / additional hour",
+      "shortDesc": "3-hour minimum · DSLR quality · unlimited digital · prints + gallery",
+      "features": [
+        "Handcrafted wooden, open-air photo booth",
+        "DSLR quality photos",
+        "Unlimited digital photos",
+        "Instant digital sharing (text, email, AirDrop, QR code)",
+        "Choice of 2×6 or 4×6 prints",
+        "Standard photo templates",
+        "Standard backdrop",
+        "Standard prop bundle",
+        "Custom felt letter board message",
+        "On-site attendant",
+        "Online gallery delivered after the event",
+        "Set-up & tear down included"
+      ],
+      "featured": false
+    },
+    {
+      "id": "moment",
+      "name": "The Moment",
+      "tagline": "Our most-booked configuration.",
+      "price": 750,
+      "priceDescription": "3-hour minimum · $150 / additional hour",
+      "shortDesc": "3-hour minimum · customizable templates · premium backdrop · custom screens",
+      "features": [
+        "Everything in The Candid",
+        "Customizable photo templates",
+        "Customizable rear screen display",
+        "Customizable tap-to-start screen",
+        "Premium backdrop",
+        "Premium prop bundle"
+      ],
+      "featured": true,
+      "featuredTag": "Most Popular"
+    },
+    {
+      "id": "glam",
+      "name": "The Glam",
+      "tagline": "A fully bespoke build, end to end.",
+      "price": 1050,
+      "priceDescription": "4-hour minimum · $100 / additional hour",
+      "shortDesc": "4-hour minimum · premium props · B&W + color modes · two custom templates",
+      "features": [
+        "Everything in The Moment",
+        "B&W Filter + color mode",
+        "2nd Customizable Photo Template",
+        "Glam Filter (skin smoothing & teeth whitening)"
+      ],
+      "featured": false
+    }
+  ],
+  "everyPackageIncludes": [
+    "Unlimited high-quality prints",
+    "Studio-quality lighting",
+    "Online gallery of all images",
+    "Instant sharing (text, email, QR)",
+    "Curated prop collection",
+    "Custom Felt Letter Board",
+    "Choice of backdrop",
+    "Dedicated booth attendants",
+    "Early arrival, stress-free setup + breakdown",
+    "Complimentary travel within 30 miles of Hollywood"
+  ],
+  "addonCategories": [
+    {
+      "id": "branded",
+      "label": "Branded Touch Points",
+      "layout": "full",
+      "addons": [
+        {
+          "id": "welcome-screen",
+          "name": "Custom Welcome / Tap-to-Start Screen",
+          "price": 50,
+          "priceMeta": "flat",
+          "description": "Custom welcome screen guests see before their first photo"
+        },
+        {
+          "id": "rear-display",
+          "name": "Custom Rear Display / Branded Visuals",
+          "price": 50,
+          "priceMeta": "flat",
+          "description": "Looping slideshow or branded visual on the back of the booth"
+        },
+        {
+          "id": "custom-template",
+          "name": "Custom Photo Template",
+          "price": 100,
+          "priceMeta": "flat",
+          "description": "One-of-a-kind photo strip layout designed around your event"
+        },
+        {
+          "id": "additional-template",
+          "name": "Additional Custom Photo Template",
+          "price": 150,
+          "priceMeta": "flat",
+          "description": "A second unique template design for the same event"
+        }
+      ]
+    },
+    {
+      "id": "filters",
+      "label": "Filters",
+      "layout": "full",
+      "addons": [
+        {
+          "id": "bw-color-filter",
+          "name": "B&W + Color Filter Set",
+          "price": 100,
+          "priceMeta": "flat",
+          "description": "Switch between modes at the booth, all night"
+        },
+        {
+          "id": "glam-filter",
+          "name": "Glam Filter",
+          "price": 150,
+          "priceMeta": "flat",
+          "description": "Real-time skin-smoothing filter — softens blemishes, evens tone, whitens teeth"
+        }
+      ]
+    },
+    {
+      "id": "prints",
+      "label": "Print Upgrades",
+      "layout": "trio",
+      "addons": [
+        {
+          "id": "postcard-print",
+          "name": "Postcard Print Upgrade (4×6)",
+          "displayName": "Postcard Print Upgrade (4 × 6)",
+          "price": 50,
+          "priceMeta": "flat",
+          "description": "Larger, glossier, designed to be kept"
+        }
+      ]
+    },
+    {
+      "id": "props",
+      "label": "Props",
+      "layout": "trio",
+      "addons": [
+        {
+          "id": "premium-props",
+          "name": "Premium Prop Bundle",
+          "price": 50,
+          "priceMeta": "flat",
+          "description": "Upgraded set of curated, on-trend, photogenic props"
+        }
+      ]
+    },
+    {
+      "id": "backdrops",
+      "label": "Backdrops",
+      "layout": "trio",
+      "addons": [
+        {
+          "id": "premium-backdrop",
+          "name": "Premium Backdrop",
+          "price": 50,
+          "priceMeta": "flat",
+          "description": "An upgrade from our standard library"
+        }
+      ]
+    },
+    {
+      "id": "event-flow",
+      "label": "Event Flow",
+      "layout": "full",
+      "addons": [
+        {
+          "id": "extra-time",
+          "name": "Extra Time",
+          "price": 150,
+          "priceMeta": "/ hour",
+          "description": "Keep the energy going — add hours so nothing goes uncaptured"
+        },
+        {
+          "id": "early-setup",
+          "name": "Early Setup",
+          "price": 100,
+          "priceMeta": "/ hour",
+          "description": "Get us on-site earlier than our standard 60–90 minute window"
+        }
+      ]
+    }
+  ]
+}
