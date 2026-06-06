@@ -555,3 +555,124 @@ button { font: inherit; cursor: pointer; }
   .admin-nav { flex-direction: row; flex-wrap: wrap; padding: 0; }
   .admin-nav__item { flex: 0 0 auto; }
 }
+
+/* =========================================================
+   Forms (General Information, Our Services)
+   ========================================================= */
+.admin-help {
+  font-size: 0.92rem;
+  color: var(--gray-500);
+  margin: 0 0 1.5rem;
+  max-width: 56ch;
+}
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.admin-form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.admin-form-field label {
+  font-family: var(--font-eyebrow);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+}
+.admin-form-field input,
+.admin-form-field textarea,
+.admin-form-field select {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  color: var(--char);
+  transition: border-color 180ms, box-shadow 180ms;
+}
+.admin-form-field input:focus,
+.admin-form-field textarea:focus,
+.admin-form-field select:focus {
+  outline: 0;
+  border-color: var(--evergreen);
+  box-shadow: 0 0 0 3px rgba(31, 67, 50, 0.12);
+}
+.admin-form-field textarea {
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.55;
+}
+.admin-form-hint {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Action bar (Save / Cancel) — sticks at bottom of form */
+.admin-form-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  background: var(--linen);
+  margin: 1.5rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.admin-form-status {
+  flex: 1;
+  font-size: 0.88rem;
+  color: var(--gray-600);
+}
+.admin-form-status.is-success { color: var(--evergreen); font-weight: 500; }
+.admin-form-status.is-error   { color: #b43c32; font-weight: 500; }
+
+/* Buttons */
+.admin-btn {
+  padding: 0.65rem 1.25rem;
+  font-family: var(--font-eyebrow);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: background-color 180ms, color 180ms, border-color 180ms, opacity 180ms;
+}
+.admin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.admin-btn--primary {
+  background: var(--evergreen);
+  color: var(--white);
+  border-color: var(--evergreen);
+}
+.admin-btn--primary:not(:disabled):hover {
+  background: var(--brass);
+  border-color: var(--brass);
+}
+.admin-btn--ghost {
+  background: transparent;
+  color: var(--gray-700);
+  border-color: var(--gray-300);
+}
+.admin-btn--ghost:not(:disabled):hover {
+  background: var(--white);
+  color: var(--evergreen);
+  border-color: var(--gray-400);
+}
+.admin-btn--danger {
+  background: transparent;
+  color: #b43c32;
+  border-color: rgba(180, 60, 50, 0.3);
+}
+.admin-btn--danger:not(:disabled):hover {
+  background: rgba(180, 60, 50, 0.08);
+  border-color: #b43c32;
+}

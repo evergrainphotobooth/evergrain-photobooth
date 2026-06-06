@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Settings — Evergrain CMS</title>
+<title>General Information — Evergrain CMS</title>
 <meta name="robots" content="noindex, nofollow" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,35 +13,196 @@
 </head>
 <body>
 
-<div data-admin-shell data-page="settings" data-title="General Settings"></div>
+<div data-admin-shell data-page="settings" data-title="General Information"></div>
 
 <div data-admin-page-content hidden>
 
+  <form id="gi-form" autocomplete="on" novalidate>
+
+    <p class="admin-help">
+      Edit the contact info and social profile links that appear in every page's footer.
+      Saving commits to GitHub and triggers a redeploy — changes go live in roughly 30 seconds.
+    </p>
+
     <div class="admin-card">
-      <h2 class="admin-card__title">Phase 2 — coming soon</h2>
-      <p style="margin: 0 0 1rem; font-size: 0.95rem; color: var(--gray-700);">
-        Editing contact info and social links from the CMS requires moving those values out of the HTML files and into Supabase, then injecting them at runtime on every page. That's Phase 2 work — about 2 hours.
-      </p>
-      <p style="margin: 0 0 0; font-size: 0.95rem; color: var(--gray-700);">
-        Until then, to update any of the below, ping me with the new values and I'll commit them across the 112 HTML files in one go:
-      </p>
-
-      <div class="detail-section-title">Contact</div>
-      <div class="detail-row"><div class="detail-row__label">Email</div><div class="detail-row__value">evergrainphotobooth@gmail.com</div></div>
-      <div class="detail-row"><div class="detail-row__label">Phone</div><div class="detail-row__value">(626) 560-8330</div></div>
-      <div class="detail-row"><div class="detail-row__label">Location</div><div class="detail-row__value">Los Angeles, CA</div></div>
-
-      <div class="detail-section-title">Social</div>
-      <div class="detail-row"><div class="detail-row__label">Instagram</div><div class="detail-row__value"><a href="https://www.instagram.com/evergrainphotobooth/" target="_blank" rel="noopener">@evergrainphotobooth</a></div></div>
-      <div class="detail-row"><div class="detail-row__label">TikTok</div><div class="detail-row__value"><a href="https://www.tiktok.com/@evergrainphotobooth" target="_blank" rel="noopener">@evergrainphotobooth</a></div></div>
-      <div class="detail-row"><div class="detail-row__label">Facebook</div><div class="detail-row__value"><a href="https://www.facebook.com/evergrainphotobooth/" target="_blank" rel="noopener">/evergrainphotobooth</a></div></div>
-      <div class="detail-row"><div class="detail-row__label">Pinterest</div><div class="detail-row__value"><a href="https://www.pinterest.com/evergrainphotobooth/" target="_blank" rel="noopener">/evergrainphotobooth</a></div></div>
-      <div class="detail-row"><div class="detail-row__label">Yelp</div><div class="detail-row__value"><a href="https://www.yelp.com/biz/evergrain-photobooth-los-angeles" target="_blank" rel="noopener">Yelp listing</a></div></div>
+      <h2 class="admin-card__title">Contact</h2>
+      <div class="admin-form-grid">
+        <div class="admin-form-field">
+          <label for="gi-email">Email</label>
+          <input type="email" id="gi-email" name="contact.email" placeholder="hello@evergrainphotobooth.com" />
+          <p class="admin-form-hint">Shown as the mailto: link in the footer.</p>
+        </div>
+        <div class="admin-form-field">
+          <label for="gi-phone">Phone (display format)</label>
+          <input type="tel" id="gi-phone" name="contact.phone" placeholder="(626) 560-8330" />
+          <p class="admin-form-hint">The number as customers see it.</p>
+        </div>
+        <div class="admin-form-field">
+          <label for="gi-phone-e164">Phone (E.164, for tel: link)</label>
+          <input type="tel" id="gi-phone-e164" name="contact.phoneE164" placeholder="+16265608330" />
+          <p class="admin-form-hint">International format. Used in the underlying tel: href so clicks place a call correctly.</p>
+        </div>
+        <div class="admin-form-field">
+          <label for="gi-location">Location</label>
+          <input type="text" id="gi-location" name="contact.location" placeholder="Los Angeles, CA" />
+        </div>
+      </div>
     </div>
+
+    <div class="admin-card">
+      <h2 class="admin-card__title">Social Profiles</h2>
+      <div class="admin-form-grid">
+        <div class="admin-form-field">
+          <label for="gi-instagram">Instagram URL</label>
+          <input type="url" id="gi-instagram" name="social.instagram" placeholder="https://www.instagram.com/…/" />
+        </div>
+        <div class="admin-form-field">
+          <label for="gi-yelp">Yelp URL</label>
+          <input type="url" id="gi-yelp" name="social.yelp" placeholder="https://www.yelp.com/biz/…" />
+        </div>
+        <div class="admin-form-field">
+          <label for="gi-facebook">Facebook URL</label>
+          <input type="url" id="gi-facebook" name="social.facebook" placeholder="https://www.facebook.com/…/" />
+        </div>
+        <div class="admin-form-field">
+          <label for="gi-tiktok">TikTok URL</label>
+          <input type="url" id="gi-tiktok" name="social.tiktok" placeholder="https://www.tiktok.com/@…" />
+        </div>
+        <div class="admin-form-field">
+          <label for="gi-pinterest">Pinterest URL</label>
+          <input type="url" id="gi-pinterest" name="social.pinterest" placeholder="https://www.pinterest.com/…/" />
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2 class="admin-card__title">Footer Tagline</h2>
+      <div class="admin-form-field">
+        <textarea id="gi-tagline" name="tagline" rows="2" placeholder="A photobooth experience built around the camera…"></textarea>
+        <p class="admin-form-hint">Short tagline below the logo in the footer.</p>
+      </div>
+    </div>
+
+    <div class="admin-form-actions">
+      <span class="admin-form-status" data-form-status></span>
+      <button type="button" class="admin-btn admin-btn--ghost" data-cancel>Cancel</button>
+      <button type="submit" class="admin-btn admin-btn--primary" data-save>Save Changes</button>
+    </div>
+
+  </form>
 
 </div>
 
-<script src="/admin/admin-shell.js"></script>
+<script>
+  const form = document.querySelector("#gi-form");
+  const statusEl = document.querySelector("[data-form-status]");
+  const saveBtn = document.querySelector("[data-save]");
+  const cancelBtn = document.querySelector("[data-cancel]");
+
+  let original = null; // pristine settings from server
+
+  /* ---------- Load ---------- */
+  async function load() {
+    statusEl.textContent = "Loading…";
+    statusEl.className = "admin-form-status";
+    const r = await fetch("/api/admin/settings");
+    if (!r.ok) {
+      statusEl.textContent = "Couldn't load settings (" + r.status + ").";
+      statusEl.className = "admin-form-status is-error";
+      return;
+    }
+    const { settings } = await r.json();
+    original = JSON.parse(JSON.stringify(settings));
+    fill(settings);
+    statusEl.textContent = "";
+    updateDirtyState();
+  }
+
+  function fill(s) {
+    document.getElementById("gi-email").value      = s.contact?.email       ?? "";
+    document.getElementById("gi-phone").value      = s.contact?.phone       ?? "";
+    document.getElementById("gi-phone-e164").value = s.contact?.phoneE164   ?? "";
+    document.getElementById("gi-location").value   = s.contact?.location    ?? "";
+    document.getElementById("gi-instagram").value  = s.social?.instagram    ?? "";
+    document.getElementById("gi-yelp").value       = s.social?.yelp         ?? "";
+    document.getElementById("gi-facebook").value   = s.social?.facebook     ?? "";
+    document.getElementById("gi-tiktok").value     = s.social?.tiktok       ?? "";
+    document.getElementById("gi-pinterest").value  = s.social?.pinterest    ?? "";
+    document.getElementById("gi-tagline").value    = s.tagline              ?? "";
+  }
+
+  function read() {
+    return {
+      contact: {
+        email:     document.getElementById("gi-email").value.trim(),
+        phone:     document.getElementById("gi-phone").value.trim(),
+        phoneE164: document.getElementById("gi-phone-e164").value.trim(),
+        location:  document.getElementById("gi-location").value.trim(),
+      },
+      social: {
+        instagram: document.getElementById("gi-instagram").value.trim(),
+        yelp:      document.getElementById("gi-yelp").value.trim(),
+        facebook:  document.getElementById("gi-facebook").value.trim(),
+        tiktok:    document.getElementById("gi-tiktok").value.trim(),
+        pinterest: document.getElementById("gi-pinterest").value.trim(),
+      },
+      tagline: document.getElementById("gi-tagline").value.trim(),
+    };
+  }
+
+  /* ---------- Dirty state ---------- */
+  function isDirty() {
+    return original && JSON.stringify(read()) !== JSON.stringify(original);
+  }
+  function updateDirtyState() {
+    const dirty = isDirty();
+    saveBtn.disabled = !dirty;
+    cancelBtn.disabled = !dirty;
+  }
+  form.addEventListener("input", updateDirtyState);
+  form.addEventListener("change", updateDirtyState);
+
+  /* ---------- Save / Cancel ---------- */
+  cancelBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (!original) return;
+    fill(original);
+    updateDirtyState();
+    statusEl.textContent = "Reverted to last saved.";
+    statusEl.className = "admin-form-status";
+    setTimeout(() => { statusEl.textContent = ""; }, 2500);
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!isDirty()) return;
+    saveBtn.disabled = true; cancelBtn.disabled = true;
+    statusEl.textContent = "Saving…";
+    statusEl.className = "admin-form-status";
+
+    const settings = read();
+    try {
+      const r = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ settings })
+      });
+      const body = await r.json();
+      if (!r.ok) throw new Error(body.error || "Save failed");
+      original = JSON.parse(JSON.stringify(body.settings || settings));
+      statusEl.textContent = body.message || "Saved. Republishing…";
+      statusEl.className = "admin-form-status is-success";
+    } catch (err) {
+      statusEl.textContent = "Error: " + (err.message || err);
+      statusEl.className = "admin-form-status is-error";
+    } finally {
+      updateDirtyState();
+    }
+  });
+
+  /* ---------- Init ---------- */
+  load();
+</script>
 
 </body>
 </html>

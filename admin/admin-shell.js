@@ -13,11 +13,12 @@
 
   // Nav items — keep in sync across pages
   const NAV = [
-    { id: "dashboard", label: "Dashboard", href: "/admin/dashboard", icon: iconDashboard() },
-    { id: "pages",     label: "Pages",     href: "/admin/pages",     icon: iconPages() },
-    { id: "assets",    label: "Assets",    href: "/admin/assets",    icon: iconAssets() },
-    { id: "inquiries", label: "Inquiries", href: "/admin/inquiries", icon: iconInquiries() },
-    { id: "settings",  label: "Settings",  href: "/admin/settings",  icon: iconSettings() },
+    { id: "dashboard", label: "Dashboard",            href: "/admin/dashboard", icon: iconDashboard() },
+    { id: "pages",     label: "Pages",                href: "/admin/pages",     icon: iconPages() },
+    { id: "services",  label: "Our Services",         href: "/admin/services",  icon: iconServices() },
+    { id: "assets",    label: "Assets",               href: "/admin/assets",    icon: iconAssets() },
+    { id: "inquiries", label: "Inquiries",            href: "/admin/inquiries", icon: iconInquiries() },
+    { id: "settings",  label: "General Information",  href: "/admin/settings",  icon: iconSettings() },
   ];
 
   const navHtml = NAV.map(n => `
@@ -90,5 +91,8 @@
   }
   function iconSettings() {
     return `<svg class="admin-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
+  }
+  function iconServices() {
+    return `<svg class="admin-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7L12 3 4 7v10l8 4 8-4V7z"/><path d="M12 12L4 7"/><path d="M12 12l8-5"/><path d="M12 12v9"/></svg>`;
   }
 })();
