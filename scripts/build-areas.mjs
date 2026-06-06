@@ -20,7 +20,7 @@ const data = JSON.parse(readFileSync(join(ROOT, "data", "areas.json"), "utf8"));
 
 // -------- Shared chunks (navbar, footer, cart aside, marquee placeholder) --------
 
-const head = (title, description, depth) => {
+const head = (title, description, depth, canonicalPath) => {
   const up = "../".repeat(depth);
   return `<!doctype html>
 <html lang="en">
@@ -35,7 +35,16 @@ const head = (title, description, depth) => {
 <link rel="stylesheet" href="${up}css/style.css" />
 <link rel="stylesheet" href="${up}css/components.css" />
 <link rel="stylesheet" href="${up}css/pages.css" />
-<link rel="icon" type="image/png" href="${up}assets/logos/FullLogo_Green.png" />
+<link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
+<link rel="canonical" href="https://evergrainphotobooth.com${canonicalPath}" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N7ERDKCDX7"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-N7ERDKCDX7');
+</script>
 </head>
 <body>
 
@@ -317,7 +326,7 @@ function buildIndex() {
           </div>
         </a>`).join("");
 
-  const html = head("Areas We Serve — Evergrain Photobooth", "Luxury DSLR photobooth rental across Greater Los Angeles, Orange County, and the Ventura edge. See all the neighborhoods we serve.", depth)
+  const html = head("Areas We Serve — Evergrain Photobooth", "Luxury DSLR photobooth rental across Greater Los Angeles, Orange County, and the Ventura edge. See all the neighborhoods we serve.", depth, "/areas-we-serve")
     + header(depth)
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
@@ -368,7 +377,7 @@ function buildRegion(region) {
           </div>
         </a>`).join("");
 
-  const html = head(`${region.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental across ${region.name}. ${region.tagline}`, depth)
+  const html = head(`${region.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental across ${region.name}. ${region.tagline}`, depth, `/areas-we-serve/${region.slug}`)
     + header(depth)
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
@@ -421,7 +430,7 @@ function buildNeighborhood(region, n) {
     { label: n.name }
   ], "breadcrumb--hero");
 
-  const html = head(`${n.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental in ${n.name}, ${region.name}. ${n.blurb}`, depth)
+  const html = head(`${n.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental in ${n.name}, ${region.name}. ${n.blurb}`, depth, `/areas-we-serve/${region.slug}/${n.slug}`)
     + header(depth)
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">

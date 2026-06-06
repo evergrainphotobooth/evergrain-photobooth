@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Don't index admin panel, experiments, or API endpoints
+Disallow: /admin/
+Disallow: /experiments/
+Disallow: /api/
+
+Sitemap: https://evergrainphotobooth.com/sitemap.xml
