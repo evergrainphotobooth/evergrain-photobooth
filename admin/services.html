@@ -10,6 +10,71 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/admin/admin.css" />
 <link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
+<style>
+  /* Page-specific styles for the services editor */
+  .svc-package { position: relative; }
+  .svc-package__head {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .svc-package__title { font-family: var(--font-display); font-size: 1.4rem; margin: 0; color: var(--evergreen); }
+  .svc-package__featured-badge {
+    font-family: var(--font-eyebrow); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--brass); background: rgba(164, 122, 42, 0.12); padding: 0.25rem 0.75rem; border-radius: 999px;
+  }
+  .feature-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
+  .feature-row, .addon-row, .every-row {
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .feature-row input, .every-row input { flex: 1; }
+  .row-remove {
+    background: transparent; border: 1px solid var(--gray-300); color: var(--gray-500);
+    width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.2rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background-color 150ms, color 150ms, border-color 150ms;
+    flex: 0 0 auto;
+  }
+  .row-remove:hover { background: rgba(180, 60, 50, 0.08); color: #b43c32; border-color: #b43c32; }
+  .row-add {
+    background: transparent; border: 1.5px dashed var(--gray-300); color: var(--gray-600);
+    padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+    margin-top: 0.5rem; transition: border-color 150ms, color 150ms, background-color 150ms;
+    font-family: var(--font-eyebrow); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600;
+  }
+  .row-add:hover { border-color: var(--evergreen); color: var(--evergreen); background: rgba(31, 67, 50, 0.04); }
+
+  .svc-addon {
+    background: rgba(244, 237, 224, 0.4);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .svc-addon__head {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;
+  }
+  .svc-addon__title { font-family: var(--font-display); font-style: italic; font-size: 1rem; margin: 0; color: var(--char); flex: 1; }
+  .svc-category {
+    border-left: 3px solid var(--brass); padding-left: 1rem; margin-bottom: 1.5rem;
+  }
+  .svc-category__head {
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;
+  }
+  .svc-category__label-input {
+    font-family: var(--font-display); font-size: 1.15rem; font-weight: 400; color: var(--char);
+    background: transparent; border: 0; border-bottom: 1.5px dashed var(--gray-300);
+    padding: 0.25rem 0; flex: 1; max-width: 320px;
+  }
+  .svc-category__label-input:focus { outline: 0; border-bottom-color: var(--evergreen); }
+  .svc-category__layout {
+    font-family: var(--font-eyebrow); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray-500); background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 4px;
+    border: 1px solid var(--gray-200);
+  }
+  .field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .field-pair--tight { grid-template-columns: 1.5fr 0.6fr 0.6fr; }
+  @media (max-width: 700px) { .field-pair, .field-pair--tight { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
 
@@ -17,37 +82,374 @@
 
 <div data-admin-page-content hidden>
 
+  <p class="admin-help">
+    Edit the three packages and all add-ons. Saving regenerates packages.html,
+    add-ons.html, and the inquiry form's data — all four files commit atomically.
+    Changes are live in ~30 seconds.
+  </p>
+
+  <!-- ===== PACKAGES ===== -->
   <div class="admin-card">
-    <h2 class="admin-card__title">Coming in the next session</h2>
-    <p class="admin-help" style="margin-bottom: 1rem;">
-      The Our Services editor is the next thing to build. When it ships, you'll be able to edit:
-    </p>
-    <ul style="margin: 0 0 1.5rem 1.2rem; padding: 0; color: var(--gray-700); font-size: 0.95rem; line-height: 1.7;">
-      <li><strong>Packages</strong> — name, tagline, price, price description, feature list (add/remove rows) for each of the 3 tiers</li>
-      <li><strong>Add-Ons</strong> — editable category labels, dynamic add/remove of add-ons, each with name + price + "flat" label + description</li>
-    </ul>
-    <p class="admin-help" style="margin-bottom: 0;">
-      All changes will save to <code>data/services.json</code> in git, trigger a Vercel rebuild, and propagate to:
-      packages.html, add-ons.html, the inquiry form's package dropdown + add-on checkboxes, the Package List cart, and all 103 city pages.
-    </p>
+    <h2 class="admin-card__title">Packages</h2>
+    <div id="packages-container"></div>
   </div>
 
+  <!-- ===== EVERY PACKAGE INCLUDES ===== -->
   <div class="admin-card">
-    <h2 class="admin-card__title">Current data (read-only)</h2>
-    <p class="admin-help" style="margin-bottom: 1rem;">
-      Source of truth is <code>data/services.json</code> in the repo. Until the editor ships, edits to this file commit-then-rebuild the same way the editor will once it's wired up.
+    <h2 class="admin-card__title">Every Package Includes</h2>
+    <p class="admin-form-hint" style="margin-bottom: 0.75rem;">
+      The bullet list shown below the 3 package cards on the Packages page.
     </p>
-    <pre id="services-preview" style="max-height: 480px; overflow: auto; background: var(--white); border: 1px solid var(--gray-200); border-radius: 6px; padding: 1rem; font-size: 0.82rem; line-height: 1.5; margin: 0;">Loading…</pre>
+    <div id="every-package-list"></div>
+    <button type="button" class="row-add" data-add-every>+ Add item</button>
+  </div>
+
+  <!-- ===== ADD-ONS ===== -->
+  <div class="admin-card">
+    <h2 class="admin-card__title">Add-Ons</h2>
+    <p class="admin-form-hint" style="margin-bottom: 1.25rem;">
+      Edit category labels and the add-ons inside each. Layout is set per category
+      (<code>full</code> = full-width section; <code>trio</code> = grouped 3-column).
+    </p>
+    <div id="addons-container"></div>
+  </div>
+
+  <!-- ===== Action bar ===== -->
+  <div class="admin-form-actions">
+    <span class="admin-form-status" data-form-status></span>
+    <button type="button" class="admin-btn admin-btn--ghost" data-cancel>Cancel</button>
+    <button type="button" class="admin-btn admin-btn--primary" data-save>Save Changes</button>
   </div>
 
 </div>
 
 <script>
-  fetch("/data/services.json").then(r => r.json()).then(data => {
-    document.getElementById("services-preview").textContent = JSON.stringify(data, null, 2);
-  }).catch(() => {
-    document.getElementById("services-preview").textContent = "Couldn't load /data/services.json";
+/* =========================================================
+   State + render
+   ========================================================= */
+let original = null;
+let state = null;
+const statusEl   = () => document.querySelector("[data-form-status]");
+const saveBtn    = () => document.querySelector("[data-save]");
+const cancelBtn  = () => document.querySelector("[data-cancel]");
+
+const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const slug = (s) => String(s).toLowerCase().replace(/[^\w]+/g, "-").replace(/(^-|-$)/g, "");
+
+/* ---------- Load ---------- */
+async function load() {
+  statusEl().textContent = "Loading…";
+  statusEl().className = "admin-form-status";
+  const r = await fetch("/api/admin/services");
+  if (!r.ok) {
+    statusEl().textContent = "Couldn't load services (" + r.status + ").";
+    statusEl().className = "admin-form-status is-error";
+    return;
+  }
+  const { services } = await r.json();
+  original = JSON.parse(JSON.stringify(services));
+  state = JSON.parse(JSON.stringify(services));
+  render();
+  statusEl().textContent = "";
+  updateDirty();
+}
+
+/* ---------- Render ---------- */
+function render() {
+  renderPackages();
+  renderEveryPackage();
+  renderAddons();
+}
+
+function renderPackages() {
+  const c = document.getElementById("packages-container");
+  c.innerHTML = state.packages.map((p, pIdx) => `
+    <div class="svc-package" style="${pIdx > 0 ? "border-top: 1px solid var(--gray-200); padding-top: 1.5rem; margin-top: 1.5rem;" : ""}">
+      <div class="svc-package__head">
+        <h3 class="svc-package__title">${esc(p.name || "Untitled Package")}</h3>
+        ${p.featured ? `<span class="svc-package__featured-badge">${esc(p.featuredTag || "Featured")}</span>` : ""}
+      </div>
+      <div class="admin-form-grid">
+        <div class="admin-form-field">
+          <label>Name</label>
+          <input type="text" data-pkg-name="${pIdx}" value="${esc(p.name)}" />
+        </div>
+        <div class="admin-form-field">
+          <label>Tagline</label>
+          <input type="text" data-pkg-tagline="${pIdx}" value="${esc(p.tagline)}" />
+        </div>
+        <div class="admin-form-field">
+          <label>Price (USD)</label>
+          <input type="number" min="0" step="50" data-pkg-price="${pIdx}" value="${p.price}" />
+        </div>
+        <div class="admin-form-field">
+          <label>Price Description</label>
+          <input type="text" data-pkg-price-desc="${pIdx}" value="${esc(p.priceDescription)}" placeholder="e.g. 3-hour minimum · $150 / additional hour" />
+        </div>
+      </div>
+      <div class="admin-form-field" style="margin-top: 1rem;">
+        <label>Short Description (for cart + list)</label>
+        <input type="text" data-pkg-short="${pIdx}" value="${esc(p.shortDesc)}" />
+      </div>
+
+      <div class="admin-form-field" style="margin-top: 1rem;">
+        <label>Features</label>
+        <div class="feature-list" data-pkg-features="${pIdx}">
+          ${(p.features || []).map((f, fIdx) => `
+            <div class="feature-row">
+              <input type="text" data-feature-input="${pIdx}-${fIdx}" value="${esc(f)}" />
+              <button type="button" class="row-remove" data-remove-feature="${pIdx}-${fIdx}" aria-label="Remove">×</button>
+            </div>
+          `).join("")}
+        </div>
+        <button type="button" class="row-add" data-add-feature="${pIdx}">+ Add feature</button>
+      </div>
+    </div>
+  `).join("");
+
+  bindPackageEvents();
+}
+
+function bindPackageEvents() {
+  document.querySelectorAll("[data-pkg-name]").forEach(el => {
+    el.addEventListener("input", e => {
+      const i = +e.target.dataset.pkgName;
+      state.packages[i].name = e.target.value;
+      // re-render only the title — full re-render is overkill
+      const titleEl = el.closest(".svc-package").querySelector(".svc-package__title");
+      if (titleEl) titleEl.textContent = e.target.value || "Untitled Package";
+      updateDirty();
+    });
   });
+  document.querySelectorAll("[data-pkg-tagline]").forEach(el => {
+    el.addEventListener("input", e => { state.packages[+e.target.dataset.pkgTagline].tagline = e.target.value; updateDirty(); });
+  });
+  document.querySelectorAll("[data-pkg-price]").forEach(el => {
+    el.addEventListener("input", e => { state.packages[+e.target.dataset.pkgPrice].price = Number(e.target.value); updateDirty(); });
+  });
+  document.querySelectorAll("[data-pkg-price-desc]").forEach(el => {
+    el.addEventListener("input", e => { state.packages[+e.target.dataset.pkgPriceDesc].priceDescription = e.target.value; updateDirty(); });
+  });
+  document.querySelectorAll("[data-pkg-short]").forEach(el => {
+    el.addEventListener("input", e => { state.packages[+e.target.dataset.pkgShort].shortDesc = e.target.value; updateDirty(); });
+  });
+  document.querySelectorAll("[data-feature-input]").forEach(el => {
+    el.addEventListener("input", e => {
+      const [p, f] = e.target.dataset.featureInput.split("-").map(Number);
+      state.packages[p].features[f] = e.target.value;
+      updateDirty();
+    });
+  });
+  document.querySelectorAll("[data-remove-feature]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const [p, f] = e.target.dataset.removeFeature.split("-").map(Number);
+      state.packages[p].features.splice(f, 1);
+      renderPackages();
+      updateDirty();
+    });
+  });
+  document.querySelectorAll("[data-add-feature]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const p = +e.target.dataset.addFeature;
+      state.packages[p].features.push("");
+      renderPackages();
+      // focus the new input
+      const inputs = document.querySelectorAll(`[data-feature-input^="${p}-"]`);
+      if (inputs.length) inputs[inputs.length - 1].focus();
+      updateDirty();
+    });
+  });
+}
+
+function renderEveryPackage() {
+  const c = document.getElementById("every-package-list");
+  state.everyPackageIncludes = state.everyPackageIncludes || [];
+  c.innerHTML = state.everyPackageIncludes.map((item, i) => `
+    <div class="every-row" style="margin-bottom: 0.5rem;">
+      <input type="text" data-every-input="${i}" value="${esc(item)}" />
+      <button type="button" class="row-remove" data-remove-every="${i}" aria-label="Remove">×</button>
+    </div>
+  `).join("");
+
+  document.querySelectorAll("[data-every-input]").forEach(el => {
+    el.addEventListener("input", e => { state.everyPackageIncludes[+e.target.dataset.everyInput] = e.target.value; updateDirty(); });
+  });
+  document.querySelectorAll("[data-remove-every]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      state.everyPackageIncludes.splice(+e.target.dataset.removeEvery, 1);
+      renderEveryPackage();
+      updateDirty();
+    });
+  });
+}
+document.querySelector("[data-add-every]")?.addEventListener("click", () => {
+  state.everyPackageIncludes = state.everyPackageIncludes || [];
+  state.everyPackageIncludes.push("");
+  renderEveryPackage();
+  const inputs = document.querySelectorAll("[data-every-input]");
+  if (inputs.length) inputs[inputs.length - 1].focus();
+  updateDirty();
+});
+
+function renderAddons() {
+  const c = document.getElementById("addons-container");
+  c.innerHTML = state.addonCategories.map((cat, cIdx) => `
+    <div class="svc-category">
+      <div class="svc-category__head">
+        <input type="text" class="svc-category__label-input" data-cat-label="${cIdx}" value="${esc(cat.label)}" />
+        <span class="svc-category__layout">${esc(cat.layout || "full")}</span>
+      </div>
+      <div data-cat-addons="${cIdx}">
+        ${(cat.addons || []).map((a, aIdx) => renderAddonEditor(cIdx, aIdx, a)).join("")}
+      </div>
+      <button type="button" class="row-add" data-add-addon="${cIdx}">+ Add add-on to ${esc(cat.label)}</button>
+    </div>
+  `).join("");
+
+  bindAddonEvents();
+}
+
+function renderAddonEditor(cIdx, aIdx, a) {
+  return `
+    <div class="svc-addon">
+      <div class="svc-addon__head">
+        <h4 class="svc-addon__title">${esc(a.name || "New add-on")}</h4>
+        <button type="button" class="row-remove" data-remove-addon="${cIdx}-${aIdx}" aria-label="Remove">×</button>
+      </div>
+      <div class="field-pair--tight" style="display:grid;grid-template-columns:1.6fr 0.6fr 0.6fr;gap:0.75rem;">
+        <div class="admin-form-field"><label>Name</label>
+          <input type="text" data-addon-name="${cIdx}-${aIdx}" value="${esc(a.name)}" />
+        </div>
+        <div class="admin-form-field"><label>Price (USD)</label>
+          <input type="number" min="0" step="25" data-addon-price="${cIdx}-${aIdx}" value="${a.price}" />
+        </div>
+        <div class="admin-form-field"><label>Price Meta</label>
+          <input type="text" data-addon-meta="${cIdx}-${aIdx}" value="${esc(a.priceMeta)}" placeholder="flat or / hour" />
+        </div>
+      </div>
+      <div class="admin-form-field" style="margin-top: 0.75rem;">
+        <label>Description</label>
+        <input type="text" data-addon-desc="${cIdx}-${aIdx}" value="${esc(a.description)}" />
+      </div>
+    </div>
+  `;
+}
+
+function bindAddonEvents() {
+  document.querySelectorAll("[data-cat-label]").forEach(el => {
+    el.addEventListener("input", e => {
+      const i = +e.target.dataset.catLabel;
+      state.addonCategories[i].label = e.target.value;
+      // update the "Add add-on to <name>" button label
+      const btn = el.closest(".svc-category").querySelector("[data-add-addon]");
+      if (btn) btn.textContent = "+ Add add-on to " + (e.target.value || "category");
+      updateDirty();
+    });
+  });
+  document.querySelectorAll("[data-addon-name]").forEach(el => {
+    el.addEventListener("input", e => {
+      const [c, a] = e.target.dataset.addonName.split("-").map(Number);
+      state.addonCategories[c].addons[a].name = e.target.value;
+      // keep title preview in sync
+      const titleEl = el.closest(".svc-addon").querySelector(".svc-addon__title");
+      if (titleEl) titleEl.textContent = e.target.value || "New add-on";
+      updateDirty();
+    });
+  });
+  document.querySelectorAll("[data-addon-price]").forEach(el => {
+    el.addEventListener("input", e => {
+      const [c, a] = e.target.dataset.addonPrice.split("-").map(Number);
+      state.addonCategories[c].addons[a].price = Number(e.target.value);
+      updateDirty();
+    });
+  });
+  document.querySelectorAll("[data-addon-meta]").forEach(el => {
+    el.addEventListener("input", e => {
+      const [c, a] = e.target.dataset.addonMeta.split("-").map(Number);
+      state.addonCategories[c].addons[a].priceMeta = e.target.value;
+      updateDirty();
+    });
+  });
+  document.querySelectorAll("[data-addon-desc]").forEach(el => {
+    el.addEventListener("input", e => {
+      const [c, a] = e.target.dataset.addonDesc.split("-").map(Number);
+      state.addonCategories[c].addons[a].description = e.target.value;
+      updateDirty();
+    });
+  });
+  document.querySelectorAll("[data-remove-addon]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const [c, a] = e.target.dataset.removeAddon.split("-").map(Number);
+      state.addonCategories[c].addons.splice(a, 1);
+      renderAddons();
+      updateDirty();
+    });
+  });
+  document.querySelectorAll("[data-add-addon]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const c = +e.target.dataset.addAddon;
+      const existing = state.addonCategories[c].addons;
+      // Generate a unique id based on category + index
+      const baseId = state.addonCategories[c].id + "-new-" + Date.now().toString(36).slice(-4);
+      existing.push({
+        id: baseId,
+        name: "New add-on",
+        price: 0,
+        priceMeta: "flat",
+        description: ""
+      });
+      renderAddons();
+      updateDirty();
+    });
+  });
+}
+
+/* ---------- Dirty state ---------- */
+function isDirty() { return original && JSON.stringify(state) !== JSON.stringify(original); }
+function updateDirty() {
+  const dirty = isDirty();
+  if (saveBtn()) saveBtn().disabled = !dirty;
+  if (cancelBtn()) cancelBtn().disabled = !dirty;
+}
+
+/* ---------- Save / Cancel ---------- */
+document.querySelector("[data-cancel]")?.addEventListener("click", () => {
+  if (!original) return;
+  state = JSON.parse(JSON.stringify(original));
+  render();
+  statusEl().textContent = "Reverted to last saved.";
+  statusEl().className = "admin-form-status";
+  setTimeout(() => { statusEl().textContent = ""; }, 2500);
+  updateDirty();
+});
+
+document.querySelector("[data-save]")?.addEventListener("click", async () => {
+  if (!isDirty()) return;
+  saveBtn().disabled = true; cancelBtn().disabled = true;
+  statusEl().textContent = "Saving + regenerating…";
+  statusEl().className = "admin-form-status";
+
+  try {
+    const r = await fetch("/api/admin/services", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ services: state })
+    });
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.error || "Save failed");
+    original = JSON.parse(JSON.stringify(state));
+    statusEl().textContent = body.message || "Saved.";
+    statusEl().className = "admin-form-status is-success";
+  } catch (err) {
+    statusEl().textContent = "Error: " + (err.message || err);
+    statusEl().className = "admin-form-status is-error";
+  } finally {
+    updateDirty();
+  }
+});
+
+/* ---------- Init ---------- */
+load();
 </script>
 
 <script src="/admin/admin-shell.js"></script>

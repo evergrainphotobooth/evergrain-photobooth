@@ -68,3 +68,87 @@ export async function putJson(path, data, sha, message) {
   const content = JSON.stringify(data, null, 2) + "\n";
   return putFile(path, content, sha, message);
 }
+
+/* Commit MULTIPLE files atomically in a single commit (Tree API).
+   `files` = [{ path, content }, ...]
+   Returns the new commit SHA. */
+export async function commitMultiple(files, message) {
+  const headers = authHeaders();
+  const json = { ...headers, "Content-Type": "application/json" };
+
+  // 1. Get latest commit SHA on the branch
+  const refRes = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/git/refs/heads/${BRANCH}`,
+    { headers }
+  );
+  if (!refRes.ok) throw new Error(`Get ref failed: ${await refRes.text()}`);
+  const latestCommitSha = (await refRes.json()).object.sha;
+
+  // 2. Get base tree SHA from that commit
+  const commitRes = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/git/commits/${latestCommitSha}`,
+    { headers }
+  );
+  if (!commitRes.ok) throw new Error(`Get commit failed: ${await commitRes.text()}`);
+  const baseTreeSha = (await commitRes.json()).tree.sha;
+
+  // 3. Create a blob for each file, in parallel
+  const blobs = await Promise.all(
+    files.map(async (f) => {
+      const r = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/git/blobs`,
+        {
+          method: "POST",
+          headers: json,
+          body: JSON.stringify({
+            content: Buffer.from(f.content, "utf8").toString("base64"),
+            encoding: "base64",
+          }),
+        }
+      );
+      if (!r.ok) throw new Error(`Blob ${f.path}: ${await r.text()}`);
+      return { path: f.path, mode: "100644", type: "blob", sha: (await r.json()).sha };
+    })
+  );
+
+  // 4. Create a new tree referencing those blobs
+  const treeRes = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/git/trees`,
+    {
+      method: "POST",
+      headers: json,
+      body: JSON.stringify({ base_tree: baseTreeSha, tree: blobs }),
+    }
+  );
+  if (!treeRes.ok) throw new Error(`Create tree: ${await treeRes.text()}`);
+  const newTreeSha = (await treeRes.json()).sha;
+
+  // 5. Create the commit
+  const newCommitRes = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/git/commits`,
+    {
+      method: "POST",
+      headers: json,
+      body: JSON.stringify({
+        message,
+        tree: newTreeSha,
+        parents: [latestCommitSha],
+      }),
+    }
+  );
+  if (!newCommitRes.ok) throw new Error(`Create commit: ${await newCommitRes.text()}`);
+  const newCommitSha = (await newCommitRes.json()).sha;
+
+  // 6. Move branch ref forward
+  const updateRefRes = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/git/refs/heads/${BRANCH}`,
+    {
+      method: "PATCH",
+      headers: json,
+      body: JSON.stringify({ sha: newCommitSha }),
+    }
+  );
+  if (!updateRefRes.ok) throw new Error(`Update ref: ${await updateRefRes.text()}`);
+
+  return newCommitSha;
+}
