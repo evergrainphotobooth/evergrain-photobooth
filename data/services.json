@@ -166,6 +166,13 @@
           "price": 50,
           "priceMeta": "flat",
           "description": "An upgrade from our standard library"
+        },
+        {
+          "id": "backdrops-new-22um",
+          "name": "Draped Backdrop",
+          "price": 250,
+          "priceMeta": "flat",
+          "description": "Ivory or hunter green draped backdrop"
         }
       ]
     },
