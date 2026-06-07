@@ -7,16 +7,13 @@
           → static site, /data/settings.json, and runtime patcher all update
    ========================================================= */
 
-import { verifySession } from "../_lib/auth.js";
+import { requireAuth } from "../_lib/auth.js";
 import { getJson, putJson } from "../_lib/github.js";
 
 const DATA_PATH = "data/settings.json";
 
-export default async function handler(req, res) {
-  // Require admin session
-  const session = verifySession(req);
-  if (!session) return res.status(401).json({ error: "Unauthorized" });
-
+async function handler(req, res) {
+  // requireAuth() wraps this with a session check + sets req.user
   try {
     if (req.method === "GET") {
       const file = await getJson(DATA_PATH);
@@ -45,7 +42,7 @@ export default async function handler(req, res) {
         DATA_PATH,
         merged,
         file.sha,
-        `CMS: update general information\n\nBy admin: ${session.user || "admin"}`
+        `CMS: update general information\n\nBy admin: ${req.user?.username || "admin"}`
       );
 
       return res.status(200).json({
@@ -92,3 +89,5 @@ function validateSettings(s) {
   if (errors.length) return { error: errors.join("; ") };
   return { data };
 }
+
+export default requireAuth(handler);
