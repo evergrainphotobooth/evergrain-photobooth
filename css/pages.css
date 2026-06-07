@@ -333,6 +333,17 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--bark);
+  /* Override the global p { max-width: 65ch } so the short single-line
+     name actually centers inside the testimonial container (otherwise
+     the <p> box sits left-aligned and the text appears off-center). */
+  max-width: none;
+  margin-inline: auto;
+}
+/* Same fix for the quote — it's a longer block but the rule keeps the
+   centering visually exact instead of relying on text wrapping. */
+.testimonial__quote {
+  max-width: none;
+  margin-inline: auto;
 }
 
 /* ---------- Inquiry form section ---------- */
