@@ -184,7 +184,7 @@
         {
           "id": "early-setup",
           "name": "Early Setup",
-          "price": 101,
+          "price": 100,
           "priceMeta": "/ hour",
           "description": "Get us on-site earlier than our standard 60–90 minute window"
         }

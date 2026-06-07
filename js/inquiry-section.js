@@ -35,7 +35,7 @@
     { id: "premium-props", name: "Premium Prop Bundle", price: 50, desc: "Upgraded set of curated, on-trend, photogenic props" },
     { id: "premium-backdrop", name: "Premium Backdrop", price: 50, desc: "An upgrade from our standard library" },
     { id: "extra-time", name: "Extra Time", price: 150, desc: "Keep the energy going — add hours so nothing goes uncaptured" },
-    { id: "early-setup", name: "Early Setup", price: 101, desc: "Get us on-site earlier than our standard 60–90 minute window" }
+    { id: "early-setup", name: "Early Setup", price: 100, desc: "Get us on-site earlier than our standard 60–90 minute window" }
   ];
   // CMS:INQUIRY_DATA:END
 
