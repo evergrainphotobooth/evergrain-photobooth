@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:services": "node scripts/build-services.mjs",
-    "build:areas": "node scripts/build-areas.mjs",
-    "build:seo": "node scripts/seo-insert.mjs && node scripts/generate-sitemap.mjs",
-    "build": "npm run build:services && npm run build:areas && npm run build:seo"
+    "regen:services": "node scripts/build-services.mjs",
+    "regen:areas": "node scripts/build-areas.mjs",
+    "regen:seo": "node scripts/seo-insert.mjs && node scripts/generate-sitemap.mjs",
+    "regen": "npm run regen:services && npm run regen:areas && npm run regen:seo"
   }
 }
+
