@@ -21,7 +21,7 @@
   const PACKAGES = [
     { id: "candid", name: "The Candid", price: 600, desc: "3-hour minimum · DSLR quality · unlimited digital · prints + gallery" },
     { id: "moment", name: "The Moment", price: 750, desc: "Great for weddings, company events, holiday parties, and celebrations for up to 150 guests." },
-    { id: "glam", name: "The Glam", price: 1050, desc: "Built for weddings, brand activations, company parties, and events that deserve the full experience." }
+    { id: "glam", name: "The Glam", price: 1050, desc: "Perfect for weddings, brand activations, company parties, and events that deserve the full experience." }
   ];
 
   const ADDONS = [
