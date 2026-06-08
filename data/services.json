@@ -3,7 +3,7 @@
     {
       "id": "candid",
       "name": "The Candid",
-      "tagline": "A clean, classic photobooth — done right.",
+      "tagline": "Built for smaller celebrations — birthdays, showers, grad parties, and private gatherings.",
       "price": 600,
       "priceDescription": "3-hour minimum · $150 / additional hour",
       "shortDesc": "3-hour minimum · DSLR quality · unlimited digital · prints + gallery",
@@ -29,7 +29,7 @@
       "tagline": "Our most-booked configuration.",
       "price": 750,
       "priceDescription": "3-hour minimum · $150 / additional hour",
-      "shortDesc": "3-hour minimum · customizable templates · premium backdrop · custom screens",
+      "shortDesc": "Great for weddings, company events, holiday parties, and celebrations for up to 150 guests.",
       "features": [
         "Everything in The Candid",
         "Customizable photo templates",
@@ -47,7 +47,7 @@
       "tagline": "A fully bespoke build, end to end.",
       "price": 1050,
       "priceDescription": "4-hour minimum · $100 / additional hour",
-      "shortDesc": "4-hour minimum · premium props · B&W + color modes · two custom templates",
+      "shortDesc": "Built for weddings, brand activations, company parties, and events that deserve the full experience.",
       "features": [
         "Everything in The Moment",
         "B&W Filter + color mode",
@@ -61,11 +61,11 @@
     "Unlimited high-quality prints",
     "Studio-quality lighting",
     "Online gallery of all images",
-    "Instant sharing (text, email, QR)",
+    "Instant sharing (text, email, QR, AirDrop)",
     "Curated prop collection",
-    "Custom Felt Letter Board",
+    "Custom felt letter board",
     "Choice of backdrop",
-    "Dedicated booth attendants",
+    "Dedicated booth attendant(s)",
     "Early arrival, stress-free setup + breakdown",
     "Complimentary travel within 30 miles of Hollywood"
   ],
@@ -80,28 +80,28 @@
           "name": "Custom Welcome / Tap-to-Start Screen",
           "price": 50,
           "priceMeta": "flat",
-          "description": "Custom welcome screen guests see before their first photo"
+          "description": "Your names, date, monogram, or logo displayed on the screen guests see before their first photo. Sets the tone the moment they step up."
         },
         {
           "id": "rear-display",
           "name": "Custom Rear Display / Branded Visuals",
           "price": 50,
           "priceMeta": "flat",
-          "description": "Looping slideshow or branded visual on the back of the booth"
+          "description": "A looping slideshow or branded visual that plays on the back of the booth, facing your guests all night. Think of it as a digital welcome sign that doubles as décor."
         },
         {
           "id": "custom-template",
           "name": "Custom Photo Template",
           "price": 100,
           "priceMeta": "flat",
-          "description": "One-of-a-kind photo strip layout designed around your event"
+          "description": "We design a one-of-a-kind photo strip layout around your event—your colors, fonts, graphics, and details. Two rounds of revisions included. This is what your guests take home."
         },
         {
           "id": "additional-template",
           "name": "Additional Custom Photo Template",
           "price": 150,
           "priceMeta": "flat",
-          "description": "A second unique template design for the same event"
+          "description": "A second unique template design for the same event. Popular for offering guests a choice between two layouts, or switching designs between ceremony and reception."
         }
       ]
     },
@@ -115,14 +115,14 @@
           "name": "B&W + Color Filter Set",
           "price": 100,
           "priceMeta": "flat",
-          "description": "Switch between modes at the booth, all night"
+          "description": "Guests choose between classic black-and-white or full color at the booth, switching freely all night. B&W adds a timeless, editorial feel that pairs well with formal events."
         },
         {
           "id": "glam-filter",
           "name": "Glam Filter",
           "price": 150,
           "priceMeta": "flat",
-          "description": "Real-time skin-smoothing filter — softens blemishes, evens tone, whitens teeth"
+          "description": "A subtle skin-smoothing filter applied in real time—softens blemishes, evens skin tone, whitens teeth, and enhances lighting. The difference is visible but never overdone. Our most-requested upgrade."
         }
       ]
     },
@@ -130,16 +130,7 @@
       "id": "prints",
       "label": "Print Upgrades",
       "layout": "trio",
-      "addons": [
-        {
-          "id": "postcard-print",
-          "name": "Postcard Print Upgrade (4×6)",
-          "displayName": "Postcard Print Upgrade (4 × 6)",
-          "price": 50,
-          "priceMeta": "flat",
-          "description": "Larger, glossier, designed to be kept"
-        }
-      ]
+      "addons": []
     },
     {
       "id": "props",
@@ -151,7 +142,7 @@
           "name": "Premium Prop Bundle",
           "price": 50,
           "priceMeta": "flat",
-          "description": "Upgraded set of curated, on-trend, photogenic props"
+          "description": "An upgraded set of curated, on-trend props. Clean, photogenic pieces that actually look good in the final print."
         }
       ]
     },
@@ -165,14 +156,14 @@
           "name": "Premium Backdrop",
           "price": 50,
           "priceMeta": "flat",
-          "description": "An upgrade from our standard library"
+          "description": "Step up from the standard backdrop to our premium collection. Richer textures and deeper colors that photograph beautifully under studio lighting."
         },
         {
           "id": "backdrops-new-22um",
-          "name": "Draped Backdrop",
+          "name": "Draped Backdrop - Ivory or Hunter Green",
           "price": 250,
           "priceMeta": "flat",
-          "description": "Ivory or hunter green draped backdrop"
+          "description": "Floor-to-length ivory or hunter green fabric, professionally draped and styled on-site to create a soft, textured backdrop with natural folds and dimension. Unlike flat backdrops, draped fabric catches your booth lighting in a way that adds depth and warmth to every photo—giving every shot a refined, editorial quality. Includes setup, styling, and breakdown. Our most elevated backdrop option."
         }
       ]
     },
@@ -186,14 +177,14 @@
           "name": "Extra Time",
           "price": 150,
           "priceMeta": "/ hour",
-          "description": "Keep the energy going — add hours so nothing goes uncaptured"
+          "description": "Keep the energy going and the booth running. Whether the night runs long or you want every moment covered from the first guest to the last dance—add hours so nothing goes uncaptured."
         },
         {
           "id": "early-setup",
           "name": "Early Setup",
           "price": 100,
           "priceMeta": "/ hour",
-          "description": "Get us on-site earlier than our standard 60–90 minute window"
+          "description": "We arrive 60–90 minutes before your event to set up and test everything. Need us there even earlier? This add-on gets us on-site ahead of our standard window so the booth is locked in and ready before your first guest walks through the door."
         }
       ]
     }
