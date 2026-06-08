@@ -142,7 +142,7 @@
           "name": "Premium Prop Bundle",
           "price": 50,
           "priceMeta": "flat",
-          "description": "An upgraded set of curated, on-trend props. Clean, photogenic pieces that actually look good in the final print."
+          "description": "An upgraded set of curated, on-trend props. Clean, photogenic pieces that actually look good in the final print"
         }
       ]
     },
@@ -156,7 +156,7 @@
           "name": "Premium Backdrop",
           "price": 50,
           "priceMeta": "flat",
-          "description": "Step up from the standard backdrop to our premium collection. Richer textures and deeper colors that photograph beautifully under studio lighting."
+          "description": "Step up from the standard backdrop to our premium collection. Richer textures and deeper colors that photograph beautifully under studio lighting"
         },
         {
           "id": "backdrops-new-22um",
