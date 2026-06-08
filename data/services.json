@@ -26,7 +26,7 @@
     {
       "id": "moment",
       "name": "The Moment",
-      "tagline": "Our most-booked configuration.",
+      "tagline": "Great for weddings, company events, holiday parties, and celebrations for up to 150 guests.",
       "price": 750,
       "priceDescription": "3-hour minimum · $150 / additional hour",
       "shortDesc": "Great for weddings, company events, holiday parties, and celebrations for up to 150 guests.",
@@ -44,7 +44,7 @@
     {
       "id": "glam",
       "name": "The Glam",
-      "tagline": "A fully bespoke build, end to end.",
+      "tagline": "Built for weddings, brand activations, company parties, and events that deserve the full experience.",
       "price": 1050,
       "priceDescription": "4-hour minimum · $100 / additional hour",
       "shortDesc": "Built for weddings, brand activations, company parties, and events that deserve the full experience.",
