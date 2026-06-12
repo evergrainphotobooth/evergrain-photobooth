@@ -1616,3 +1616,53 @@ a.area-pill:hover {
 @media (min-width: 820px) {
   .addon-carousel__arrow { display: inline-flex; }
 }
+
+/* ---------- Region page expanded sections ---------- */
+.region-narrative p,
+.region-differentiator p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--char);
+  max-width: 65ch;
+  margin-bottom: var(--space-md);
+}
+.region-narrative p:last-child,
+.region-differentiator p:last-child { margin-bottom: 0; }
+
+/* Events grid: responsive, brand-aligned cards */
+.region-events__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+.region-events__item {
+  background: var(--white);
+  border: 1px solid rgba(92, 74, 53, 0.12);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  transition: transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.region-events__item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(164, 122, 42, 0.4);
+}
+.region-events__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.2rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--evergreen);
+  margin: 0 0 var(--space-sm);
+}
+.region-events__item p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--bark);
+  max-width: none;
+  margin: 0;
+}

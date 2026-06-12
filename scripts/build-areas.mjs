@@ -345,7 +345,53 @@ function buildRegion(region) {
           </div>
         </a>`).join("");
 
-  const html = head(`${region.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental across ${region.name}. ${region.tagline}`, depth, `/areas-we-serve/${region.slug}`)
+  // Backward-compatible fallback for older area entries that lack the expanded fields
+  const metaTitle = region.metaTitle || `${region.name} Photobooth Rental — Evergrain Photobooth`;
+  const metaDescription = region.metaDescription || `Luxury DSLR photobooth rental across ${region.name}. ${region.tagline}`;
+  const narrative = region.narrative || [];
+  const events = region.events || [];
+  const differentiator = region.differentiator || "";
+
+  const narrativeHtml = narrative.length ? `
+  <section class="section section--tight region-narrative" aria-labelledby="region-narrative-heading">
+    <div class="container container--narrow">
+      <div class="reveal">
+        <span class="eyebrow">About ${region.name}</span>
+        <h2 id="region-narrative-heading" class="display">A photo booth that belongs in ${region.name}.</h2>
+        ${narrative.map(p => `<p>${p}</p>`).join("\n        ")}
+      </div>
+    </div>
+  </section>` : "";
+
+  const eventsHtml = events.length ? `
+  <section class="section section--linen-warm region-events" aria-labelledby="region-events-heading">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: var(--space-xl);">
+        <span class="eyebrow">Events we serve</span>
+        <h2 id="region-events-heading" class="display">Events we cover in ${region.name}.</h2>
+        <p style="color:var(--bark); max-width:60ch;">From weddings to brand activations, our open-air DSLR photo booth shows up for the moments that matter most.</p>
+      </div>
+      <div class="region-events__grid">
+        ${events.map(ev => `<article class="region-events__item reveal">
+          <h3 class="region-events__title">${ev.title}</h3>
+          <p>${ev.copy}</p>
+        </article>`).join("\n        ")}
+      </div>
+    </div>
+  </section>` : "";
+
+  const differentiatorHtml = differentiator ? `
+  <section class="section section--tight region-differentiator" aria-labelledby="region-differentiator-heading">
+    <div class="container container--narrow">
+      <div class="reveal">
+        <span class="eyebrow">Why Evergrain</span>
+        <h2 id="region-differentiator-heading" class="display">Built for ${region.name}.</h2>
+        <p>${differentiator}</p>
+      </div>
+    </div>
+  </section>` : "";
+
+  const html = head(metaTitle, metaDescription, depth, `/areas-we-serve/${region.slug}`)
     + header(depth)
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
@@ -372,6 +418,9 @@ function buildRegion(region) {
       </div>
     </div>
   </section>
+${narrativeHtml}
+${eventsHtml}
+${differentiatorHtml}
 
 ${packagesSection(region.name, depth)}
 
