@@ -447,7 +447,53 @@ function buildNeighborhood(region, n) {
     { label: n.name }
   ], "breadcrumb--hero");
 
-  const html = head(`${n.name} Photobooth Rental — Evergrain Photobooth`, `Luxury DSLR photobooth rental in ${n.name}, ${region.name}. ${n.blurb}`, depth, `/areas-we-serve/${region.slug}/${n.slug}`)
+  // Backward-compatible fallback for neighborhoods that lack the expanded fields
+  const metaTitle = n.metaTitle || `${n.name} Photobooth Rental — Evergrain Photobooth`;
+  const metaDescription = n.metaDescription || `Luxury DSLR photobooth rental in ${n.name}, ${region.name}. ${n.blurb}`;
+  const narrative = n.narrative || [];
+  const events = n.events || [];
+  const differentiator = n.differentiator || "";
+
+  const narrativeHtml = narrative.length ? `
+  <section class="section section--tight region-narrative" aria-labelledby="nbhd-narrative-heading">
+    <div class="container container--narrow">
+      <div class="reveal">
+        <span class="eyebrow">About ${n.name}</span>
+        <h2 id="nbhd-narrative-heading" class="display">A photo booth that belongs in ${n.name}.</h2>
+        ${narrative.map(p => `<p>${p}</p>`).join("\n        ")}
+      </div>
+    </div>
+  </section>` : "";
+
+  const eventsHtml = events.length ? `
+  <section class="section section--linen-warm region-events" aria-labelledby="nbhd-events-heading">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: var(--space-xl);">
+        <span class="eyebrow">Events we serve</span>
+        <h2 id="nbhd-events-heading" class="display">Events we cover in ${n.name}.</h2>
+        <p style="color:var(--bark); max-width:60ch;">From weddings to brand activations, our open-air DSLR photo booth shows up for the moments that matter most.</p>
+      </div>
+      <div class="region-events__grid">
+        ${events.map(ev => `<article class="region-events__item reveal">
+          <h3 class="region-events__title">${ev.title}</h3>
+          <p>${ev.copy}</p>
+        </article>`).join("\n        ")}
+      </div>
+    </div>
+  </section>` : "";
+
+  const differentiatorHtml = differentiator ? `
+  <section class="section section--tight region-differentiator" aria-labelledby="nbhd-differentiator-heading">
+    <div class="container container--narrow">
+      <div class="reveal">
+        <span class="eyebrow">Why Evergrain</span>
+        <h2 id="nbhd-differentiator-heading" class="display">Built for ${n.name}.</h2>
+        <p>${differentiator}</p>
+      </div>
+    </div>
+  </section>` : "";
+
+  const html = head(metaTitle, metaDescription, depth, `/areas-we-serve/${region.slug}/${n.slug}`)
     + header(depth)
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
@@ -462,6 +508,9 @@ function buildNeighborhood(region, n) {
       </div>
     </div>
   </section>
+${narrativeHtml}
+${eventsHtml}
+${differentiatorHtml}
 
 ${packagesSection(n.name, depth)}
 
