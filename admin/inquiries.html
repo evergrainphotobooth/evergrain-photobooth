@@ -21,8 +21,12 @@
     <div class="filters">
       <button class="filter-pill is-active" data-filter="all">All</button>
       <button class="filter-pill" data-filter="new">New</button>
-      <button class="filter-pill" data-filter="contacted">Contacted</button>
-      <button class="filter-pill" data-filter="archived">Archived</button>
+      <button class="filter-pill" data-filter="initiated">Initiated</button>
+      <button class="filter-pill" data-filter="cold">Cold</button>
+      <button class="filter-pill" data-filter="warm">Warm</button>
+      <button class="filter-pill" data-filter="hot">Hot</button>
+      <button class="filter-pill" data-filter="closed">Closed</button>
+      <button class="filter-pill" data-filter="bad">Bad</button>
       <span class="text-meta" style="margin-left:auto;" data-inquiry-count></span>
     </div>
 
@@ -69,7 +73,42 @@
     const d = new Date(iso);
     return d.toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
   };
+  // 12-hour clock for the stored 24h time value (e.g. "16:00:00" → "4:00 PM")
+  const fmtTime = (t) => {
+    if (!t) return "—";
+    const m = String(t).match(/^(\d{1,2}):(\d{2})/);
+    if (!m) return t;
+    let h = parseInt(m[1], 10);
+    const period = h >= 12 ? "PM" : "AM";
+    h = h % 12; if (h === 0) h = 12;
+    return `${h}:${m[2]} ${period}`;
+  };
   const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  /* ---------- Lead-stage system ---------- */
+  // Stored DB value → label, color cue, and (for Closed) a star marker.
+  const STATUSES = [
+    { key: "initiated", label: "Initiated Contact", color: "#2F7A4F", onText: "#fff" },
+    { key: "cold",      label: "Cold Lead",         color: "#3B6EA5", onText: "#fff" },
+    { key: "warm",      label: "Warm Lead",         color: "#D4A72C", onText: "#1A1410" },
+    { key: "hot",       label: "Hot Lead",          color: "#C2452D", onText: "#fff" },
+    { key: "closed",    label: "Closed",            color: "#A47A2A", onText: "#fff", star: true },
+    { key: "bad",       label: "Bad Lead",          color: "#7A7269", onText: "#fff" },
+  ];
+  function statusMeta(key) {
+    const found = STATUSES.find(s => s.key === key);
+    if (found) return found;
+    if (key === "contacted") return { key, label: "Contacted", color: "#A47A2A", onText: "#fff" };
+    if (key === "archived")  return { key, label: "Archived",  color: "#7A7269", onText: "#fff" };
+    return { key: "new", label: "New", color: "#5C4A35", onText: "#fff" }; // default
+  }
+  // Read-only pill for the list view: soft color tint + dot + readable dark label.
+  function statusPill(key) {
+    const m = statusMeta(key);
+    const star = m.star ? `<span style="color:${m.color};margin-right:2px;">★</span>` : "";
+    return `<span class="status-pill" style="background:${m.color}1F;">`
+      + `<span class="status-pill__dot" style="background:${m.color};"></span>${star}${esc(m.label)}</span>`;
+  }
 
   async function load() {
     tableEl.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
@@ -97,7 +136,7 @@
         <td>${esc(r.event_type || "—")}<div class="text-meta">${esc(r.venue_city || "")}</div></td>
         <td>${fmtDate(r.event_date)}</td>
         <td>${esc(r.selected_package || "—")}<div class="text-meta">${esc(r.estimated_total || "")}</div></td>
-        <td><span class="status-pill status-pill--${r.status || "new"}">${esc(r.status || "new")}</span></td>
+        <td>${statusPill(r.status || "new")}</td>
         <td class="text-meta">${fmtDateTime(r.created_at)}</td>
       </tr>
     `).join("");
@@ -172,8 +211,19 @@
 
     const addons = Array.isArray(i.interested_addons) ? i.interested_addons.join(", ") : "";
 
+    const statusSelector = `
+      <div class="detail-section-title">Lead status</div>
+      <div class="status-options">
+        ${STATUSES.map(s => {
+          const active = (i.status || "new") === s.key;
+          const star = s.star ? `<span class="status-option__star">★</span>` : "";
+          return `<button type="button" class="status-option${active ? " is-active" : ""}" data-set-status="${s.key}" style="--st:${s.color}; --on:${s.onText};">`
+            + `<span class="status-option__dot"></span>${star}${esc(s.label)}</button>`;
+        }).join("")}
+      </div>`;
+
     drawerBody.innerHTML = `
-      <div style="margin-bottom:1rem;"><span class="status-pill status-pill--${esc(i.status || "new")}">${esc(i.status || "new")}</span></div>
+      <div class="status-selector">${statusSelector}</div>
 
       <div class="detail-section-title">Contact</div>
       ${row("Email", i.email, `mailto:${i.email}?subject=${encodeURIComponent("Re: Your Evergrain inquiry")}`)}
@@ -181,7 +231,7 @@
 
       <div class="detail-section-title">Event</div>
       ${row("Date", fmtDate(i.event_date))}
-      ${row("Start time", i.event_start_time)}
+      ${row("Start time", fmtTime(i.event_start_time))}
       ${row("Type", i.event_type)}
       ${row("Venue city", i.venue_city)}
       ${row("Venue address", i.venue_address)}
@@ -204,20 +254,23 @@
       <button type="button" class="btn btn--ghost btn--sm" data-save-notes style="margin-top: 0.5rem;">Save notes</button>
     `;
 
+    // Reply in Gmail — opens the evergrain account and searches for any
+    // existing thread with this client (lands on the conversation if one
+    // exists; otherwise the search view with Compose available).
+    const gmailQuery = encodeURIComponent(`from:${i.email} OR to:${i.email}`);
+    const gmailUrl = `https://mail.google.com/mail/u/0/?authuser=${encodeURIComponent("evergrainphotobooth@gmail.com")}#search/${gmailQuery}`;
     drawerFooter.innerHTML = `
-      <div class="flex" style="gap:0.4rem;">
-        ${i.status !== "contacted" ? `<button type="button" class="btn btn--brass btn--sm" data-set-status="contacted">Mark Contacted</button>` : ""}
-        ${i.status !== "new"       ? `<button type="button" class="btn btn--ghost btn--sm" data-set-status="new">Mark New</button>`        : ""}
-        ${i.status !== "archived"  ? `<button type="button" class="btn btn--danger btn--sm" data-set-status="archived">Archive</button>`    : ""}
-      </div>
-      <a href="mailto:${esc(i.email)}?subject=${encodeURIComponent("Re: Your Evergrain inquiry")}" class="btn btn--primary btn--sm">Reply via Email</a>
+      <a href="${gmailUrl}" target="_blank" rel="noopener" class="btn btn--primary btn--sm btn--block">
+        Reply in Gmail
+      </a>
     `;
 
-    // Wire status buttons
-    drawerFooter.querySelectorAll("[data-set-status]").forEach(btn => {
+    // Wire lead-status selector (lives in the drawer body now)
+    drawerBody.querySelectorAll("[data-set-status]").forEach(btn => {
       btn.addEventListener("click", async () => {
-        btn.disabled = true;
         const newStatus = btn.getAttribute("data-set-status");
+        if (newStatus === (i.status || "new")) return; // already this stage
+        drawerBody.querySelectorAll("[data-set-status]").forEach(b => b.disabled = true);
         const r = await fetch("/api/admin/inquiries", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -227,7 +280,7 @@
           await load();
           openDetail(i.id); // re-render the drawer with fresh data
         } else {
-          btn.disabled = false;
+          drawerBody.querySelectorAll("[data-set-status]").forEach(b => b.disabled = false);
           alert("Failed to update.");
         }
       });

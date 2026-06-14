@@ -245,6 +245,7 @@ button { font: inherit; cursor: pointer; }
   transition: background-color 180ms, color 180ms, border-color 180ms, transform 120ms;
 }
 .btn:active { transform: translateY(1px); }
+.btn--block { width: 100%; justify-content: center; }
 .btn--primary { background: var(--evergreen); color: var(--linen); }
 .btn--primary:hover { background: var(--evergreen-dark); color: var(--linen); }
 .btn--brass { background: var(--brass); color: var(--white); }
@@ -344,9 +345,62 @@ button { font: inherit; cursor: pointer; }
   text-transform: uppercase;
   font-weight: 600;
 }
+/* Soft-tint pill with a colored dot; background tint set inline per status */
+.status-pill { color: var(--char, #1A1410); }
+.status-pill__dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+/* Legacy class-based pills (kept for any pre-stage rows that still use them) */
 .status-pill--new       { background: rgba(31, 67, 50, 0.10); color: var(--evergreen); }
 .status-pill--contacted { background: rgba(164, 122, 42, 0.12); color: var(--brass); }
 .status-pill--archived  { background: var(--gray-100); color: var(--gray-700); }
+
+/* ---------- Lead-stage selector (drawer) ---------- */
+.status-selector { margin-bottom: 1.25rem; }
+.status-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.status-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--gray-200);
+  background: #fff;
+  color: var(--gray-700);
+  font-family: var(--font-eyebrow);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 120ms, border-color 120ms, color 120ms, transform 80ms;
+}
+.status-option__dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--st);
+  flex: 0 0 auto;
+}
+.status-option__star { color: var(--st); margin-right: -0.1rem; }
+.status-option:hover {
+  border-color: var(--st);
+  background: color-mix(in srgb, var(--st) 8%, #fff);
+}
+.status-option:active { transform: translateY(1px); }
+.status-option.is-active {
+  background: var(--st);
+  border-color: var(--st);
+  color: var(--on);
+}
+.status-option.is-active .status-option__dot { background: var(--on); }
+.status-option.is-active .status-option__star { color: var(--on); }
+.status-option:disabled { opacity: 0.55; cursor: default; }
 
 /* ---------- Filters bar ---------- */
 .filters {

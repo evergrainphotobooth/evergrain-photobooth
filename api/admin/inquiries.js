@@ -54,7 +54,13 @@ async function handler(req, res) {
     }
     const { id, status, admin_notes } = payload;
     if (!id) return res.status(400).json({ error: "id required" });
-    if (status && !["new", "contacted", "archived"].includes(status)) {
+    // Lead-stage vocabulary + legacy values (contacted/archived) kept for
+    // backward compatibility with any rows created before the stage system.
+    const VALID_STATUSES = [
+      "new", "initiated", "cold", "warm", "hot", "closed", "bad",
+      "contacted", "archived",
+    ];
+    if (status && !VALID_STATUSES.includes(status)) {
       return res.status(400).json({ error: "Invalid status" });
     }
 
