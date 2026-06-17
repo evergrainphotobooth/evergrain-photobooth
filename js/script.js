@@ -179,79 +179,156 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    /* ===== 4-step stepper controller =====
+       Step 1 (Contact) is captured to the backend on first "Next" — the API
+       creates a partial row and returns its id. Each subsequent Next PATCHes
+       that same row; final Submit flips it to completed + emails the team.
+       The row id persists in sessionStorage so a mid-flow refresh continues
+       the same record instead of orphaning a new one. */
+    const TOTAL = 4;
+    const ID_KEY = "evergrain-inquiry-id";
+    const errorEl = form.querySelector(".form__error");
+    const successEl = form.querySelector(".form__success");
+    const steps = Array.from(form.querySelectorAll(".form-step"));
+    const dots = Array.from(form.querySelectorAll("[data-step-dot]"));
+    const stepperEl = form.querySelector("[data-stepper]");
+    const navEl = form.querySelector("[data-step-nav]");
+    const backBtn = form.querySelector("[data-step-back]");
+    const nextBtn = form.querySelector("[data-step-next]");
+    const submitBtn = form.querySelector("[data-step-submit]");
+
+    let current = 1;
+    let inquiryId = null;
+    try { inquiryId = sessionStorage.getItem(ID_KEY) || null; } catch {}
+
+    const STEP_REQUIRED = {
+      1: [["name", "Name"], ["email", "Email"], ["phone", "Phone"], ["eventType", "Event Type"]],
+      2: [],
+      3: [["packageInterest", "Package You're Considering"]],
+      4: [],
+    };
+
+    const showErr = (msg) => {
+      if (!errorEl) return;
+      errorEl.textContent = msg;
+      errorEl.classList.add("is-visible");
+    };
+    const clearErr = () => errorEl?.classList.remove("is-visible");
+
+    const collect = () => {
+      const fd = new FormData(form);
+      const d = Object.fromEntries(fd.entries());
+      d.interestedAddons = fd.getAll("interestedAddons");
+      return d;
+    };
+
+    function validateStep(n) {
+      clearErr();
+      const d = collect();
+      const miss = (STEP_REQUIRED[n] || []).filter(([k]) => !d[k]).map(([, l]) => l);
+      if (miss.length) { showErr(`Please fill in: ${miss.join(", ")}.`); return false; }
+      if (n === 1) {
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email || "")) { showErr("Please enter a valid email address."); return false; }
+        if ((d.phone || "").replace(/\D/g, "").length !== 10) { showErr("Phone number must be 10 digits — please double-check."); return false; }
+      }
+      return true;
+    }
+
+    function showStep(n) {
+      current = n;
+      steps.forEach(fs => {
+        const s = Number(fs.dataset.step);
+        fs.hidden = s !== n;
+        fs.classList.toggle("is-active", s === n);
+      });
+      dots.forEach(d => {
+        const s = Number(d.dataset.stepDot);
+        d.classList.toggle("is-active", s === n);
+        d.classList.toggle("is-done", s < n);
+      });
+      if (backBtn) backBtn.hidden = n === 1;
+      if (nextBtn) nextBtn.hidden = n === TOTAL;
+      if (submitBtn) submitBtn.hidden = n !== TOTAL;
+    }
+
+    // POST to the inquiry endpoint. step = furthest step reached; isFinal flips completed.
+    async function postInquiry(step, isFinal) {
+      const data = collect();
+      data.step = step;
+      data.partial = !isFinal;
+      if (inquiryId) data.id = inquiryId;
+      const resp = await fetch("/api/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!resp.ok) {
+        const b = await resp.json().catch(() => ({}));
+        throw new Error(b.error || "Save failed");
+      }
+      const body = await resp.json().catch(() => ({}));
+      if (body.id) {
+        inquiryId = body.id;
+        try { sessionStorage.setItem(ID_KEY, body.id); } catch {}
+      }
+      return body;
+    }
+
+    // ---- Next: validate → capture partial → advance ----
+    nextBtn?.addEventListener("click", async () => {
+      if (!validateStep(current)) return;
+      nextBtn.disabled = true;
+      const lbl = nextBtn.textContent;
+      nextBtn.textContent = "Saving…";
+      // Best-effort capture — never trap the user if the network hiccups;
+      // the final submit will still create/complete the row.
+      try { await postInquiry(Math.min(current + 1, TOTAL), false); } catch (err) { console.error(err); }
+      nextBtn.disabled = false;
+      nextBtn.textContent = lbl;
+      showStep(Math.min(current + 1, TOTAL));
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    backBtn?.addEventListener("click", () => {
+      clearErr();
+      showStep(Math.max(current - 1, 1));
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    // ---- Final submit: validate all gated steps → complete ----
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const successEl = form.querySelector(".form__success");
-      const errorEl = form.querySelector(".form__error");
-      const submitBtn = form.querySelector("button[type='submit']");
-      errorEl?.classList.remove("is-visible");
+      clearErr();
       successEl?.classList.remove("is-visible");
+      // Re-check the required steps in case a field was cleared after advancing.
+      if (!validateStep(1)) { showStep(1); form.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+      if (!validateStep(3)) { showStep(3); form.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
 
-      const fd = new FormData(form);
-      const data = Object.fromEntries(fd.entries());
-      // Multi-value: collect every checked add-on as an array
-      data.interestedAddons = fd.getAll("interestedAddons");
-
-      // Required field validation (matches asterisks in the form)
-      const required = [
-        ["name", "Your Name"],
-        ["email", "Email"],
-        ["phone", "Phone"],
-        ["eventDate", "Event Date"],
-        ["eventType", "Event Type"],
-        ["venueCity", "Venue City"]
-      ];
-      const missing = required.filter(([k]) => !data[k]).map(([, l]) => l);
-      if (missing.length) {
-        errorEl.textContent = `Please fill in: ${missing.join(", ")}.`;
-        errorEl.classList.add("is-visible");
-        return;
-      }
-
-      // Phone must be 10 digits (formatted by the live formatter)
-      const phoneDigits = (data.phone || "").replace(/\D/g, "");
-      if (phoneDigits.length !== 10) {
-        errorEl.textContent = "Phone number must be 10 digits — please double-check.";
-        errorEl.classList.add("is-visible");
-        return;
-      }
-
-      // Submit
-      const originalLabel = submitBtn?.textContent;
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Sending…";
-      }
-
+      const lbl = submitBtn?.textContent;
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Sending…"; }
       try {
-        const resp = await fetch("/api/inquiry", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-        if (!resp.ok) {
-          const body = await resp.json().catch(() => ({}));
-          throw new Error(body.error || "Submission failed");
-        }
-
+        await postInquiry(TOTAL, true);
         form.reset();
+        inquiryId = null;
+        try { sessionStorage.removeItem(ID_KEY); } catch {}
+        // Collapse the stepper UI, reveal the success message.
+        steps.forEach(fs => { fs.hidden = true; });
+        stepperEl?.setAttribute("hidden", "");
+        navEl?.setAttribute("hidden", "");
         successEl?.classList.add("is-visible");
         successEl?.scrollIntoView({ behavior: "smooth", block: "center" });
-        // Re-render cart-summary block + form sync after reset
         if (window.EvergrainCart) {
           window.EvergrainCart.renderInquirySummary();
           window.EvergrainCart.renderInquiryForm();
         }
       } catch (err) {
         console.error(err);
-        errorEl.textContent = "Something went wrong sending your inquiry. Please try again, or email us directly.";
-        errorEl.classList.add("is-visible");
+        showErr("Something went wrong sending your inquiry. Please try again, or email us directly.");
       } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalLabel || "Send Inquiry";
-        }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = lbl || "Send Inquiry"; }
       }
     });
+
+    showStep(1);
   }
 });

@@ -648,6 +648,118 @@ body.has-sticky-banner .site-header {
 }
 .form__error.is-visible { display: block; }
 
+/* ---------- Inquiry form label note (inline parenthetical) ---------- */
+.form__label-note {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--bark);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+/* ---------- Multi-step inquiry form ---------- */
+.form--stepped { gap: var(--space-lg); }
+
+/* Stepper progress header */
+.stepper {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.5rem;
+}
+.stepper__item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex: 1;
+  min-width: 0;
+  color: var(--bark);
+  position: relative;
+}
+/* connector line between steps */
+.stepper__item:not(:last-child)::after {
+  content: "";
+  flex: 1;
+  height: 1.5px;
+  background: rgba(92, 74, 53, 0.2);
+  transition: background-color var(--dur-med) var(--ease-out);
+}
+.stepper__num {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-eyebrow);
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--white);
+  border: 1.5px solid rgba(92, 74, 53, 0.25);
+  color: var(--bark);
+  transition: background-color var(--dur-med), border-color var(--dur-med), color var(--dur-med);
+}
+.stepper__label {
+  font-family: var(--font-eyebrow);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* active step */
+.stepper__item.is-active .stepper__num {
+  background: var(--evergreen);
+  border-color: var(--evergreen);
+  color: var(--linen);
+}
+.stepper__item.is-active .stepper__label { color: var(--evergreen); }
+/* completed step */
+.stepper__item.is-done .stepper__num {
+  background: var(--brass);
+  border-color: var(--brass);
+  color: var(--white);
+}
+.stepper__item.is-done::after { background: var(--brass); }
+.stepper__item.is-done .stepper__label { color: var(--char); }
+
+@media (max-width: 640px) {
+  /* On mobile, collapse to numbered dots only — labels would crowd */
+  .stepper__label { display: none; }
+  .stepper__item { flex: 0 0 auto; }
+  .stepper__item:not(:last-child)::after { min-width: 1.5rem; }
+}
+
+/* Step panels — reset fieldset defaults */
+.form-step {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-md);
+  min-inline-size: 0; /* let grid children shrink inside a fieldset */
+  animation: form-step-in var(--dur-med) var(--ease-out);
+}
+.form-step[hidden] { display: none; }
+@keyframes form-step-in {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Nav row */
+.form__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.form__nav-spacer { flex: 1; }
+.form__nav[hidden] { display: none; }
+
 /* ---------- Slide-in Package List (Cart) ---------- */
 .cart-overlay {
   position: fixed;

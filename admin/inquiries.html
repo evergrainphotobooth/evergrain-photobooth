@@ -20,6 +20,9 @@
     <!-- Filters -->
     <div class="filters">
       <button class="filter-pill is-active" data-filter="all">All</button>
+      <button class="filter-pill" data-filter="complete">Complete</button>
+      <button class="filter-pill" data-filter="partial">Partial</button>
+      <span class="filters__divider" aria-hidden="true"></span>
       <button class="filter-pill" data-filter="new">New</button>
       <button class="filter-pill" data-filter="initiated">Initiated</button>
       <button class="filter-pill" data-filter="cold">Cold</button>
@@ -112,7 +115,10 @@
 
   async function load() {
     tableEl.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
-    const q = currentFilter === "all" ? "" : `?status=${currentFilter}`;
+    let q = "";
+    if (currentFilter === "complete") q = "?completed=true";
+    else if (currentFilter === "partial") q = "?completed=false";
+    else if (currentFilter !== "all") q = `?status=${currentFilter}`;
     const r = await fetch(`/api/admin/inquiries${q}`);
     if (!r.ok) {
       tableEl.innerHTML = `<div class="empty-state"><h3>Couldn't load inquiries</h3><p>Try refreshing.</p></div>`;
@@ -131,8 +137,8 @@
     }
 
     const rows = currentList.map(r => `
-      <tr data-row-id="${r.id}" class="${r.id === selectedId ? "is-selected" : ""}">
-        <td><strong>${esc(r.name)}</strong><div class="text-meta">${esc(r.email)}</div></td>
+      <tr data-row-id="${r.id}" class="${r.id === selectedId ? "is-selected" : ""}${r.completed === false ? " is-partial" : ""}">
+        <td><strong>${esc(r.name)}</strong>${r.completed === false ? ` <span class="partial-badge" title="Reached step ${r.last_step || 1} of 4">Partial · ${r.last_step || 1}/4</span>` : ""}<div class="text-meta">${esc(r.email)}</div></td>
         <td>${esc(r.event_type || "—")}<div class="text-meta">${esc(r.venue_city || "")}</div></td>
         <td>${fmtDate(r.event_date)}</td>
         <td>${esc(r.selected_package || "—")}<div class="text-meta">${esc(r.estimated_total || "")}</div></td>
@@ -222,7 +228,12 @@
         }).join("")}
       </div>`;
 
+    const partialBanner = i.completed === false
+      ? `<div class="partial-banner">⚠ Partial submission — this lead reached <strong>step ${i.last_step || 1} of 4</strong> and hasn't finished the form yet. Whatever they filled in is captured below.</div>`
+      : "";
+
     drawerBody.innerHTML = `
+      ${partialBanner}
       <div class="status-selector">${statusSelector}</div>
 
       <div class="detail-section-title">Contact</div>

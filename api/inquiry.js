@@ -19,12 +19,7 @@ export default async function handler(req, res) {
   }
 
   // Honeypot — bots tend to fill every field; a hidden one tells us it's a bot.
-  // Add <input name="website" tabindex="-1" autocomplete="off" hidden> if you want it client-side.
   if (payload.website) return res.status(200).json({ ok: true });
-
-  const required = ["name", "email", "phone", "eventDate", "eventType", "venueCity"];
-  const missing = required.filter(k => !payload[k]);
-  if (missing.length) return res.status(400).json({ error: `Missing: ${missing.join(", ")}` });
 
   const {
     SUPABASE_URL,
@@ -39,51 +34,101 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server misconfigured" });
   }
 
-  // ---- 1. Save to Supabase ----
-  const dbResp = await fetch(`${SUPABASE_URL}/rest/v1/inquiries`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_SERVICE_ROLE_KEY,
-      "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-      "Prefer": "return=minimal",
-    },
-    body: JSON.stringify({
-      name: payload.name,
-      email: payload.email,
-      phone: payload.phone,
-      event_date: payload.eventDate,
-      event_start_time: payload.eventStartTime || null,
-      event_type: payload.eventType,
-      venue_city: payload.venueCity,
-      venue_address: payload.venueAddress || null,
-      guests: payload.guests || null,
-      package_interest: payload.packageInterest || null,
-      aesthetic: payload.aesthetic || null,
-      interested_addons: Array.isArray(payload.interestedAddons) ? payload.interestedAddons : [],
-      selected_package: payload.selectedPackage || null,
-      selected_addons: payload.selectedAddons || null,
-      estimated_total: payload.estimatedTotal || null,
-      referral: payload.referral || null,
-      message: payload.message || null,
-      raw_payload: payload,
-    }),
-  });
+  // ---- Mode detection ----------------------------------------------------
+  // The 4-step stepper drives three flows against ONE row:
+  //   1. Partial create  — { partial:true, step:1, ...step1 fields }  → INSERT (completed=false), returns id, no email
+  //   2. Progressive PATCH — { id, partial:true, step:N, ...fields }  → UPDATE that row (only while completed=false), no email
+  //   3. Completion       — { id, partial:false, ...all fields }      → UPDATE → completed=true + email
+  // Legacy full submit (no id, no partial flag) still works: INSERT completed=true + email.
+  const isPartial = payload.partial === true;
+  const existingId = typeof payload.id === "string" && payload.id ? payload.id : null;
+  const step = Number(payload.step) || (isPartial ? 1 : 4);
 
-  if (!dbResp.ok) {
-    console.error("Supabase save failed:", await dbResp.text());
-    return res.status(500).json({ error: "Could not save inquiry" });
+  // Step-1 fields are the minimum to create/keep a lead.
+  const STEP1 = ["name", "email", "phone", "eventType"];
+  // A completed inquiry also needs a package selection (incl. "Not sure yet").
+  const COMPLETION = [...STEP1, "packageInterest"];
+
+  const required = (isPartial && !existingId) ? STEP1 : (isPartial ? [] : COMPLETION);
+  const missing = required.filter(k => !payload[k]);
+  if (missing.length) return res.status(400).json({ error: `Missing: ${missing.join(", ")}` });
+
+  // Build the column set from whatever fields are present. Undefined keys are
+  // omitted so a partial PATCH never clobbers a previously-saved field with null.
+  const cols = {};
+  const set = (col, val) => { if (val !== undefined) cols[col] = val; };
+  set("name", payload.name);
+  set("email", payload.email);
+  set("phone", payload.phone);
+  set("event_date", payload.eventDate || null);
+  set("event_start_time", payload.eventStartTime || null);
+  set("event_type", payload.eventType);
+  set("venue_city", payload.venueCity || null);
+  set("venue_address", payload.venueAddress || null);
+  set("guests", payload.guests || null);
+  set("package_interest", payload.packageInterest || null);
+  set("aesthetic", payload.aesthetic || null);
+  if (Array.isArray(payload.interestedAddons)) set("interested_addons", payload.interestedAddons);
+  set("selected_package", payload.selectedPackage || null);
+  set("selected_addons", payload.selectedAddons || null);
+  set("estimated_total", payload.estimatedTotal || null);
+  set("referral", payload.referral || null);
+  set("message", payload.message || null);
+  cols.last_step = step;
+  cols.completed = !isPartial;           // true only on the final completion call
+  cols.raw_payload = payload;
+
+  const sbHeaders = {
+    "Content-Type": "application/json",
+    "apikey": SUPABASE_SERVICE_ROLE_KEY,
+    "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+  };
+
+  let rowId = existingId;
+
+  if (existingId) {
+    // ---- UPDATE the in-progress row. Guard: only rows still completed=false,
+    // so a finished inquiry can never be overwritten by a replayed/forged id. ----
+    const upd = await fetch(
+      `${SUPABASE_URL}/rest/v1/inquiries?id=eq.${encodeURIComponent(existingId)}&completed=eq.false`,
+      { method: "PATCH", headers: { ...sbHeaders, Prefer: "return=representation" }, body: JSON.stringify(cols) }
+    );
+    if (!upd.ok) {
+      console.error("Supabase update failed:", await upd.text());
+      return res.status(500).json({ error: "Could not save inquiry" });
+    }
+    const rows = await upd.json().catch(() => []);
+    if (!Array.isArray(rows) || rows.length === 0) {
+      // 0 rows matched → the id is unknown or already completed (e.g. a stale
+      // session id from a prior finished inquiry). Treat this as a brand-new
+      // lead and fall through to INSERT, so a lead is never silently dropped.
+      rowId = null;
+    } else {
+      rowId = rows[0].id;
+    }
   }
 
-  // ---- 2. Email the team via Resend (non-blocking — DB save is already done) ----
-  if (RESEND_API_KEY && INQUIRY_FROM_EMAIL && INQUIRY_TO_EMAIL) {
+  if (!rowId) {
+    // ---- INSERT a new row (partial step-1 OR legacy/fallback full submit) ----
+    const ins = await fetch(`${SUPABASE_URL}/rest/v1/inquiries`, {
+      method: "POST",
+      headers: { ...sbHeaders, Prefer: "return=representation" },
+      body: JSON.stringify(cols),
+    });
+    if (!ins.ok) {
+      console.error("Supabase insert failed:", await ins.text());
+      return res.status(500).json({ error: "Could not save inquiry" });
+    }
+    const rows = await ins.json().catch(() => []);
+    rowId = Array.isArray(rows) && rows[0] ? rows[0].id : null;
+  }
+
+  // ---- Email the team via Resend — ONLY on completion (never on partial saves) ----
+  if (!isPartial && RESEND_API_KEY && INQUIRY_FROM_EMAIL && INQUIRY_TO_EMAIL) {
     try {
       const mailResp = await fetch("https://api.resend.com/emails", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${RESEND_API_KEY}`,
-        },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
         body: JSON.stringify({
           from: INQUIRY_FROM_EMAIL,
           to: [INQUIRY_TO_EMAIL],
@@ -98,7 +143,7 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ ok: true, id: rowId });
 }
 
 /* ---------- Date + time formatting ---------- */

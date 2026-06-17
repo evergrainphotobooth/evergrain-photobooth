@@ -31,12 +31,14 @@ async function handler(req, res) {
       return res.status(200).json({ ok: true, inquiry: rows[0] });
     }
 
-    const status = url.searchParams.get("status"); // 'new' | 'contacted' | 'archived' | null (all)
+    const status = url.searchParams.get("status"); // lead stage, or null (all)
+    const completed = url.searchParams.get("completed"); // 'true' | 'false' | null
     const limit  = Math.min(Number(url.searchParams.get("limit")) || 100, 500);
-    const filter = status ? `&status=eq.${status}` : "";
+    let filter = status ? `&status=eq.${status}` : "";
+    if (completed === "true" || completed === "false") filter += `&completed=eq.${completed}`;
 
     const resp = await fetch(
-      `${SUPABASE_URL}/rest/v1/inquiries?select=id,created_at,name,email,phone,event_date,event_type,venue_city,status,selected_package,estimated_total${filter}&order=created_at.desc&limit=${limit}`,
+      `${SUPABASE_URL}/rest/v1/inquiries?select=id,created_at,name,email,phone,event_date,event_type,venue_city,status,selected_package,estimated_total,completed,last_step${filter}&order=created_at.desc&limit=${limit}`,
       { headers: baseHeaders }
     );
     if (!resp.ok) {
