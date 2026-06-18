@@ -360,6 +360,10 @@
   text-align: center;
   margin-bottom: var(--space-md);
 }
+/* Slightly smaller quote than the standalone testimonial default. */
+.testimonial-carousel .testimonial__quote {
+  font-size: clamp(1.25rem, 2.2vw, 1.85rem);
+}
 .testimonial-carousel__viewport {
   position: relative;
   /* Leave room for the arrows on either side so long quotes never overlap them. */
