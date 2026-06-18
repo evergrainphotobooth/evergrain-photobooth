@@ -177,6 +177,19 @@ document.addEventListener("DOMContentLoaded", () => {
     start();
   });
 
+  /* --- The Booth spec accordion ---
+     Hover-to-open is handled in CSS. Clicking a header toggles .is-open to
+     pin it open (and keeps it open after the pointer leaves). */
+  document.querySelectorAll("[data-spec-accordion]").forEach(acc => {
+    acc.querySelectorAll("[data-spec-toggle]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const spec = btn.closest(".booth-spec");
+        const open = spec.classList.toggle("is-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    });
+  });
+
   /* --- Gallery filtering --- */
   const filterPills = document.querySelectorAll(".filter-pill");
   const galleryItems = document.querySelectorAll(".gallery__item");
