@@ -46,10 +46,19 @@ export default async function handler(req, res) {
 
   // Step-1 fields are the minimum to create/keep a lead.
   const STEP1 = ["name", "email", "phone", "eventType"];
-  // A completed inquiry also needs a package selection (incl. "Not sure yet").
-  const COMPLETION = [...STEP1, "packageInterest"];
 
-  const required = (isPartial && !existingId) ? STEP1 : (isPartial ? [] : COMPLETION);
+  // Required-field rules per flow:
+  //   - partial create (no id): the step-1 contact fields
+  //   - progressive patch (partial + id): nothing (fields already persisted)
+  //   - completion OF an existing partial row (id present): just packageInterest —
+  //     the contact fields were validated + saved at step 1 and live in the row,
+  //     so we don't force the client to re-send them
+  //   - legacy one-shot full submit (no id, not partial): the full set
+  let required;
+  if (isPartial && !existingId) required = STEP1;
+  else if (isPartial) required = [];
+  else if (existingId) required = ["packageInterest"];
+  else required = [...STEP1, "packageInterest"];
   const missing = required.filter(k => !payload[k]);
   if (missing.length) return res.status(400).json({ error: `Missing: ${missing.join(", ")}` });
 
@@ -116,10 +125,7 @@ export default async function handler(req, res) {
       body: JSON.stringify(cols),
     });
     if (!ins.ok) {
-      const detail = await ins.text();
-      console.error("Supabase insert failed:", detail);
-      // TEMP diagnostic: echo DB error when ?debug=1 so we can see the real cause.
-      if (req.query && req.query.debug) return res.status(500).json({ error: "Could not save inquiry", detail });
+      console.error("Supabase insert failed:", await ins.text());
       return res.status(500).json({ error: "Could not save inquiry" });
     }
     const rows = await ins.json().catch(() => []);
