@@ -116,7 +116,10 @@ export default async function handler(req, res) {
       body: JSON.stringify(cols),
     });
     if (!ins.ok) {
-      console.error("Supabase insert failed:", await ins.text());
+      const detail = await ins.text();
+      console.error("Supabase insert failed:", detail);
+      // TEMP diagnostic: echo DB error when ?debug=1 so we can see the real cause.
+      if (req.query && req.query.debug) return res.status(500).json({ error: "Could not save inquiry", detail });
       return res.status(500).json({ error: "Could not save inquiry" });
     }
     const rows = await ins.json().catch(() => []);
