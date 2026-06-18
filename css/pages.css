@@ -346,6 +346,82 @@
   margin-inline: auto;
 }
 
+/* ---------- Testimonial carousel ----------
+   Crossfades between client quotes. The active slide is position:relative
+   so it dictates the container height automatically; inactive slides are
+   absolutely positioned and faded out, so there's no JS height math. */
+.testimonial-carousel {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+.testimonial-carousel__eyebrow {
+  display: block;
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+.testimonial-carousel__viewport {
+  position: relative;
+  /* Leave room for the arrows on either side so long quotes never overlap them. */
+  padding-inline: clamp(2.75rem, 8vw, 5.5rem);
+}
+.testimonial-carousel__slides {
+  position: relative;
+}
+.testimonial-carousel__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-med) var(--ease-out),
+              visibility 0s linear var(--dur-med);
+}
+.testimonial-carousel__slide.is-active {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+.testimonial-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(244, 237, 224, 0.14);
+  border: 1px solid rgba(244, 237, 224, 0.45);
+  color: var(--linen);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.testimonial-carousel__arrow:hover {
+  background: var(--linen);
+  color: var(--evergreen);
+}
+.testimonial-carousel__arrow:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+.testimonial-carousel__arrow--prev { left: 0; }
+.testimonial-carousel__arrow--next { right: 0; }
+.testimonial-carousel__arrow--prev:hover { transform: translateY(-50%) translateX(-2px); }
+.testimonial-carousel__arrow--next:hover { transform: translateY(-50%) translateX(2px); }
+
+@media (max-width: 600px) {
+  .testimonial-carousel__viewport { padding-inline: 0; }
+  .testimonial-carousel__arrow--prev { left: -0.25rem; }
+  .testimonial-carousel__arrow--next { right: -0.25rem; }
+}
+
 /* ---------- Inquiry form section ---------- */
 .inquiry {
   background: var(--linen-warm);

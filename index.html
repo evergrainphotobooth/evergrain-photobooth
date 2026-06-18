@@ -281,12 +281,32 @@ gtag('config', 'G-N7ERDKCDX7');
   <!-- ===== TESTIMONIAL ===== -->
   <section class="section section--evergreen topo-bg topo-bg--inverted">
     <div class="container">
-      <div class="testimonial reveal">
-        <span class="eyebrow eyebrow--light">Heard from clients</span>
-        <p class="testimonial__quote" style="color:var(--linen);">
-          "I booked Evergrain for my nephew's 2nd birthday. They did an amazing job communicating all the different available options and even helped customize a template that matched the theme of the party. During the event they were super attentive and engaging with all our guests and had several prop options. 10/10 would recommend and book again!"
-        </p>
-        <p class="testimonial__author" style="color:var(--champagne);">Bryan T.</p>
+      <div class="testimonial-carousel reveal" data-testimonial-carousel aria-roledescription="carousel" aria-label="Client testimonials">
+        <span class="eyebrow eyebrow--light testimonial-carousel__eyebrow">Heard from clients</span>
+        <div class="testimonial-carousel__viewport">
+          <button type="button" class="testimonial-carousel__arrow testimonial-carousel__arrow--prev" data-testimonial-prev aria-label="Previous testimonial">&larr;</button>
+          <div class="testimonial-carousel__slides" data-testimonial-slides>
+            <div class="testimonial testimonial-carousel__slide is-active" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--linen);">
+                "I booked Evergrain for my nephew's 2nd birthday. They did an amazing job communicating all the different available options and even helped customize a template that matched the theme of the party. During the event they were super attentive and engaging with all our guests and had several prop options. 10/10 would recommend and book again!"
+              </p>
+              <p class="testimonial__author" style="color:var(--champagne);">Bryan T.</p>
+            </div>
+            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--linen);">
+                "Cindy and Hamilton were so accommodating and thoughtful. We had them come for a family party and the photobooth was set up in no time! I was surprised how little space it took. We were able to get a custom background for our print-outs and the print quality was amazing! You can also have the file sent directly to you for posting. Highly recommend Evergrain!"
+              </p>
+              <p class="testimonial__author" style="color:var(--champagne);">Kristine P.</p>
+            </div>
+            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--linen);">
+                "I booked Evergrain Photobooth for my twin's 8th birthday party, and they did an amazing job! I highly recommend them — if I could give 10 stars, I would. They were professional, punctual, and incredibly easy to work with. What really stood out was how they customized the entire photo booth experience, including the backdrop and printed photos to perfectly match our party theme. They also used beautiful lighting that made everyone look their best in every photo. Our guests loved it, and the photos turned out fantastic. I can't wait to book Evergrain Photobooth again for future events!"
+              </p>
+              <p class="testimonial__author" style="color:var(--champagne);">May N.</p>
+            </div>
+          </div>
+          <button type="button" class="testimonial-carousel__arrow testimonial-carousel__arrow--next" data-testimonial-next aria-label="Next testimonial">&rarr;</button>
+        </div>
       </div>
     </div>
   </section>

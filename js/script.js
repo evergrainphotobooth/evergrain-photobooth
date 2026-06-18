@@ -142,6 +142,41 @@ document.addEventListener("DOMContentLoaded", () => {
     start();
   });
 
+  /* --- Testimonial carousel (crossfade, manual + auto-advance) ---
+     Fades between client quotes. Arrows step prev/next and wrap around.
+     Auto-advances every 7s; pauses on hover/focus. Honors reduced-motion. */
+  document.querySelectorAll("[data-testimonial-carousel]").forEach(root => {
+    const slides = Array.from(root.querySelectorAll("[data-testimonial-slide]"));
+    if (slides.length < 2) return;
+
+    const AUTO_MS = 7000;
+    let index = slides.findIndex(s => s.classList.contains("is-active"));
+    if (index < 0) index = 0;
+    let timer = null;
+
+    const show = (i) => {
+      index = (i + slides.length) % slides.length;
+      slides.forEach((slide, n) => slide.classList.toggle("is-active", n === index));
+    };
+    const next = () => show(index + 1);
+    const prev = () => show(index - 1);
+
+    const start = () => { if (!timer) timer = setInterval(next, AUTO_MS); };
+    const stop = () => { clearInterval(timer); timer = null; };
+    const reset = () => { stop(); start(); };
+
+    root.querySelector("[data-testimonial-next]")?.addEventListener("click", () => { next(); reset(); });
+    root.querySelector("[data-testimonial-prev]")?.addEventListener("click", () => { prev(); reset(); });
+
+    root.addEventListener("mouseenter", stop);
+    root.addEventListener("mouseleave", start);
+    root.addEventListener("focusin", stop);
+    root.addEventListener("focusout", start);
+    document.addEventListener("visibilitychange", () => { document.hidden ? stop() : start(); });
+
+    start();
+  });
+
   /* --- Gallery filtering --- */
   const filterPills = document.querySelectorAll(".filter-pill");
   const galleryItems = document.querySelectorAll(".gallery__item");
