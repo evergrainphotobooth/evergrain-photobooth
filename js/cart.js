@@ -123,7 +123,7 @@ const Cart = {
         <div class="cart__empty">
           <p>Your Package List is empty.</p>
           <p style="font-size:0.9rem;">Start by choosing a package, then customize with add-ons.</p>
-          <a href="/packages" class="btn btn--primary btn--sm">Browse Packages</a>
+          <a href="/packages" class="btn btn--primary btn--sm"><span>Browse Packages</span></a>
         </div>`;
       if (footerEl) footerEl.style.display = "none";
       return;
