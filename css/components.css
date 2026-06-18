@@ -101,12 +101,19 @@
   z-index: 0;
 }
 .btn--primary > * { position: relative; z-index: 1; }
-.btn--primary:hover::before { transform: translateY(0); }
-.btn--primary:hover {
+/* Raise the ink-wipe on hover and on press (click/tap). */
+.btn--primary:hover::before,
+.btn--primary:active::before { transform: translateY(0); }
+.btn--primary:hover,
+.btn--primary:active {
   background: var(--evergreen);
   color: var(--char); /* dark text on brass ink-wipe — passes WCAG AA */
   border-color: var(--brass);
 }
+/* Keep the label dark/visible once the brass wipe covers the button.
+   Targets the wrapping span directly so it never inherits the light color. */
+.btn--primary:hover > *,
+.btn--primary:active > * { color: var(--char); }
 
 /* Inline text link with arrow */
 .link-arrow {

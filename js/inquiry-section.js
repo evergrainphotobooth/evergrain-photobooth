@@ -202,8 +202,8 @@
       <div class="form__nav" data-step-nav>
         <button type="button" class="btn btn--outline" data-step-back hidden>← Back</button>
         <span class="form__nav-spacer"></span>
-        <button type="button" class="btn btn--primary" data-step-next>Next →</button>
-        <button type="submit" class="btn btn--primary" data-step-submit hidden>Send Inquiry</button>
+        <button type="button" class="btn btn--primary" data-step-next><span>Next →</span></button>
+        <button type="submit" class="btn btn--primary" data-step-submit hidden><span>Send Inquiry</span></button>
       </div>
       <p class="form__help" style="margin-top: var(--space-sm);">By submitting, you agree to our <a href="/privacy-policy">Privacy Policy</a>.</p>
     </form>
