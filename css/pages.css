@@ -421,9 +421,12 @@
 .testimonial-carousel__arrow--next:hover { transform: translateY(-50%) translateX(2px); }
 
 @media (max-width: 600px) {
-  .testimonial-carousel__viewport { padding-inline: 0; }
-  .testimonial-carousel__arrow--prev { left: -0.25rem; }
-  .testimonial-carousel__arrow--next { right: -0.25rem; }
+  /* Smaller quote + enough side padding that text clears the arrows. */
+  .testimonial-carousel .testimonial__quote { font-size: 1.05rem; }
+  .testimonial-carousel__viewport { padding-inline: 2.75rem; }
+  .testimonial-carousel__arrow { width: 36px; height: 36px; font-size: 1rem; }
+  .testimonial-carousel__arrow--prev { left: 0; }
+  .testimonial-carousel__arrow--next { right: 0; }
 }
 
 /* ---------- Inquiry form section ---------- */
