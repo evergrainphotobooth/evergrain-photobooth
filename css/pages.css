@@ -1269,6 +1269,43 @@ a.area-pill:hover {
   margin: 0 0 var(--space-md);
   flex: 1;
 }
+/* Price-set selector (e.g. Magnetic Photo Sleeves: Set of 50 / Set of 100) */
+.addon__variants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+.addon__variant { position: relative; display: inline-flex; }
+.addon__variant input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.addon__variant span {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.85rem;
+  border: 1.5px solid rgba(92, 74, 53, 0.25);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  color: var(--bark);
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.addon__variant input:checked + span {
+  background: var(--evergreen);
+  border-color: var(--evergreen);
+  color: var(--linen);
+}
+.addon__variant input:focus-visible + span {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
 .addon__toggle {
   background: transparent;
   border: 1.5px solid var(--evergreen);

@@ -200,10 +200,22 @@ const Cart = {
     });
     document.querySelectorAll("[data-addon-card]").forEach(card => {
       const id = card.getAttribute("data-addon-card");
-      const isSelected = this.state.addons.some(a => a.id === id);
-      card.classList.toggle("is-selected", isSelected);
+      const inCart = this.state.addons.find(a => a.id === id);
+      card.classList.toggle("is-selected", !!inCart);
       const btn = card.querySelector("[data-toggle-addon]");
-      if (btn) btn.textContent = isSelected ? "Added" : "Add to List";
+      if (btn) btn.textContent = inCart ? "Added" : "Add to List";
+      // Reflect a saved price-set choice back onto the card (e.g. after reload).
+      if (inCart && inCart.variant) {
+        const radio = card.querySelector(`[data-variant-radio][value="${CSS.escape(inCart.variant)}"]`);
+        if (radio && !radio.checked) {
+          radio.checked = true;
+          card.setAttribute("data-price", String(inCart.price));
+          const priceEl = card.querySelector(".addon__price");
+          const metaEl = card.querySelector(".addon__price-meta");
+          if (priceEl) priceEl.textContent = this.formatPrice(inCart.price);
+          if (metaEl && radio.dataset.variantMeta) metaEl.textContent = radio.dataset.variantMeta;
+        }
+      }
     });
   },
 
@@ -386,13 +398,40 @@ const Cart = {
         e.preventDefault();
         const card = btn.closest("[data-addon-card]");
         if (!card) return;
+        // If the card has a price-set selector, use the chosen set's price + label.
+        const variant = card.querySelector("[data-variant-radio]:checked");
+        const baseName = card.getAttribute("data-name");
         const addon = {
           id: card.getAttribute("data-addon-card"),
-          name: card.getAttribute("data-name"),
-          price: Number(card.getAttribute("data-price")),
-          desc: card.getAttribute("data-desc") || ""
+          name: variant ? `${baseName} — ${variant.value}` : baseName,
+          price: variant ? Number(variant.dataset.variantPrice) : Number(card.getAttribute("data-price")),
+          desc: card.getAttribute("data-desc") || "",
+          variant: variant ? variant.value : null
         };
         this.toggleAddon(addon);
+      });
+    });
+
+    // Price-set (variant) selectors on add-on cards — update the card's
+    // displayed price and, if it's already in the list, the saved entry.
+    document.querySelectorAll("[data-addon-card] [data-variant-radio]").forEach(radio => {
+      radio.addEventListener("change", () => {
+        const card = radio.closest("[data-addon-card]");
+        if (!card) return;
+        const price = Number(radio.dataset.variantPrice);
+        card.setAttribute("data-price", String(price));
+        const priceEl = card.querySelector(".addon__price");
+        const metaEl = card.querySelector(".addon__price-meta");
+        if (priceEl) priceEl.textContent = this.formatPrice(price);
+        if (metaEl && radio.dataset.variantMeta) metaEl.textContent = radio.dataset.variantMeta;
+        const existing = this.state.addons.find(a => a.id === card.getAttribute("data-addon-card"));
+        if (existing) {
+          existing.price = price;
+          existing.variant = radio.value;
+          existing.name = `${card.getAttribute("data-name")} — ${radio.value}`;
+          this.save();
+          this.render();
+        }
       });
     });
 

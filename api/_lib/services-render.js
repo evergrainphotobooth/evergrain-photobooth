@@ -51,6 +51,22 @@ export function renderEveryPackageList(everyPackageIncludes) {
 }
 
 /* ---------- add-ons.html addon card ---------- */
+/* Optional price-set selector. When an add-on has 2+ priceSets, guests pick
+   a set and the card's price + cart entry follow the selection. */
+function renderAddonVariants(a) {
+  if (!Array.isArray(a.priceSets) || a.priceSets.length < 2) return "";
+  const opts = a.priceSets.map((ps, idx) =>
+    `              <label class="addon__variant">
+                <input type="radio" name="variant-${esc(a.id)}" value="${esc(ps.label)}" data-variant-radio data-variant-price="${ps.price}" data-variant-meta="${esc(ps.meta || a.priceMeta || "")}"${idx === 0 ? " checked" : ""} />
+                <span>${esc(ps.label)} — $${fmtPrice(ps.price)}</span>
+              </label>`
+  ).join("\n");
+  return `
+            <div class="addon__variants" role="radiogroup" aria-label="Choose a set size">
+${opts}
+            </div>`;
+}
+
 function renderAddonCard(a) {
   const displayName = a.displayName || a.name;
   return `          <article class="addon reveal" data-addon-card="${esc(a.id)}" data-name="${esc(a.name)}" data-price="${a.price}" data-desc="${esc(a.description)}">
@@ -58,7 +74,7 @@ function renderAddonCard(a) {
               <h3 class="addon__name">${esc(displayName)}</h3>
               <div><span class="addon__price">$${fmtPrice(a.price)}</span><span class="addon__price-meta">${esc(a.priceMeta)}</span></div>
             </div>
-            <p class="addon__copy">${esc(a.description)}.</p>
+            <p class="addon__copy">${esc(a.description)}.</p>${renderAddonVariants(a)}
             <button type="button" class="addon__toggle" data-toggle-addon>Add to List</button>
           </article>`;
 }

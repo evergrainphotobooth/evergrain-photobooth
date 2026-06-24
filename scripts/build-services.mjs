@@ -62,6 +62,22 @@ function buildEveryPackageList() {
 }
 
 /* ---------- 2. add-ons.html — categorized addon cards ---------- */
+/* Optional price-set selector. When an add-on has 2+ priceSets, guests pick
+   a set and the card's price + cart entry follow the selection. */
+function buildAddonVariants(a) {
+  if (!Array.isArray(a.priceSets) || a.priceSets.length < 2) return "";
+  const opts = a.priceSets.map((ps, idx) =>
+    `              <label class="addon__variant">
+                <input type="radio" name="variant-${escAttr(a.id)}" value="${escAttr(ps.label)}" data-variant-radio data-variant-price="${ps.price}" data-variant-meta="${escAttr(ps.meta || a.priceMeta || "")}"${idx === 0 ? " checked" : ""} />
+                <span>${esc(ps.label)} — $${fmtPrice(ps.price)}</span>
+              </label>`
+  ).join("\n");
+  return `
+            <div class="addon__variants" role="radiogroup" aria-label="Choose a set size">
+${opts}
+            </div>`;
+}
+
 function buildAddonCard(a) {
   const displayName = a.displayName || a.name;
   const dataDescAttr = escAttr(a.description);
@@ -70,7 +86,7 @@ function buildAddonCard(a) {
               <h3 class="addon__name">${esc(displayName)}</h3>
               <div><span class="addon__price">$${fmtPrice(a.price)}</span><span class="addon__price-meta">${esc(a.priceMeta)}</span></div>
             </div>
-            <p class="addon__copy">${esc(a.description)}.</p>
+            <p class="addon__copy">${esc(a.description)}.</p>${buildAddonVariants(a)}
             <button type="button" class="addon__toggle" data-toggle-addon>Add to List</button>
           </article>`;
 }
