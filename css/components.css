@@ -89,6 +89,9 @@
   opacity: 0.5;
   pointer-events: none;
 }
+/* .btn sets display:inline-flex, which would override the [hidden] attribute's
+   display:none — restore it so JS-hidden stepper buttons truly disappear. */
+.btn[hidden] { display: none !important; }
 
 /* Subtle "ink-wipe" micro-interaction on primary buttons */
 .btn--primary::before {
@@ -274,24 +277,50 @@ body.has-sticky-banner .site-header {
 }
 .nav__toggle svg { width: 28px; height: 28px; }
 
+/* Dim scrim behind the mobile nav drawer so the page reads clearly. Sits
+   below the header (z 90) so the drawer + top bar stay above it. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 48, 36, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 85;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+body.nav-open::before { opacity: 1; pointer-events: auto; }
+
 @media (max-width: 880px) {
   .nav__toggle { display: inline-flex; }
+  .nav__logo img { height: 32px; }
+  /* backdrop-filter makes the header a containing block for fixed children,
+     which would trap the slide-out drawer inside the header's box. Drop it on
+     mobile (the 96%-opaque background keeps the bar readable) so the drawer
+     positions against the full viewport. */
+  .site-header,
+  .site-header.is-scrolled,
+  body.has-sticky-banner .site-header {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
   .nav__menu {
     position: fixed;
     inset: 0 0 0 auto;
-    width: min(86vw, 360px);
+    width: min(58vw, 230px);
     background: var(--evergreen-dark);
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    padding: 6rem 2rem 2rem;
+    padding: 5.5rem 1.5rem 2rem;
     gap: var(--space-md);
     transform: translateX(100%);
     transition: transform var(--dur-med) var(--ease-out);
     box-shadow: var(--shadow-lg);
+    z-index: 100;
   }
   .nav__menu.is-open { transform: none; }
-  .nav__link { font-size: 1rem; letter-spacing: 0.2em; }
+  .nav__link { font-size: 1rem; letter-spacing: 0.18em; }
 }
 
 /* ---------- Footer ---------- */
@@ -606,6 +635,7 @@ body.has-sticky-banner .site-header {
 .form__select,
 .form__textarea {
   width: 100%;
+  min-width: 0;
   padding: 0.95rem 1.1rem;
   background: var(--white);
   border: 1.5px solid rgba(92, 74, 53, 0.2);
@@ -766,6 +796,13 @@ body.has-sticky-banner .site-header {
 }
 .form__nav-spacer { flex: 1; }
 .form__nav[hidden] { display: none; }
+/* On narrow screens let the nav buttons fill the row (and wrap if needed)
+   instead of forcing a min-width wider than the viewport. */
+@media (max-width: 600px) {
+  .form__nav { flex-wrap: wrap; }
+  .form__nav-spacer { display: none; }
+  .form__nav .btn { flex: 1 1 auto; justify-content: center; }
+}
 
 /* ---------- Slide-in Package List (Cart) ---------- */
 .cart-overlay {

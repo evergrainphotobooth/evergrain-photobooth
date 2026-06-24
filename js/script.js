@@ -25,12 +25,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector(".nav__toggle");
   const menu = document.querySelector(".nav__menu");
   if (toggle && menu) {
-    toggle.addEventListener("click", () => {
-      const open = menu.classList.toggle("is-open");
+    const setNav = open => {
+      menu.classList.toggle("is-open", open);
+      document.body.classList.toggle("nav-open", open);
       toggle.setAttribute("aria-expanded", String(open));
+    };
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      setNav(!menu.classList.contains("is-open"));
     });
     menu.querySelectorAll("a").forEach(a => {
-      a.addEventListener("click", () => menu.classList.remove("is-open"));
+      a.addEventListener("click", () => setNav(false));
+    });
+    // Tap the dimmed scrim (anywhere outside the drawer) to close.
+    document.addEventListener("click", e => {
+      if (menu.classList.contains("is-open") && !menu.contains(e.target) && !toggle.contains(e.target)) {
+        setNav(false);
+      }
     });
   }
 
