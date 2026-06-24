@@ -1269,6 +1269,11 @@ a.area-pill:hover {
   margin: 0 0 var(--space-md);
   flex: 1;
 }
+/* Full-width single-card rows (Props, Keepsakes) let the copy span the whole
+   card instead of the global p { max-width: 65ch } cap. */
+.addons:not(.addons--2col) .addon__copy {
+  max-width: none;
+}
 /* Price-set quantity picker (e.g. Magnetic Photo Sleeves: Set of 50 / 100).
    Each set has a − / + stepper; quantities combine into one list item. */
 .addon__variants--qty {
