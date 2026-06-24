@@ -62,19 +62,24 @@ function buildEveryPackageList() {
 }
 
 /* ---------- 2. add-ons.html — categorized addon cards ---------- */
-/* Optional price-set selector. When an add-on has 2+ priceSets, guests pick
-   a set and the card's price + cart entry follow the selection. */
+/* Optional price-set quantity picker. When an add-on has priceSets, guests
+   choose how many of each set — quantities combine (e.g. 1×50 + 1×100 = 150).
+   The card's price + cart entry follow the combined selection. */
 function buildAddonVariants(a) {
-  if (!Array.isArray(a.priceSets) || a.priceSets.length < 2) return "";
-  const opts = a.priceSets.map((ps, idx) =>
-    `              <label class="addon__variant">
-                <input type="radio" name="variant-${escAttr(a.id)}" value="${escAttr(ps.label)}" data-variant-radio data-variant-price="${ps.price}" data-variant-meta="${escAttr(ps.meta || a.priceMeta || "")}"${idx === 0 ? " checked" : ""} />
-                <span>${esc(ps.label)} — $${fmtPrice(ps.price)}</span>
-              </label>`
+  if (!Array.isArray(a.priceSets) || a.priceSets.length < 1) return "";
+  const rows = a.priceSets.map((ps, idx) =>
+    `              <div class="addon__variant-row">
+                <span class="addon__variant-name">${esc(ps.label)} — $${fmtPrice(ps.price)}</span>
+                <div class="addon__qty" data-qty data-variant-label="${escAttr(ps.label)}" data-variant-price="${ps.price}" data-variant-units="${ps.units || 0}">
+                  <button type="button" class="addon__qty-btn" data-qty-dec aria-label="Decrease ${escAttr(ps.label)}">−</button>
+                  <span class="addon__qty-val" data-qty-val>${idx === 0 ? 1 : 0}</span>
+                  <button type="button" class="addon__qty-btn" data-qty-inc aria-label="Increase ${escAttr(ps.label)}">+</button>
+                </div>
+              </div>`
   ).join("\n");
   return `
-            <div class="addon__variants" role="radiogroup" aria-label="Choose a set size">
-${opts}
+            <div class="addon__variants addon__variants--qty" data-variant-qty>
+${rows}
             </div>`;
 }
 

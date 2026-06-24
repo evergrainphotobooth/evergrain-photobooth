@@ -187,15 +187,23 @@ gtag('config', 'G-N7ERDKCDX7');
               <div><span class="addon__price">$40</span><span class="addon__price-meta">set of 50</span></div>
             </div>
             <p class="addon__copy">Clear, protective magnetic sleeves that turn every print into a fridge-ready keepsake. Guests slide their photo strip or postcard print inside and it's instantly display-ready — no tape, no pins, no frames needed. One of those small touches that makes the night stick around long after the last photo..</p>
-            <div class="addon__variants" role="radiogroup" aria-label="Choose a set size">
-              <label class="addon__variant">
-                <input type="radio" name="variant-prints-new-w4mh" value="Set of 50" data-variant-radio data-variant-price="40" data-variant-meta="set of 50" checked />
-                <span>Set of 50 — $40</span>
-              </label>
-              <label class="addon__variant">
-                <input type="radio" name="variant-prints-new-w4mh" value="Set of 100" data-variant-radio data-variant-price="75" data-variant-meta="set of 100" />
-                <span>Set of 100 — $75</span>
-              </label>
+            <div class="addon__variants addon__variants--qty" data-variant-qty>
+              <div class="addon__variant-row">
+                <span class="addon__variant-name">Set of 50 — $40</span>
+                <div class="addon__qty" data-qty data-variant-label="Set of 50" data-variant-price="40" data-variant-units="50">
+                  <button type="button" class="addon__qty-btn" data-qty-dec aria-label="Decrease Set of 50">−</button>
+                  <span class="addon__qty-val" data-qty-val>1</span>
+                  <button type="button" class="addon__qty-btn" data-qty-inc aria-label="Increase Set of 50">+</button>
+                </div>
+              </div>
+              <div class="addon__variant-row">
+                <span class="addon__variant-name">Set of 100 — $75</span>
+                <div class="addon__qty" data-qty data-variant-label="Set of 100" data-variant-price="75" data-variant-units="100">
+                  <button type="button" class="addon__qty-btn" data-qty-dec aria-label="Decrease Set of 100">−</button>
+                  <span class="addon__qty-val" data-qty-val>0</span>
+                  <button type="button" class="addon__qty-btn" data-qty-inc aria-label="Increase Set of 100">+</button>
+                </div>
+              </div>
             </div>
             <button type="button" class="addon__toggle" data-toggle-addon>Add to List</button>
           </article>

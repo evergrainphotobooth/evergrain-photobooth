@@ -77,6 +77,43 @@ const Cart = {
     this.render();
   },
 
+  /* Read the per-set quantity steppers on a price-set add-on card.
+     Returns combined price, total units, a per-set qty map and a summary. */
+  readCardComposition(card) {
+    let total = 0, units = 0;
+    const quantities = {}, parts = [];
+    card.querySelectorAll("[data-qty]").forEach(g => {
+      const qty = Math.max(0, Number(g.querySelector("[data-qty-val]")?.textContent) || 0);
+      const price = Number(g.dataset.variantPrice) || 0;
+      const u = Number(g.dataset.variantUnits) || 0;
+      quantities[g.dataset.variantLabel] = qty;
+      if (qty > 0) {
+        total += qty * price;
+        units += qty * u;
+        parts.push(`${qty} × ${g.dataset.variantLabel}`);
+      }
+    });
+    return {
+      total, units, quantities,
+      any: parts.length > 0,
+      variant: units ? `${units} sleeves (${parts.join(", ")})` : ""
+    };
+  },
+
+  /* Refresh a price-set card's headline price + meta from its steppers, and
+     disable Add to List until at least one set is chosen. Returns the composition. */
+  updateAddonCardDisplay(card) {
+    const comp = this.readCardComposition(card);
+    const priceEl = card.querySelector(".addon__price");
+    const metaEl = card.querySelector(".addon__price-meta");
+    if (priceEl) priceEl.textContent = this.formatPrice(comp.total);
+    if (metaEl) metaEl.textContent = comp.units ? `${comp.units} sleeves` : "Select a set";
+    const inCart = this.state.addons.some(a => a.id === card.getAttribute("data-addon-card"));
+    const btn = card.querySelector("[data-toggle-addon]");
+    if (btn) btn.disabled = !comp.any && !inCart;
+    return comp;
+  },
+
   total() {
     let total = 0;
     if (this.state.package) total += Number(this.state.package.price) || 0;
@@ -170,7 +207,7 @@ const Cart = {
           <div class="cart__item">
             <div>
               <h4 class="cart__item-title">${a.name}</h4>
-              <p class="cart__item-desc">${a.desc || ""}</p>
+              <p class="cart__item-desc">${a.variant || a.desc || ""}</p>
               <button type="button" class="cart__item-remove" data-remove-addon="${a.id}">Remove</button>
             </div>
             <div class="cart__item-price">${this.formatPrice(a.price)}</div>
@@ -204,17 +241,16 @@ const Cart = {
       card.classList.toggle("is-selected", !!inCart);
       const btn = card.querySelector("[data-toggle-addon]");
       if (btn) btn.textContent = inCart ? "Added" : "Add to List";
-      // Reflect a saved price-set choice back onto the card (e.g. after reload).
-      if (inCart && inCart.variant) {
-        const radio = card.querySelector(`[data-variant-radio][value="${CSS.escape(inCart.variant)}"]`);
-        if (radio && !radio.checked) {
-          radio.checked = true;
-          card.setAttribute("data-price", String(inCart.price));
-          const priceEl = card.querySelector(".addon__price");
-          const metaEl = card.querySelector(".addon__price-meta");
-          if (priceEl) priceEl.textContent = this.formatPrice(inCart.price);
-          if (metaEl && radio.dataset.variantMeta) metaEl.textContent = radio.dataset.variantMeta;
+      // Price-set quantity cards: restore saved stepper values (e.g. after reload),
+      // then sync the headline price + Add button state.
+      if (card.querySelector("[data-variant-qty]")) {
+        if (inCart && inCart.quantities) {
+          card.querySelectorAll("[data-qty]").forEach(g => {
+            const v = g.querySelector("[data-qty-val]");
+            if (v) v.textContent = String(inCart.quantities[g.dataset.variantLabel] || 0);
+          });
         }
+        this.updateAddonCardDisplay(card);
       }
     });
   },
@@ -303,7 +339,7 @@ const Cart = {
 
     if (hiddenPkg) hiddenPkg.value = this.state.package ? `${this.state.package.name} (${this.formatPrice(this.state.package.price)})` : "None selected";
     if (hiddenAddons) hiddenAddons.value = this.state.addons.length
-      ? this.state.addons.map(a => `${a.name} (${this.formatPrice(a.price)})`).join(" • ")
+      ? this.state.addons.map(a => `${a.name}${a.variant ? ` — ${a.variant}` : ""} (${this.formatPrice(a.price)})`).join(" • ")
       : "None selected";
     if (hiddenTotal) hiddenTotal.value = this.formatPrice(this.total());
 
@@ -321,7 +357,7 @@ const Cart = {
       html += `<li><span>${this.state.package.name}</span><span>${this.formatPrice(this.state.package.price)}</span></li>`;
     }
     this.state.addons.forEach(a => {
-      html += `<li><span>${a.name}</span><span>${this.formatPrice(a.price)}</span></li>`;
+      html += `<li><span>${a.name}${a.variant ? ` <em style="font-style:normal;color:var(--bark);">· ${a.variant}</em>` : ""}</span><span>${this.formatPrice(a.price)}</span></li>`;
     });
     html += `</ul>
       <div class="inquiry-cart-summary__total">
@@ -398,41 +434,54 @@ const Cart = {
         e.preventDefault();
         const card = btn.closest("[data-addon-card]");
         if (!card) return;
-        // If the card has a price-set selector, use the chosen set's price + label.
-        const variant = card.querySelector("[data-variant-radio]:checked");
-        const baseName = card.getAttribute("data-name");
-        const addon = {
+        // Price-set cards: combine the chosen set quantities into one item.
+        if (card.querySelector("[data-variant-qty]")) {
+          const comp = this.readCardComposition(card);
+          const inCart = this.state.addons.some(a => a.id === card.getAttribute("data-addon-card"));
+          if (!comp.any && !inCart) { this.notify("Choose a quantity first"); return; }
+          this.toggleAddon({
+            id: card.getAttribute("data-addon-card"),
+            name: card.getAttribute("data-name"),
+            price: comp.total,
+            desc: card.getAttribute("data-desc") || "",
+            variant: comp.variant,
+            quantities: comp.quantities
+          });
+          return;
+        }
+        this.toggleAddon({
           id: card.getAttribute("data-addon-card"),
-          name: variant ? `${baseName} — ${variant.value}` : baseName,
-          price: variant ? Number(variant.dataset.variantPrice) : Number(card.getAttribute("data-price")),
-          desc: card.getAttribute("data-desc") || "",
-          variant: variant ? variant.value : null
-        };
-        this.toggleAddon(addon);
+          name: card.getAttribute("data-name"),
+          price: Number(card.getAttribute("data-price")),
+          desc: card.getAttribute("data-desc") || ""
+        });
       });
     });
 
-    // Price-set (variant) selectors on add-on cards — update the card's
-    // displayed price and, if it's already in the list, the saved entry.
-    document.querySelectorAll("[data-addon-card] [data-variant-radio]").forEach(radio => {
-      radio.addEventListener("change", () => {
-        const card = radio.closest("[data-addon-card]");
-        if (!card) return;
-        const price = Number(radio.dataset.variantPrice);
-        card.setAttribute("data-price", String(price));
-        const priceEl = card.querySelector(".addon__price");
-        const metaEl = card.querySelector(".addon__price-meta");
-        if (priceEl) priceEl.textContent = this.formatPrice(price);
-        if (metaEl && radio.dataset.variantMeta) metaEl.textContent = radio.dataset.variantMeta;
-        const existing = this.state.addons.find(a => a.id === card.getAttribute("data-addon-card"));
+    // Price-set quantity steppers — change a set's quantity, update the card's
+    // headline price and (if already in the list) the saved entry live.
+    document.querySelectorAll("[data-addon-card] [data-variant-qty] [data-qty]").forEach(row => {
+      const card = row.closest("[data-addon-card]");
+      const valEl = row.querySelector("[data-qty-val]");
+      const step = delta => {
+        valEl.textContent = String(Math.max(0, (Number(valEl.textContent) || 0) + delta));
+        const comp = this.updateAddonCardDisplay(card);
+        const id = card.getAttribute("data-addon-card");
+        const existing = this.state.addons.find(a => a.id === id);
         if (existing) {
-          existing.price = price;
-          existing.variant = radio.value;
-          existing.name = `${card.getAttribute("data-name")} — ${radio.value}`;
-          this.save();
-          this.render();
+          if (!comp.any) {
+            this.removeAddon(id, { silent: true });
+          } else {
+            existing.price = comp.total;
+            existing.variant = comp.variant;
+            existing.quantities = comp.quantities;
+            this.save();
+            this.render();
+          }
         }
-      });
+      };
+      row.querySelector("[data-qty-dec]")?.addEventListener("click", () => step(-1));
+      row.querySelector("[data-qty-inc]")?.addEventListener("click", () => step(1));
     });
 
     // Clear cart button

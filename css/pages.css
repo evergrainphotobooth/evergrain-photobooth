@@ -1269,42 +1269,70 @@ a.area-pill:hover {
   margin: 0 0 var(--space-md);
   flex: 1;
 }
-/* Price-set selector (e.g. Magnetic Photo Sleeves: Set of 50 / Set of 100) */
-.addon__variants {
+/* Price-set quantity picker (e.g. Magnetic Photo Sleeves: Set of 50 / 100).
+   Each set has a − / + stepper; quantities combine into one list item. */
+.addon__variants--qty {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
+  flex-direction: column;
+  gap: 0.5rem;
   margin-bottom: var(--space-md);
 }
-.addon__variant { position: relative; display: inline-flex; }
-.addon__variant input {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
+.addon__variant-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
 }
-.addon__variant span {
+.addon__variant-name {
+  font-size: 0.85rem;
+  color: var(--bark);
+}
+.addon__qty {
   display: inline-flex;
   align-items: center;
-  padding: 0.45rem 0.85rem;
+  gap: 0.25rem;
   border: 1.5px solid rgba(92, 74, 53, 0.25);
   border-radius: 999px;
-  font-size: 0.82rem;
-  color: var(--bark);
-  white-space: nowrap;
+  padding: 0.15rem;
+}
+.addon__qty-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--evergreen);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out),
-              border-color var(--dur-fast) var(--ease-out),
               color var(--dur-fast) var(--ease-out);
 }
-.addon__variant input:checked + span {
+.addon__qty-btn:hover {
   background: var(--evergreen);
-  border-color: var(--evergreen);
   color: var(--linen);
 }
-.addon__variant input:focus-visible + span {
+.addon__qty-btn:focus-visible {
   outline: 2px solid var(--brass);
   outline-offset: 2px;
+}
+.addon__qty-val {
+  min-width: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--char);
+}
+.addon__toggle:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.addon__toggle:disabled:hover {
+  background: transparent;
+  color: var(--evergreen);
 }
 .addon__toggle {
   background: transparent;
