@@ -512,7 +512,10 @@ a.area-pill:hover {
 
 /* Specific cell sizing for editorial rhythm */
 .story-mosaic__item--1 { grid-column: span 4; aspect-ratio: 16 / 11; }
-.story-mosaic__item--2 { grid-column: span 2; aspect-ratio: 3 / 4; }
+/* No aspect-ratio: item 2 stretches to fill its row, matching item 1's height.
+   Its image is absolutely positioned so it never inflates the row height. */
+.story-mosaic__item--2 { grid-column: span 2; align-self: stretch; }
+.story-mosaic__item--2 img { position: absolute; inset: 0; }
 .story-mosaic__item--3 { grid-column: span 2; aspect-ratio: 1 / 1; }
 .story-mosaic__item--4 { grid-column: span 2; aspect-ratio: 1 / 1; }
 .story-mosaic__item--5 { grid-column: span 2; aspect-ratio: 1 / 1; }
@@ -529,6 +532,8 @@ a.area-pill:hover {
   .story-mosaic__item--6,
   .story-mosaic__item--7 { grid-column: span 1; }
   .story-mosaic__item--1 { grid-column: 1 / -1; aspect-ratio: 16 / 11; }
+  /* Match item 3's square so the two top cells are the same size on mobile. */
+  .story-mosaic__item--2 { align-self: auto; aspect-ratio: 1 / 1; }
 }
 
 .story-timeline {
