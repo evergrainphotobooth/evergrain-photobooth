@@ -292,7 +292,9 @@ body::before {
 body.nav-open::before { opacity: 1; pointer-events: auto; }
 
 @media (max-width: 880px) {
-  .nav__toggle { display: inline-flex; }
+  /* Keep the hamburger above the drawer (z 100) so it stays visible at the
+     top-right while the menu is open — tap it to collapse the menu. */
+  .nav__toggle { display: inline-flex; position: relative; z-index: 110; }
   .nav__logo img { height: 32px; }
   /* backdrop-filter makes the header a containing block for fixed children,
      which would trap the slide-out drawer inside the header's box. Drop it on

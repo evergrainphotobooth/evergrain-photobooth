@@ -43,6 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
         setNav(false);
       }
     });
+    // Swipe right on the drawer to collapse it back off-screen.
+    let swipeX = 0, swipeY = 0;
+    menu.addEventListener("touchstart", e => {
+      swipeX = e.touches[0].clientX;
+      swipeY = e.touches[0].clientY;
+    }, { passive: true });
+    menu.addEventListener("touchend", e => {
+      const dx = e.changedTouches[0].clientX - swipeX;
+      const dy = e.changedTouches[0].clientY - swipeY;
+      if (dx > 50 && Math.abs(dx) > Math.abs(dy)) setNav(false);
+    }, { passive: true });
   }
 
   /* --- Highlight active nav link (clean-URL aware) --- */
