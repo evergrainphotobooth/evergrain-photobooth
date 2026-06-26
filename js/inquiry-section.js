@@ -135,12 +135,14 @@
             </select>
           </div>
           <div class="form__field">
-            <label class="form__label" for="venueCity">Venue City</label>
-            <input class="form__input" type="text" id="venueCity" name="venueCity" autocomplete="address-level2" />
+            <label class="form__label" for="venueCity">Venue Name</label>
+            <!-- name="venueCity" kept so it maps to the existing inquiries.venue_city
+                 column (no DB migration); the field now captures the venue name. -->
+            <input class="form__input" type="text" id="venueCity" name="venueCity" autocomplete="off" />
           </div>
         </div>
         <div class="form__field">
-          <label class="form__label" for="venueAddress">Venue Full Address <span class="form__label-note">(if known)</span></label>
+          <label class="form__label" for="venueAddress">Venue Full Address <span class="form__label-note">(street address, city, state, zip code)</span></label>
           <input class="form__input" type="text" id="venueAddress" name="venueAddress" autocomplete="street-address" />
         </div>
       </fieldset>

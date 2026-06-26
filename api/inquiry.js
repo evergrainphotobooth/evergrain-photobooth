@@ -190,7 +190,7 @@ function renderEmail(p) {
       ${row("Event Date", formatDate(p.eventDate))}
       ${row("Event Start", formatTime(p.eventStartTime))}
       ${row("Event Type", p.eventType)}
-      ${row("Venue City", p.venueCity)}
+      ${row("Venue Name", p.venueCity)}
       ${row("Venue Address", p.venueAddress)}
       ${row("Guests", p.guests)}
       ${row("Aesthetic", p.aesthetic)}
