@@ -763,6 +763,80 @@ a.area-pill:hover {
   .booth-carousel__track { transition: none; }
 }
 
+/* ---------- "A few past setups" filmstrip — 4 across, scroll for more ---------- */
+.setups-carousel-wrap {
+  position: relative;
+  margin-top: var(--space-md);
+}
+.setups-carousel {
+  display: flex;
+  gap: var(--space-md);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-block: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+.setups-carousel::-webkit-scrollbar { display: none; }
+.setups-carousel__item {
+  flex: 0 0 calc((100% - 3 * var(--space-md)) / 4); /* 4 across on desktop */
+  scroll-snap-align: start;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--linen-warm);
+  aspect-ratio: 4 / 5;
+}
+.setups-carousel__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 600ms var(--ease-out);
+}
+.setups-carousel__item:hover img { transform: scale(1.03); }
+@media (max-width: 900px) {
+  .setups-carousel__item { flex: 0 0 calc((100% - var(--space-md)) / 2); } /* 2 across */
+}
+@media (max-width: 560px) {
+  .setups-carousel__item { flex: 0 0 78%; } /* ~1.3 across, scroll for the rest */
+}
+/* Arrows stay visible so more images can be scrolled in once added. */
+.setups-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid rgba(92, 74, 53, 0.15);
+  color: var(--evergreen);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1;
+  padding-bottom: 4px;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.setups-carousel__arrow:hover {
+  background: var(--evergreen);
+  color: var(--linen);
+}
+.setups-carousel__arrow:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+.setups-carousel__arrow--prev { left: -12px; }
+.setups-carousel__arrow--next { right: -12px; }
+
 /* ---------- Packages page ---------- */
 .packages {
   display: grid;
