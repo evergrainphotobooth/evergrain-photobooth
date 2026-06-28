@@ -12,7 +12,7 @@
         "DSLR quality photos",
         "Unlimited digital photos",
         "Instant digital sharing (text, email, AirDrop, QR code)",
-        "Choice of 2×6 or 4×6 prints",
+        "2×6 photo strip",
         "Standard photo templates",
         "Standard backdrop",
         "Standard prop bundle",
@@ -32,6 +32,7 @@
       "shortDesc": "Great for weddings, company events, holiday parties, and celebrations for up to 150 guests.",
       "features": [
         "Everything in The Candid",
+        "Choice of 2×6 or 4×6 prints",
         "Customizable photo templates",
         "Customizable rear screen display",
         "Customizable tap-to-start screen",
@@ -172,8 +173,18 @@
           "price": 40,
           "priceMeta": "set of 50",
           "priceSets": [
-            { "label": "Set of 50", "price": 40, "meta": "set of 50", "units": 50 },
-            { "label": "Set of 100", "price": 75, "meta": "set of 100", "units": 100 }
+            {
+              "label": "Set of 50",
+              "price": 40,
+              "meta": "set of 50",
+              "units": 50
+            },
+            {
+              "label": "Set of 100",
+              "price": 75,
+              "meta": "set of 100",
+              "units": 100
+            }
           ],
           "description": "Clear, protective magnetic sleeves that turn every print into a fridge-ready keepsake. Guests slide their photo strip or postcard print inside and it's instantly display-ready — no tape, no pins, no frames needed. One of those small touches that makes the night stick around long after the last photo."
         }
