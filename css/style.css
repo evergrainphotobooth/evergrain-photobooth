@@ -185,6 +185,8 @@ p { margin: 0 0 var(--space-md); max-width: 65ch; }
 .section--evergreen h1,
 .section--evergreen h2,
 .section--evergreen h3 { color: var(--linen); }
+/* Body copy reads light on the evergreen background (overrides .lede's dark bark). */
+.section--evergreen .lede { color: var(--champagne); }
 .section--char { background: var(--char); color: var(--linen); }
 .section--char h1,
 .section--char h2,
