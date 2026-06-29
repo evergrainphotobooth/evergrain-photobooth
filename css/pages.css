@@ -1474,24 +1474,25 @@ a.area-pill:hover {
 }
 
 .gallery {
-  columns: 3;
-  column-gap: var(--space-md);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 per row on desktop */
+  gap: var(--space-md);
 }
-@media (max-width: 900px) { .gallery { columns: 2; } }
-@media (max-width: 500px) { .gallery { columns: 1; } }
+@media (max-width: 900px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } } /* 1 per row on mobile */
 
 .gallery__item {
-  break-inside: avoid;
-  margin-bottom: var(--space-md);
   display: block;
   overflow: hidden;
   border-radius: var(--radius-md);
   position: relative;
   background: var(--linen-warm);
+  aspect-ratio: 4 / 5;
 }
 .gallery__item img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
   transition: transform 600ms var(--ease-out), filter var(--dur-med);
   filter: saturate(0.85);

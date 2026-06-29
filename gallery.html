@@ -35,6 +35,7 @@ gtag('config', 'G-N7ERDKCDX7');
         <li><a href="/the-booth" class="nav__link">The Booth</a></li>
         <li><a href="/packages" class="nav__link">Packages</a></li>
         <li><a href="/add-ons" class="nav__link">Add-Ons</a></li>
+        <li><a href="/gallery" class="nav__link">Gallery</a></li>
         <li><a href="/faq" class="nav__link">FAQ</a></li>
       </ul>
       <div class="nav__actions">
@@ -64,76 +65,8 @@ gtag('config', 'G-N7ERDKCDX7');
   <section class="section">
     <div class="container">
 
-      <div class="gallery-filters reveal">
-        <button class="filter-pill is-active" data-filter="all" type="button">All</button>
-        <button class="filter-pill" data-filter="weddings" type="button">Weddings</button>
-        <button class="filter-pill" data-filter="corporate" type="button">Corporate</button>
-        <button class="filter-pill" data-filter="parties" type="button">Parties</button>
-        <button class="filter-pill" data-filter="brand" type="button">Brand Activations</button>
-      </div>
-
-      <div class="gallery">
-        <a href="https://picsum.photos/seed/eg1/800/1100" class="gallery__item" data-category="weddings">
-          <img src="https://picsum.photos/seed/eg1/800/1100" alt="Wedding photo" loading="lazy" />
-          <span class="gallery__caption">Pasadena · Spring wedding</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg2/800/600" class="gallery__item" data-category="corporate">
-          <img src="https://picsum.photos/seed/eg2/800/600" alt="Corporate event" loading="lazy" />
-          <span class="gallery__caption">Downtown LA · Brand launch</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg3/800/900" class="gallery__item" data-category="parties">
-          <img src="https://picsum.photos/seed/eg3/800/900" alt="Party photo" loading="lazy" />
-          <span class="gallery__caption">Silver Lake · Milestone birthday</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg4/800/1000" class="gallery__item" data-category="weddings">
-          <img src="https://picsum.photos/seed/eg4/800/1000" alt="Wedding photo" loading="lazy" />
-          <span class="gallery__caption">Malibu · Cliffside ceremony</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg5/800/700" class="gallery__item" data-category="brand">
-          <img src="https://picsum.photos/seed/eg5/800/700" alt="Brand activation" loading="lazy" />
-          <span class="gallery__caption">Beverly Hills · Pop-up activation</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg6/800/1200" class="gallery__item" data-category="weddings">
-          <img src="https://picsum.photos/seed/eg6/800/1200" alt="Wedding photo" loading="lazy" />
-          <span class="gallery__caption">Ojai · Garden reception</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg7/800/800" class="gallery__item" data-category="parties">
-          <img src="https://picsum.photos/seed/eg7/800/800" alt="Party photo" loading="lazy" />
-          <span class="gallery__caption">Echo Park · Holiday party</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg8/800/950" class="gallery__item" data-category="corporate">
-          <img src="https://picsum.photos/seed/eg8/800/950" alt="Corporate event" loading="lazy" />
-          <span class="gallery__caption">Culver City · Tech offsite</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg9/800/750" class="gallery__item" data-category="brand">
-          <img src="https://picsum.photos/seed/eg9/800/750" alt="Brand event" loading="lazy" />
-          <span class="gallery__caption">Venice · Fashion preview</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg10/800/1100" class="gallery__item" data-category="weddings">
-          <img src="https://picsum.photos/seed/eg10/800/1100" alt="Wedding photo" loading="lazy" />
-          <span class="gallery__caption">Pasadena · Backyard wedding</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg11/800/650" class="gallery__item" data-category="parties">
-          <img src="https://picsum.photos/seed/eg11/800/650" alt="Party photo" loading="lazy" />
-          <span class="gallery__caption">Highland Park · 30th birthday</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg12/800/900" class="gallery__item" data-category="corporate">
-          <img src="https://picsum.photos/seed/eg12/800/900" alt="Corporate event" loading="lazy" />
-          <span class="gallery__caption">Santa Monica · Holiday gala</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg13/800/1000" class="gallery__item" data-category="weddings">
-          <img src="https://picsum.photos/seed/eg13/800/1000" alt="Wedding photo" loading="lazy" />
-          <span class="gallery__caption">Pasadena · Vow renewal</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg14/800/800" class="gallery__item" data-category="brand">
-          <img src="https://picsum.photos/seed/eg14/800/800" alt="Brand event" loading="lazy" />
-          <span class="gallery__caption">DTLA · Magazine launch</span>
-        </a>
-        <a href="https://picsum.photos/seed/eg15/800/1100" class="gallery__item" data-category="parties">
-          <img src="https://picsum.photos/seed/eg15/800/1100" alt="Party photo" loading="lazy" />
-          <span class="gallery__caption">Long Beach · Engagement party</span>
-        </a>
-      </div>
+      <!-- Populated at runtime from the Supabase gallery folder by js/gallery.js -->
+      <div class="gallery" data-gallery-grid aria-busy="true"></div>
 
       <div class="text-center" style="margin-top: var(--space-2xl);">
         <a href="#inquiry" class="btn btn--primary"><span>Request a Quote</span></a>
@@ -162,7 +95,7 @@ gtag('config', 'G-N7ERDKCDX7');
         </ul>
 
       </div>
-      <div><h4>Explore</h4><ul class="footer__list"><li><a href="/our-story">Our Story</a></li><li><a href="/the-booth">The Booth</a></li><li><a href="/packages">Packages</a></li><li><a href="/add-ons">Add-Ons</a></li></ul></div>
+      <div><h4>Explore</h4><ul class="footer__list"><li><a href="/our-story">Our Story</a></li><li><a href="/the-booth">The Booth</a></li><li><a href="/packages">Packages</a></li><li><a href="/add-ons">Add-Ons</a></li><li><a href="/gallery">Gallery</a></li></ul></div>
       <div><h4>Resources</h4><ul class="footer__list"><li><a href="/faq">FAQ</a></li><li><a href="#inquiry">Request a Quote</a></li>
           <li><a href="/areas-we-serve">Areas We Serve</a></li></ul></div>
       <div><h4>Contact</h4><ul class="footer__list"><li><a href="mailto:evergrainphotobooth@gmail.com" data-cms-email>evergrainphotobooth@gmail.com</a></li><li><a href="tel:+16265608330" data-cms-phone>(626) 560-8330</a></li><li data-cms-location>Los Angeles, CA</li></ul></div>
@@ -195,6 +128,7 @@ gtag('config', 'G-N7ERDKCDX7');
 <script src="js/cart.js"></script>
 <script src="js/script.js"></script>
 <script src="js/animations.js"></script>
+<script src="js/gallery.js" defer></script>
 <script src="/js/site-settings.js" defer></script>
 </body>
 </html>
