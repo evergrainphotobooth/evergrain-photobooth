@@ -88,6 +88,18 @@
   };
   const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+  // Resolve a package name + price for the Gmail reply template.
+  // Prefers selected_package (e.g. "The Glam ($1,050)"), then package_interest
+  // (e.g. "The Glam"). Falls back to fillable placeholders when none/"Not sure yet".
+  const PKG_PRICES = { "the candid": "$600", "the moment": "$750", "the glam": "$1,050" };
+  function resolveReplyPackage(inq) {
+    const raw = (inq.selected_package || inq.package_interest || "").trim();
+    const m = raw.match(/^(.*?)\s*\(\$([\d,]+)\)\s*$/); // "Name ($1,050)"
+    if (m) return { name: m[1].trim(), price: `$${m[2]}` };
+    if (!raw || raw.toLowerCase() === "not sure yet") return { name: "[Package Name]", price: "$___" };
+    return { name: raw, price: PKG_PRICES[raw.toLowerCase()] || "$___" };
+  }
+
   /* ---------- Lead-stage system ---------- */
   // Stored DB value → label, color cue, and (for Closed) a star marker.
   const STATUSES = [
@@ -265,11 +277,54 @@
       <button type="button" class="btn btn--ghost btn--sm" data-save-notes style="margin-top: 0.5rem;">Save notes</button>
     `;
 
-    // Reply in Gmail — opens the evergrain account and searches for any
-    // existing thread with this client (lands on the conversation if one
-    // exists; otherwise the search view with Compose available).
-    const gmailQuery = encodeURIComponent(`from:${i.email} OR to:${i.email}`);
-    const gmailUrl = `https://mail.google.com/mail/u/0/?authuser=${encodeURIComponent("evergrainphotobooth@gmail.com")}#search/${gmailQuery}`;
+    // Reply in Gmail — opens a pre-filled COMPOSE window in the evergrain
+    // account (To / Subject / Body), with the lead's name + recommended
+    // package + price templated in. Falls back to placeholders the user can
+    // fill when a package wasn't selected.
+    const firstName = (i.name || "").trim().split(/\s+/)[0] || "there";
+    const pkg = resolveReplyPackage(i);
+
+    const replySubject = "Evergrain Photobooth is Excited to Celebrate with You! 🎉";
+    const replyBody =
+`Hi ${firstName},
+
+Thank you so much for reaching out! We'd love the opportunity to be part of your celebration.
+
+Based on the information you provided, your event sounds like it's going to be amazing. Our photobooth isn't just a booth—it's an experience that keeps guests entertained while creating keepsakes they'll treasure long after the event.
+
+Here's what every rental includes:
+• Professional setup and breakdown
+• Friendly booth attendant
+• Unlimited photo sessions
+• Premium props
+• Customized photo template
+• Instant digital gallery
+• High-quality lighting for beautiful photos
+
+Based on your event, I'd recommend our ${pkg.name}, which starts at ${pkg.price}.
+
+I'd be happy to customize a package if you have something specific in mind.
+
+If your date is still available, I'd love to reserve it for you. A signed agreement and retainer are all that's needed to secure your event.
+
+If you have any questions—or would like to schedule a quick call—I'm here to help.
+
+Looking forward to hearing from you!
+
+Best,
+
+Hamilton Szeto
+Evergrain Photobooth
+(626) 560-8330
+evergrainphotobooth.com`;
+
+    const gmailUrl =
+      `https://mail.google.com/mail/u/0/?authuser=${encodeURIComponent("evergrainphotobooth@gmail.com")}` +
+      `&view=cm&fs=1&tf=1` +
+      `&to=${encodeURIComponent(i.email || "")}` +
+      `&su=${encodeURIComponent(replySubject)}` +
+      `&body=${encodeURIComponent(replyBody)}`;
+
     drawerFooter.innerHTML = `
       <a href="${gmailUrl}" target="_blank" rel="noopener" class="btn btn--primary btn--sm btn--block">
         Reply in Gmail
