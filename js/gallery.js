@@ -23,10 +23,10 @@
   const path = (name) => PREFIX + encodeURIComponent(name);
   const fullUrl = (name) =>
     `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path(name)}`;
-  // Resized + compressed thumbnail cropped to the grid's 4:5 cell
+  // Resized + compressed thumbnail cropped to the grid's 6:4 (landscape) cell
   // (≈60–120 KB vs multi-MB). The full photo opens on click.
   const thumbUrl = (name) =>
-    `${SUPABASE_URL}/storage/v1/render/image/public/${BUCKET}/${path(name)}?width=800&height=1000&resize=cover&quality=72`;
+    `${SUPABASE_URL}/storage/v1/render/image/public/${BUCKET}/${path(name)}?width=1200&height=800&resize=cover&quality=72`;
   // "1. Austins_1st_birthday.jpg" -> "Austins 1st birthday"
   const label = (name) =>
     name.replace(/^\d+\.\s*/, "").replace(/\.[^.]+$/, "").replace(/_/g, " ").trim();
