@@ -916,12 +916,13 @@ a.area-pill:hover {
 }
 .package--featured .package__tagline { color: var(--champagne); }
 
-/* "Starting at" label — matches the tagline's size + color, sits above the price. */
+/* "Starting at" label — sits above the price. Colour matches the price-meta
+   ("3-hour minimum") on each card: dark on the light cards, light on featured. */
 .package__starting {
   font-family: var(--font-display);
   font-style: italic;
   font-size: 1rem;
-  color: var(--brass);
+  color: var(--bark);
   margin-bottom: 0.35rem;
 }
 .package--featured .package__starting { color: var(--champagne); }
