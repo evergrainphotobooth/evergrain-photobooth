@@ -21,8 +21,6 @@
   const PREFIX = "images/gallery/";
 
   const path = (name) => PREFIX + encodeURIComponent(name);
-  const fullUrl = (name) =>
-    `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path(name)}`;
   // Resized + compressed thumbnail cropped to the grid's 6:4 (landscape) cell
   // (≈60–120 KB vs multi-MB). The full photo opens on click.
   const thumbUrl = (name) =>
@@ -64,7 +62,7 @@
     grid.innerHTML = files
       .map((f) => {
         const alt = label(f.name);
-        return `<a href="${fullUrl(f.name)}" class="gallery__item" target="_blank" rel="noopener"><img src="${thumbUrl(f.name)}" alt="${alt}" loading="lazy" /></a>`;
+        return `<div class="gallery__item"><img src="${thumbUrl(f.name)}" alt="${alt}" loading="lazy" /></div>`;
       })
       .join("");
     grid.removeAttribute("aria-busy");

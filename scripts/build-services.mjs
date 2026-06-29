@@ -44,6 +44,7 @@ function buildPackagesGrid() {
         <article class="${articleClass}" data-package-card="${escAttr(p.id)}" data-name="${escAttr(p.name)}" data-price="${p.price}" data-desc="${escAttr(p.shortDesc)}">${tag}
           <h2 class="package__name">${esc(p.name)}</h2>
           <p class="package__tagline">${esc(p.tagline)}</p>
+          <p class="package__starting">Starting at</p>
           <div class="package__price">
             <span class="package__price-amount"><sup>$</sup>${fmtPrice(p.price)}</span>
             <div class="package__price-meta">${esc(p.priceDescription)}</div>

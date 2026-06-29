@@ -32,6 +32,7 @@ export function renderPackagesGrid(packages) {
         <article class="${articleClass}" data-package-card="${esc(p.id)}" data-name="${esc(p.name)}" data-price="${p.price}" data-desc="${esc(p.shortDesc)}">${tag}
           <h2 class="package__name">${esc(p.name)}</h2>
           <p class="package__tagline">${esc(p.tagline)}</p>
+          <p class="package__starting">Starting at</p>
           <div class="package__price">
             <span class="package__price-amount"><sup>$</sup>${fmtPrice(p.price)}</span>
             <div class="package__price-meta">${esc(p.priceDescription)}</div>

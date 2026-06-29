@@ -916,6 +916,16 @@ a.area-pill:hover {
 }
 .package--featured .package__tagline { color: var(--champagne); }
 
+/* "Starting at" label — matches the tagline's size + color, sits above the price. */
+.package__starting {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--brass);
+  margin-bottom: 0.35rem;
+}
+.package--featured .package__starting { color: var(--champagne); }
+
 .package__price {
   margin-bottom: var(--space-lg);
 }
