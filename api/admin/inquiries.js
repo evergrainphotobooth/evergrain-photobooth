@@ -1,8 +1,9 @@
 /* =========================================================
    Inquiries API for the admin
-   GET  /api/admin/inquiries          → list (paginated, filtered)
-   GET  /api/admin/inquiries?id=UUID  → single inquiry
-   PATCH /api/admin/inquiries         → body: { id, status?, admin_notes? }
+   GET    /api/admin/inquiries          → list (paginated, filtered)
+   GET    /api/admin/inquiries?id=UUID  → single inquiry
+   PATCH  /api/admin/inquiries          → body: { id, status?, admin_notes? }
+   DELETE /api/admin/inquiries          → body { id } or ?id=UUID (permanent)
    ========================================================= */
 
 import { requireAuth } from "../_lib/auth.js";
@@ -88,7 +89,36 @@ async function handler(req, res) {
     return res.status(200).json({ ok: true, inquiry: Array.isArray(rows) ? rows[0] : rows });
   }
 
-  res.setHeader("Allow", "GET, PATCH");
+  if (req.method === "DELETE") {
+    // Accept id via query (?id=) or JSON body { id }.
+    const url = new URL(req.url, `https://${req.headers.host}`);
+    let id = url.searchParams.get("id");
+    if (!id) {
+      let payload = req.body || {};
+      if (typeof payload === "string") {
+        try { payload = JSON.parse(payload); } catch { payload = {}; }
+      }
+      id = payload.id;
+    }
+    if (!id) return res.status(400).json({ error: "id required" });
+
+    const resp = await fetch(`${SUPABASE_URL}/rest/v1/inquiries?id=eq.${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: { ...baseHeaders, Prefer: "return=representation" },
+    });
+    if (!resp.ok) {
+      console.error("inquiries delete failed:", await resp.text());
+      return res.status(500).json({ error: "Delete failed" });
+    }
+    const rows = await resp.json().catch(() => []);
+    // return=representation gives back the deleted rows; 0 rows = id not found.
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    return res.status(200).json({ ok: true, deleted: rows[0].id });
+  }
+
+  res.setHeader("Allow", "GET, PATCH, DELETE");
   return res.status(405).json({ error: "Method not allowed" });
 }
 

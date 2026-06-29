@@ -17,19 +17,19 @@
 
 <div data-admin-page-content hidden>
 
-    <!-- Filters -->
+    <!-- Filters (counts appended live by updateFilterCounts) -->
     <div class="filters">
-      <button class="filter-pill is-active" data-filter="all">All</button>
-      <button class="filter-pill" data-filter="complete">Complete</button>
-      <button class="filter-pill" data-filter="partial">Partial</button>
+      <button class="filter-pill is-active" data-filter="all" data-label="All"></button>
+      <button class="filter-pill" data-filter="complete" data-label="Complete"></button>
+      <button class="filter-pill" data-filter="partial" data-label="Partial"></button>
       <span class="filters__divider" aria-hidden="true"></span>
-      <button class="filter-pill" data-filter="new">New</button>
-      <button class="filter-pill" data-filter="initiated">Initiated</button>
-      <button class="filter-pill" data-filter="cold">Cold</button>
-      <button class="filter-pill" data-filter="warm">Warm</button>
-      <button class="filter-pill" data-filter="hot">Hot</button>
-      <button class="filter-pill" data-filter="closed">Closed</button>
-      <button class="filter-pill" data-filter="bad">Bad</button>
+      <button class="filter-pill" data-filter="new" data-label="New"></button>
+      <button class="filter-pill" data-filter="initiated" data-label="Initiated"></button>
+      <button class="filter-pill" data-filter="cold" data-label="Cold"></button>
+      <button class="filter-pill" data-filter="warm" data-label="Warm"></button>
+      <button class="filter-pill" data-filter="hot" data-label="Hot"></button>
+      <button class="filter-pill" data-filter="closed" data-label="Closed"></button>
+      <button class="filter-pill" data-filter="bad" data-label="Bad"></button>
       <span class="text-meta" style="margin-left:auto;" data-inquiry-count></span>
     </div>
 
@@ -52,6 +52,18 @@
   </div>
   <div class="drawer__footer" data-drawer-footer></div>
 </aside>
+
+<!-- Delete confirmation modal -->
+<div class="modal-overlay" data-confirm-overlay hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h3 class="modal__title" id="confirm-title">Delete this lead?</h3>
+    <p class="modal__body" data-confirm-body>This permanently removes the inquiry from Supabase and can't be undone.</p>
+    <div class="modal__actions">
+      <button type="button" class="btn btn--ghost btn--sm" data-confirm-cancel>Cancel</button>
+      <button type="button" class="btn btn--danger btn--sm" data-confirm-delete>Delete lead</button>
+    </div>
+  </div>
+</div>
 
 <script>
   const tableEl = document.querySelector("[data-inquiries-table]");
@@ -125,20 +137,45 @@
       + `<span class="status-pill__dot" style="background:${m.color};"></span>${star}${esc(m.label)}</span>`;
   }
 
+  let allInquiries = [];
+
+  // Predicate for a given filter key against one inquiry row.
+  function matchesFilter(r, f) {
+    if (f === "all") return true;
+    if (f === "complete") return r.completed === true;
+    if (f === "partial") return r.completed === false;
+    return (r.status || "new") === f; // lead-stage keys
+  }
+
+  // Rewrite each pill's text to "Label (n)" using the master list.
+  function updateFilterCounts() {
+    document.querySelectorAll("[data-filter]").forEach(btn => {
+      const f = btn.getAttribute("data-filter");
+      const label = btn.getAttribute("data-label");
+      const n = allInquiries.filter(r => matchesFilter(r, f)).length;
+      btn.textContent = `${label} (${n})`;
+    });
+  }
+
+  // Apply the active filter to the master list + repaint the table.
+  function applyFilter() {
+    currentList = allInquiries.filter(r => matchesFilter(r, currentFilter));
+    render();
+  }
+
   async function load() {
     tableEl.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
-    let q = "";
-    if (currentFilter === "complete") q = "?completed=true";
-    else if (currentFilter === "partial") q = "?completed=false";
-    else if (currentFilter !== "all") q = `?status=${currentFilter}`;
-    const r = await fetch(`/api/admin/inquiries${q}`);
+    // Always pull the full set (small dataset) so pill counts stay accurate and
+    // filtering is instant + offline. Filtering happens client-side.
+    const r = await fetch(`/api/admin/inquiries?limit=500`);
     if (!r.ok) {
       tableEl.innerHTML = `<div class="empty-state"><h3>Couldn't load inquiries</h3><p>Try refreshing.</p></div>`;
       return;
     }
     const { inquiries } = await r.json();
-    currentList = inquiries;
-    render();
+    allInquiries = inquiries || [];
+    updateFilterCounts();
+    applyFilter();
   }
 
   function render() {
@@ -180,13 +217,13 @@
     });
   }
 
-  // Filter pills
+  // Filter pills — filter the already-loaded master list locally (instant).
   document.querySelectorAll("[data-filter]").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll("[data-filter]").forEach(b => b.classList.remove("is-active"));
       btn.classList.add("is-active");
       currentFilter = btn.getAttribute("data-filter");
-      load();
+      applyFilter();
     });
   });
 
@@ -326,10 +363,18 @@ evergrainphotobooth.com`;
       `&body=${encodeURIComponent(replyBody)}`;
 
     drawerFooter.innerHTML = `
-      <a href="${gmailUrl}" target="_blank" rel="noopener" class="btn btn--primary btn--sm btn--block">
+      <button type="button" class="btn btn--danger btn--sm" data-delete-lead aria-label="Delete lead">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="margin-right:0.35rem;vertical-align:-2px;"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6"/><path d="M10 11v6M14 11v6"/></svg>Delete
+      </button>
+      <a href="${gmailUrl}" target="_blank" rel="noopener" class="btn btn--primary btn--sm">
         Reply in Gmail
       </a>
     `;
+
+    // Delete → open confirmation modal pre-filled with this lead's name.
+    drawerFooter.querySelector("[data-delete-lead]")?.addEventListener("click", () => {
+      openConfirmDelete(i.id, i.name);
+    });
 
     // Wire lead-status selector (lives in the drawer body now)
     drawerBody.querySelectorAll("[data-set-status]").forEach(btn => {
@@ -366,6 +411,46 @@ evergrainphotobooth.com`;
       setTimeout(() => { e.target.textContent = "Save notes"; e.target.disabled = false; }, 1200);
     });
   }
+
+  /* ---------- Delete confirmation modal ---------- */
+  const confirmOverlay = document.querySelector("[data-confirm-overlay]");
+  const confirmBody = document.querySelector("[data-confirm-body]");
+  const confirmDeleteBtn = document.querySelector("[data-confirm-delete]");
+  const confirmCancelBtn = document.querySelector("[data-confirm-cancel]");
+  let pendingDeleteId = null;
+
+  function openConfirmDelete(id, name) {
+    pendingDeleteId = id;
+    confirmBody.innerHTML = `Permanently delete <strong>${esc(name || "this lead")}</strong>? This removes the inquiry from Supabase and can't be undone.`;
+    confirmDeleteBtn.disabled = false;
+    confirmDeleteBtn.textContent = "Delete lead";
+    confirmOverlay.hidden = false;
+    requestAnimationFrame(() => confirmOverlay.classList.add("is-open"));
+  }
+  function closeConfirm() {
+    confirmOverlay.classList.remove("is-open");
+    pendingDeleteId = null;
+    setTimeout(() => { confirmOverlay.hidden = true; }, 180);
+  }
+  confirmCancelBtn.addEventListener("click", closeConfirm);
+  confirmOverlay.addEventListener("click", (e) => { if (e.target === confirmOverlay) closeConfirm(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !confirmOverlay.hidden) closeConfirm(); });
+
+  confirmDeleteBtn.addEventListener("click", async () => {
+    if (!pendingDeleteId) return;
+    const id = pendingDeleteId;
+    confirmDeleteBtn.disabled = true;
+    confirmDeleteBtn.textContent = "Deleting…";
+    const r = await fetch(`/api/admin/inquiries?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    if (r.ok) {
+      closeConfirm();
+      closeDrawer();
+      await load(); // refetch → counts + table update
+    } else {
+      confirmDeleteBtn.textContent = "Failed — retry";
+      confirmDeleteBtn.disabled = false;
+    }
+  });
 
   load();
 </script>

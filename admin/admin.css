@@ -769,3 +769,48 @@ tr.is-partial { background: rgba(196, 69, 45, 0.03); }
   background: rgba(180, 60, 50, 0.08);
   border-color: #b43c32;
 }
+
+/* ---------- Confirmation modal (delete lead) ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(26, 20, 16, 0.45);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.modal-overlay.is-open { opacity: 1; }
+.modal-overlay[hidden] { display: none; }
+.modal {
+  width: 100%;
+  max-width: 420px;
+  background: var(--white, #fff);
+  border-radius: 12px;
+  padding: 1.6rem 1.6rem 1.3rem;
+  box-shadow: 0 24px 60px rgba(26, 20, 16, 0.28);
+  transform: translateY(8px) scale(0.98);
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.modal-overlay.is-open .modal { transform: none; }
+.modal__title {
+  font-family: var(--font-display, Georgia, serif);
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--evergreen, #1F4332);
+  margin: 0 0 0.6rem;
+}
+.modal__body {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--gray-700, #5C4A35);
+  margin: 0 0 1.4rem;
+}
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
