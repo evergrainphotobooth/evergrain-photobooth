@@ -376,11 +376,14 @@ evergrainphotobooth.com`;
       openConfirmDelete(i.id, i.name);
     });
 
-    // Wire lead-status selector (lives in the drawer body now)
+    // Wire lead-status selector (lives in the drawer body now).
+    // Clicking the already-active stage toggles it OFF → reverts to "new"
+    // (the default un-staged bucket, which has no chip of its own).
     drawerBody.querySelectorAll("[data-set-status]").forEach(btn => {
       btn.addEventListener("click", async () => {
-        const newStatus = btn.getAttribute("data-set-status");
-        if (newStatus === (i.status || "new")) return; // already this stage
+        const clicked = btn.getAttribute("data-set-status");
+        const current = i.status || "new";
+        const newStatus = (clicked === current) ? "new" : clicked;
         drawerBody.querySelectorAll("[data-set-status]").forEach(b => b.disabled = true);
         const r = await fetch("/api/admin/inquiries", {
           method: "PATCH",
