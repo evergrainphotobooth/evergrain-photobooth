@@ -1,9 +1,13 @@
 /* =========================================================
-   Evergrain Photobooth — Contact Picker (W3C Contact Picker API)
-   One-tap autofill of Name / Email / Phone for the inquiry form.
-   Progressive enhancement: the [data-contact-picker] trigger stays
-   hidden unless the API is available (Chrome on Android, secure
-   context), so the manual stepper form is always the baseline.
+   Evergrain Photobooth — Quick Contact fill
+   One-tap fast path for the inquiry form, on EVERY device:
+     • Android Chrome / Samsung Internet → W3C Contact Picker API
+       (navigator.contacts.select) opens the native contacts sheet.
+     • iOS Safari / desktop (no Contact Picker API) → focus the Name
+       field so the browser's built-in AutoFill ("AutoFill Contact")
+       bar appears above the keyboard. That is Apple's/Chrome's native
+       equivalent — there is no web API to open the contacts sheet on iOS.
+   The button is always visible; only its behavior branches.
    ========================================================= */
 
 (function () {
@@ -16,18 +20,24 @@
     navigator.contacts &&
     typeof navigator.contacts.select === "function";
 
-  // Not supported → leave the trigger + helper UI hidden; manual form only.
-  if (!supported) return;
-
-  // Reveal the picker affordances now that we know the API exists.
+  // Always reveal the button + helper UI — it works on every device,
+  // just via different mechanisms (native picker vs. native AutoFill).
   document
     .querySelectorAll("[data-contact-picker], [data-contact-picker-hint], [data-contact-picker-divider]")
     .forEach((el) => { el.hidden = false; });
 
+  // Tailor the hint copy to what the tap will actually do on this device.
+  const hint = document.querySelector("[data-contact-picker-hint]");
+  if (hint) {
+    hint.textContent = supported
+      ? "One tap to autofill your name, email & phone from your contacts."
+      : "One tap to jump in and use your keyboard's AutoFill.";
+  }
+
   const firstOf = (arr) => (Array.isArray(arr) && arr.length ? arr[0] : "");
 
-  // Match the inquiry form's (XXX) XXX-XXXX keyup formatter so the
-  // picked number displays consistently even though we set it directly.
+  // Match the inquiry form's (XXX) XXX-XXXX formatter so a picked number
+  // displays consistently even though we set it programmatically.
   function prettyPhone(digits) {
     const d = String(digits).replace(/\D/g, "").slice(0, 10);
     if (d.length >= 7) return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
@@ -40,12 +50,26 @@
     const el = document.getElementById(id);
     if (!el || val == null || val === "") return;
     el.value = val;
-    // Fire input + change so any listeners (partial-save tracking, validation) react.
+    // Fire input + change so partial-save tracking + validation react.
     el.dispatchEvent(new Event("input", { bubbles: true }));
     el.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
+  // Fallback path (iOS / desktop): bring the Name field into view and focus
+  // it within the click gesture so the OS AutoFill suggestion bar surfaces.
+  function focusForAutofill() {
+    const name = document.getElementById("name");
+    if (!name) return;
+    name.scrollIntoView({ behavior: "smooth", block: "center" });
+    // focus must run in the same user-gesture tick for iOS to show AutoFill
+    name.focus({ preventScroll: true });
+  }
+
   btn.addEventListener("click", async () => {
+    if (!supported) {
+      focusForAutofill();
+      return;
+    }
     btn.disabled = true;
     try {
       const results = await navigator.contacts.select(["name", "email", "tel"], { multiple: false });
@@ -64,8 +88,9 @@
         eventType.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     } catch (err) {
-      // Permission denied / runtime failure → silently fall back to manual entry.
+      // Permission denied / runtime failure → fall back to manual entry.
       console.warn("Contact Picker:", err && err.message);
+      focusForAutofill();
     } finally {
       btn.disabled = false;
     }
