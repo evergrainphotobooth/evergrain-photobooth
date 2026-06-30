@@ -768,10 +768,15 @@ body.nav-open::before { opacity: 1; pointer-events: auto; }
 .stepper__item.is-done .stepper__label { color: var(--char); }
 
 @media (max-width: 640px) {
-  /* On mobile, collapse to numbered dots only — labels would crowd */
+  /* On mobile, collapse to numbered dots only — labels would crowd.
+     Items 1–3 each = dot + a connector line that stretches (flex:1),
+     so the dots distribute evenly edge-to-edge. The last item is just
+     the final dot. Result: the row spans the full width and reads centered. */
+  .stepper { width: 100%; gap: 0; }
   .stepper__label { display: none; }
-  .stepper__item { flex: 0 0 auto; }
-  .stepper__item:not(:last-child)::after { min-width: 1.5rem; }
+  .stepper__item { flex: 1; gap: 0; }
+  .stepper__item:last-child { flex: 0 0 auto; }
+  .stepper__item:not(:last-child)::after { min-width: 0; margin-inline: 0.5rem; }
 }
 
 /* Step panels — reset fieldset defaults */
