@@ -98,6 +98,11 @@ gtag('config', 'G-N7ERDKCDX7');
     letter-spacing: 0.18em;
     text-transform: uppercase;
   }
+  /* The hidden attribute must win over our display rules so the picker UI
+     stays hidden until contact-picker.js reveals it on supported browsers.
+     (The button itself is already guarded by .btn[hidden] in components.css.) */
+  .lp-divider[hidden],
+  .lp-picker__hint[hidden] { display: none !important; }
 
   /* Reuse the injected stepper form, but drop its own intro/cart-summary +
      the duplicated section padding so the landing page stays short + sweet. */
