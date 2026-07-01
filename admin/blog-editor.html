@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blog Editor — Evergrain CMS</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/admin/admin.css" />
+<link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
+<style>
+  .editor-top { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+  .back-link { font-size:.85rem; color:var(--brass, #a47a2a); text-decoration:none; }
+  .back-link:hover { text-decoration:underline; }
+  .editor-top__actions { display:flex; align-items:center; gap:.6rem; }
+
+  .card-title { font-family:"Fraunces",serif; font-weight:400; font-size:1.15rem; margin:0 0 .25rem; color:var(--gray-900,#1a1410); }
+  .card-sub { font-size:.83rem; color:var(--gray-500); margin:0 0 1rem; }
+
+  .inline-row { display:flex; gap:.6rem; align-items:flex-end; flex-wrap:wrap; }
+  .inline-row .field { margin:0; flex:1; min-width:220px; }
+  .field__hint { font-size:.75rem; color:var(--gray-500); margin-top:.3rem; }
+  .count { font-weight:600; }
+  .count.ok { color:#2F7A4F; } .count.bad { color:#B4462F; }
+
+  .title-set { display:inline-flex; align-items:center; gap:.4rem; font-size:.82rem; color:#2F7A4F; font-weight:600; margin-top:.5rem; }
+  .title-set svg { width:15px; height:15px; }
+
+  .img-preview { margin-top:.85rem; }
+  .img-preview img { max-width:100%; max-height:240px; border-radius:12px; border:1px solid var(--line,#ece7df); display:block; }
+  .img-url { font-family:ui-monospace,monospace; font-size:.72rem; color:var(--gray-500); word-break:break-all; margin-top:.4rem; }
+
+  .gen-status { font-size:.85rem; color:var(--gray-600); display:inline-flex; align-items:center; gap:.5rem; }
+
+  /* Rendered preview of the generated HTML */
+  .blog-preview { border:1px solid var(--line,#ece7df); border-radius:14px; padding:1.5rem 1.6rem; background:#fff; max-height:520px; overflow:auto; }
+  .blog-preview h1 { font-family:"Fraunces",serif; font-weight:400; font-size:1.7rem; line-height:1.2; margin:0 0 1rem; color:#1a1410; }
+  .blog-preview h2 { font-family:"Fraunces",serif; font-weight:400; font-size:1.3rem; margin:1.6rem 0 .6rem; color:#1a1410; }
+  .blog-preview h3 { font-family:"Manrope",sans-serif; font-weight:600; font-size:1.05rem; margin:1.1rem 0 .4rem; }
+  .blog-preview p, .blog-preview li { font-size:.95rem; line-height:1.65; color:#3a332b; }
+  .blog-preview ul, .blog-preview ol { padding-left:1.3rem; margin:.6rem 0; }
+  .blog-preview img { max-width:100%; border-radius:10px; margin:1rem 0; }
+  .blog-preview a { color:var(--brass,#a47a2a); }
+  .blog-preview blockquote { border-left:3px solid var(--brass,#a47a2a); margin:1rem 0; padding:.3rem 0 .3rem 1rem; color:#5c5347; font-style:italic; }
+  .blog-preview table { border-collapse:collapse; width:100%; margin:1rem 0; font-size:.9rem; }
+  .blog-preview th, .blog-preview td { border:1px solid var(--line,#ece7df); padding:.5rem .7rem; text-align:left; }
+
+  .preview-toggle { display:flex; gap:.4rem; margin-bottom:.7rem; }
+  .seg-btn { font:inherit; font-size:.82rem; padding:.35rem .8rem; border-radius:999px; border:1px solid var(--line,#ddd6c9);
+             background:#fff; color:var(--gray-600); cursor:pointer; }
+  .seg-btn.is-active { background:var(--ink,#1a1410); color:#fff; border-color:var(--ink,#1a1410); }
+
+  /* Final checklist */
+  .checklist { display:flex; flex-direction:column; gap:.5rem; }
+  .chk-item { display:flex; gap:.7rem; align-items:flex-start; padding:.6rem .8rem; border-radius:10px; background:var(--wash,#f7f4ee); }
+  .chk-mark { flex-shrink:0; width:22px; height:22px; border-radius:50%; display:grid; place-items:center; font-size:.8rem; font-weight:700; color:#fff; margin-top:1px; }
+  .chk-mark.pass { background:#2F7A4F; } .chk-mark.fail { background:#B4462F; }
+  .chk-text { font-size:.9rem; line-height:1.45; }
+  .chk-note { font-size:.8rem; color:var(--gray-600); margin-top:.15rem; }
+  .chk-summary { font-size:.85rem; color:var(--gray-600); margin:0 0 .9rem; }
+
+  .save-status { font-size:.83rem; color:var(--gray-500); }
+  .disabled-note { font-size:.8rem; color:var(--gray-500); }
+</style>
+</head>
+<body>
+
+<div data-admin-shell data-page="pages" data-title="Blog Editor"></div>
+
+<div data-admin-page-content hidden>
+
+    <div class="editor-top">
+      <a class="back-link" href="/admin/pages">← Back to Pages</a>
+      <div class="editor-top__actions">
+        <span class="save-status" data-save-status></span>
+        <span data-status-pill></span>
+        <button type="button" class="btn btn--ghost btn--sm" data-save disabled>Save draft</button>
+        <button type="button" class="btn btn--primary btn--sm" data-publish disabled>Publish</button>
+      </div>
+    </div>
+
+    <!-- 1. Title -->
+    <div class="admin-card">
+      <h2 class="card-title">Blog title</h2>
+      <p class="card-sub">This becomes the page’s H1 and the basis for generation. Set it so the system has a definitive title.</p>
+      <div class="inline-row">
+        <div class="field">
+          <label class="field__label" for="f-title">Title (H1)</label>
+          <input class="field__input" id="f-title" type="text" placeholder="e.g. How to Choose the Perfect Photo Booth for a Wedding" />
+        </div>
+        <button type="button" class="btn btn--brass btn--sm" data-set-title>Set title</button>
+      </div>
+      <div class="title-set" data-title-set hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Title set</span>
+      </div>
+
+      <div class="field" style="margin-top:1rem;max-width:340px;">
+        <label class="field__label" for="f-category">Category</label>
+        <select class="field__select" id="f-category">
+          <option value="">Uncategorized</option>
+        </select>
+        <div class="field__hint">Reflects as /candid-moments/[category]/[slug]</div>
+      </div>
+    </div>
+
+    <!-- 2. Featured image (single-image rule) -->
+    <div class="admin-card">
+      <h2 class="card-title">Featured image</h2>
+      <p class="card-sub">Paste an image URL to upload it to Supabase. The blog spec allows exactly one image — descriptive filename + keyword-aware alt text.</p>
+      <div class="inline-row">
+        <div class="field">
+          <label class="field__label" for="f-image-url">Image URL to upload</label>
+          <input class="field__input" id="f-image-url" type="url" placeholder="https://…/photo.jpg" />
+        </div>
+        <div class="field" style="flex:0 1 240px;">
+          <label class="field__label" for="f-image-filename">Filename (optional, descriptive)</label>
+          <input class="field__input" id="f-image-filename" type="text" placeholder="wedding-photo-booth" />
+        </div>
+        <button type="button" class="btn btn--brass btn--sm" data-upload>Upload to Supabase</button>
+      </div>
+      <div class="img-preview" data-img-preview hidden>
+        <img data-img-el alt="" />
+        <div class="img-url" data-img-url></div>
+      </div>
+      <div class="inline-row" style="margin-top:1rem;">
+        <div class="field">
+          <label class="field__label" for="f-image-alt">Image alt text</label>
+          <input class="field__input" id="f-image-alt" type="text" placeholder="Descriptive, keyword-aware alt text" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="f-image-title">Image title</label>
+          <input class="field__input" id="f-image-title" type="text" placeholder="Short descriptive title" />
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Generate -->
+    <div class="admin-card">
+      <h2 class="card-title">Generate blog</h2>
+      <p class="card-sub">Writes a full ~1,000-word, SEO-optimized draft from your title, following the Evergrain blog spec, then self-checks it against the final checklist.</p>
+      <div class="inline-row" style="align-items:center;">
+        <button type="button" class="btn btn--primary btn--sm" data-generate disabled>Generate blog</button>
+        <span class="gen-status" data-gen-status></span>
+      </div>
+      <p class="disabled-note" data-gen-hint style="margin-top:.6rem;">Set a title first to enable generation.</p>
+    </div>
+
+    <!-- 4. SEO fields -->
+    <div class="admin-card" data-seo-card hidden>
+      <h2 class="card-title">SEO</h2>
+      <div class="field" style="max-width:360px;">
+        <label class="field__label" for="f-primary-keyword">Primary keyword</label>
+        <input class="field__input" id="f-primary-keyword" type="text" />
+      </div>
+      <div class="field" style="margin-top:.9rem;">
+        <label class="field__label" for="f-meta-title">Meta title <span class="text-meta">(50–60 chars — <span class="count" data-mt-count>0</span>)</span></label>
+        <input class="field__input" id="f-meta-title" type="text" />
+      </div>
+      <div class="field" style="margin-top:.9rem;">
+        <label class="field__label" for="f-meta-description">Meta description <span class="text-meta">(140–160 chars — <span class="count" data-md-count>0</span>)</span></label>
+        <textarea class="field__textarea" id="f-meta-description" rows="2"></textarea>
+      </div>
+      <div class="field" style="margin-top:.9rem;max-width:520px;">
+        <label class="field__label" for="f-slug">URL slug</label>
+        <input class="field__input" id="f-slug" type="text" />
+        <div class="field__hint">Full URL: <span class="img-url" data-full-url></span></div>
+      </div>
+    </div>
+
+    <!-- 5. Content -->
+    <div class="admin-card" data-content-card hidden>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem;">
+        <h2 class="card-title" style="margin-bottom:.25rem;">Content</h2>
+        <span class="text-meta"><span class="count" data-word-count>0</span> words</span>
+      </div>
+      <div class="preview-toggle">
+        <button type="button" class="seg-btn is-active" data-view="preview">Preview</button>
+        <button type="button" class="seg-btn" data-view="html">HTML</button>
+      </div>
+      <div class="blog-preview" data-preview></div>
+      <textarea class="field__textarea" data-html style="display:none;min-height:340px;font-family:ui-monospace,monospace;font-size:.82rem;line-height:1.5;"></textarea>
+    </div>
+
+    <!-- 6. Final checklist -->
+    <div class="admin-card" data-checklist-card hidden>
+      <h2 class="card-title">Final checklist</h2>
+      <p class="chk-summary" data-chk-summary></p>
+      <div class="checklist" data-checklist></div>
+    </div>
+
+</div>
+
+<script>
+  const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const $ = (sel) => document.querySelector(sel);
+  const params = new URLSearchParams(location.search);
+
+  // Editor state
+  const state = {
+    id: params.get("id") || null,
+    status: "draft",
+    checklist: [],
+    categories: [],
+  };
+
+  const els = {
+    title: $("#f-title"),
+    setTitleBtn: $("[data-set-title]"),
+    titleSet: $("[data-title-set]"),
+    category: $("#f-category"),
+    imageUrl: $("#f-image-url"),
+    imageFilename: $("#f-image-filename"),
+    uploadBtn: $("[data-upload]"),
+    imgPreview: $("[data-img-preview]"),
+    imgEl: $("[data-img-el]"),
+    imgUrlLabel: $("[data-img-url]"),
+    imageAlt: $("#f-image-alt"),
+    imageTitle: $("#f-image-title"),
+    generateBtn: $("[data-generate]"),
+    genStatus: $("[data-gen-status]"),
+    genHint: $("[data-gen-hint]"),
+    seoCard: $("[data-seo-card]"),
+    primaryKeyword: $("#f-primary-keyword"),
+    metaTitle: $("#f-meta-title"),
+    mtCount: $("[data-mt-count]"),
+    metaDescription: $("#f-meta-description"),
+    mdCount: $("[data-md-count]"),
+    slug: $("#f-slug"),
+    fullUrl: $("[data-full-url]"),
+    contentCard: $("[data-content-card]"),
+    preview: $("[data-preview]"),
+    html: $("[data-html]"),
+    wordCount: $("[data-word-count]"),
+    checklistCard: $("[data-checklist-card]"),
+    checklist: $("[data-checklist]"),
+    chkSummary: $("[data-chk-summary]"),
+    saveBtn: $("[data-save]"),
+    publishBtn: $("[data-publish]"),
+    saveStatus: $("[data-save-status]"),
+    statusPill: $("[data-status-pill]"),
+    // uploaded image URL lives here (Supabase public URL), separate from the paste box
+    _uploadedUrl: "",
+  };
+
+  const uploadedImageUrl = () => els._uploadedUrl;
+
+  /* ---------- helpers ---------- */
+  function wordCountFromHtml(html) {
+    if (!html) return 0;
+    const t = String(html).replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+      .replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/gi, " ").replace(/\s+/g, " ").trim();
+    return t ? t.split(" ").length : 0;
+  }
+  function setSaveStatus(msg, ok) {
+    els.saveStatus.textContent = msg || "";
+    els.saveStatus.style.color = ok === false ? "#B4462F" : (ok ? "#2F7A4F" : "var(--gray-500)");
+  }
+  function renderStatusPill() {
+    const published = state.status === "published";
+    const color = published ? "#2F7A4F" : "#8A7B5C";
+    els.statusPill.innerHTML = `<span class="status-pill" style="background:${color}1F;"><span class="status-pill__dot" style="background:${color};"></span>${published ? "Published" : "Draft"}</span>`;
+    els.publishBtn.textContent = published ? "Unpublish" : "Publish";
+  }
+  function updateFullUrl() {
+    const cat = state.categories.find(c => c.id === els.category.value);
+    const catPart = cat ? cat.slug + "/" : "";
+    els.fullUrl.textContent = `/candid-moments/${catPart}${els.slug.value || ""}`;
+  }
+  function updateCounts() {
+    const mt = els.metaTitle.value.length;
+    els.mtCount.textContent = mt;
+    els.mtCount.className = "count " + (mt >= 50 && mt <= 60 ? "ok" : "bad");
+    const md = els.metaDescription.value.length;
+    els.mdCount.textContent = md;
+    els.mdCount.className = "count " + (md >= 140 && md <= 160 ? "ok" : "bad");
+  }
+  function updateWordCount() {
+    els.wordCount.textContent = wordCountFromHtml(els.html.value).toLocaleString();
+  }
+  function refreshPreview() {
+    els.preview.innerHTML = els.html.value || `<p class="text-meta">Nothing yet — generate or paste HTML.</p>`;
+    updateWordCount();
+  }
+  function enableGate() {
+    const hasTitle = !!state.id;
+    els.generateBtn.disabled = !hasTitle;
+    els.saveBtn.disabled = !hasTitle;
+    els.publishBtn.disabled = !hasTitle;
+    els.genHint.hidden = hasTitle;
+  }
+
+  /* ---------- categories ---------- */
+  async function loadCategories() {
+    const r = await fetch("/api/admin/blog-categories");
+    if (!r.ok) return;
+    const { categories } = await r.json();
+    state.categories = categories || [];
+    els.category.innerHTML = `<option value="">Uncategorized</option>` +
+      state.categories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join("");
+  }
+
+  /* ---------- checklist ---------- */
+  function renderChecklist() {
+    const list = state.checklist || [];
+    els.checklistCard.hidden = list.length === 0;
+    if (list.length === 0) return;
+    const passed = list.filter(i => i.pass).length;
+    els.chkSummary.textContent = `${passed} of ${list.length} checks passing.`;
+    els.checklist.innerHTML = list.map(i => `
+      <div class="chk-item">
+        <span class="chk-mark ${i.pass ? "pass" : "fail"}">${i.pass ? "✓" : "✕"}</span>
+        <div>
+          <div class="chk-text">${esc(i.item)}</div>
+          ${i.note ? `<div class="chk-note">${esc(i.note)}</div>` : ""}
+        </div>
+      </div>`).join("");
+  }
+
+  /* ---------- load existing post ---------- */
+  function fromRow(p) {
+    state.id = p.id;
+    state.status = p.status || "draft";
+    state.checklist = Array.isArray(p.checklist) ? p.checklist : [];
+    els.title.value = p.title || "";
+    els.category.value = p.category_id || "";
+    els.primaryKeyword.value = p.primary_keyword || "";
+    els.metaTitle.value = p.meta_title || "";
+    els.metaDescription.value = p.meta_description || "";
+    els.slug.value = p.slug || "";
+    els.imageAlt.value = p.image_alt || "";
+    els.imageTitle.value = p.image_title || "";
+    els.html.value = p.content_html || "";
+    if (p.image_url) {
+      els._uploadedUrl = p.image_url;
+      showImage(p.image_url);
+    }
+    if (p.title) els.titleSet.hidden = false;
+    if (p.content_html || p.meta_title) { els.seoCard.hidden = false; els.contentCard.hidden = false; }
+    renderChecklist();
+    refreshPreview();
+    updateCounts();
+    updateFullUrl();
+    renderStatusPill();
+    enableGate();
+  }
+
+  async function loadPost() {
+    if (!state.id) { renderStatusPill(); enableGate(); return; }
+    const r = await fetch(`/api/admin/blog-posts?id=${encodeURIComponent(state.id)}`);
+    if (!r.ok) { setSaveStatus("Couldn't load this post.", false); return; }
+    const { post } = await r.json();
+    fromRow(post);
+  }
+
+  function showImage(url) {
+    els.imgEl.src = url;
+    els.imgEl.alt = els.imageAlt.value || "";
+    els.imgUrlLabel.textContent = url;
+    els.imgPreview.hidden = false;
+  }
+
+  /* ---------- Set title (create or update the post) ---------- */
+  els.setTitleBtn.addEventListener("click", async () => {
+    const title = els.title.value.trim();
+    if (!title) { alert("Enter a title first."); return; }
+    els.setTitleBtn.disabled = true;
+    els.setTitleBtn.textContent = state.id ? "Updating…" : "Setting…";
+    try {
+      let r;
+      if (!state.id) {
+        r = await fetch("/api/admin/blog-posts", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, category_id: els.category.value || null }),
+        });
+      } else {
+        r = await fetch("/api/admin/blog-posts", {
+          method: "PATCH", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: state.id, title, category_id: els.category.value || null }),
+        });
+      }
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Failed");
+      const post = d.post;
+      state.id = post.id;
+      state.status = post.status || "draft";
+      if (!els.slug.value && post.slug) els.slug.value = post.slug;
+      els.titleSet.hidden = false;
+      // Reflect the id in the URL so a refresh keeps editing this post.
+      if (params.get("id") !== state.id) {
+        params.set("id", state.id);
+        history.replaceState(null, "", `${location.pathname}?${params.toString()}`);
+      }
+      renderStatusPill();
+      updateFullUrl();
+      enableGate();
+      setSaveStatus("Title set ✓", true);
+    } catch (err) {
+      setSaveStatus(err.message || "Failed to set title", false);
+    } finally {
+      els.setTitleBtn.disabled = false;
+      els.setTitleBtn.textContent = state.id ? "Update title" : "Set title";
+    }
+  });
+
+  /* ---------- Upload image ---------- */
+  els.uploadBtn.addEventListener("click", async () => {
+    const url = els.imageUrl.value.trim();
+    if (!url) { alert("Paste an image URL first."); return; }
+    els.uploadBtn.disabled = true;
+    els.uploadBtn.textContent = "Uploading…";
+    try {
+      const r = await fetch("/api/admin/upload-image", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, filename: els.imageFilename.value.trim() || els.slug.value || els.title.value }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Upload failed");
+      els._uploadedUrl = d.url;
+      showImage(d.url);
+      setSaveStatus("Image uploaded ✓", true);
+    } catch (err) {
+      setSaveStatus(err.message || "Upload failed", false);
+      alert(err.message || "Upload failed");
+    } finally {
+      els.uploadBtn.disabled = false;
+      els.uploadBtn.textContent = "Upload to Supabase";
+    }
+  });
+
+  /* ---------- Generate ---------- */
+  els.generateBtn.addEventListener("click", async () => {
+    if (!state.id) { alert("Set a title first."); return; }
+    if (els.html.value.trim() && !confirm("Generating will replace the current content. Continue?")) return;
+    const cat = state.categories.find(c => c.id === els.category.value);
+    els.generateBtn.disabled = true;
+    els.genStatus.innerHTML = `<span class="loading"></span> Writing your blog… this can take 20–40 seconds.`;
+    try {
+      const r = await fetch("/api/admin/generate-blog", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: els.title.value.trim(),
+          categoryName: cat ? cat.name : "",
+          imageUrl: uploadedImageUrl(),
+          imageAlt: els.imageAlt.value.trim(),
+          imageTitle: els.imageTitle.value.trim(),
+        }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Generation failed");
+
+      els.primaryKeyword.value = d.primaryKeyword || "";
+      els.metaTitle.value = d.metaTitle || "";
+      els.metaDescription.value = d.metaDescription || "";
+      els.slug.value = d.slug || els.slug.value;
+      if (!els.imageAlt.value) els.imageAlt.value = d.imageAlt || "";
+      if (!els.imageTitle.value) els.imageTitle.value = d.imageTitle || "";
+      els.html.value = d.contentHtml || "";
+      state.checklist = Array.isArray(d.checklist) ? d.checklist : [];
+
+      els.seoCard.hidden = false;
+      els.contentCard.hidden = false;
+      refreshPreview();
+      updateCounts();
+      updateFullUrl();
+      renderChecklist();
+      els.genStatus.innerHTML = `<span style="color:#2F7A4F;font-weight:600;">✓ Draft generated (${(d.wordCount||0).toLocaleString()} words).</span> Review, then Save or Publish.`;
+    } catch (err) {
+      els.genStatus.innerHTML = `<span style="color:#B4462F;">${esc(err.message || "Generation failed")}</span>`;
+    } finally {
+      els.generateBtn.disabled = false;
+    }
+  });
+
+  /* ---------- Save / Publish ---------- */
+  function collectPayload() {
+    return {
+      id: state.id,
+      title: els.title.value.trim(),
+      category_id: els.category.value || null,
+      primaryKeyword: els.primaryKeyword.value.trim(),
+      metaTitle: els.metaTitle.value.trim(),
+      metaDescription: els.metaDescription.value.trim(),
+      slug: els.slug.value.trim(),
+      imageUrl: uploadedImageUrl(),
+      imageAlt: els.imageAlt.value.trim(),
+      imageTitle: els.imageTitle.value.trim(),
+      contentHtml: els.html.value,
+      checklist: state.checklist,
+    };
+  }
+  async function persist(extra, btn, labelBusy, labelDone) {
+    if (!state.id) { alert("Set a title first."); return; }
+    const payload = { ...collectPayload(), ...extra };
+    btn.disabled = true; const orig = btn.textContent; btn.textContent = labelBusy;
+    try {
+      const r = await fetch("/api/admin/blog-posts", {
+        method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Save failed");
+      state.status = d.post?.status || state.status;
+      renderStatusPill();
+      setSaveStatus(labelDone + " ✓", true);
+    } catch (err) {
+      setSaveStatus(err.message || "Save failed", false);
+    } finally {
+      btn.disabled = false; btn.textContent = orig;
+    }
+  }
+  els.saveBtn.addEventListener("click", () => persist({}, els.saveBtn, "Saving…", "Saved"));
+  els.publishBtn.addEventListener("click", () => {
+    const publishing = state.status !== "published";
+    persist({ status: publishing ? "published" : "draft" }, els.publishBtn,
+            publishing ? "Publishing…" : "Unpublishing…", publishing ? "Published" : "Unpublished");
+  });
+
+  /* ---------- live wiring ---------- */
+  els.metaTitle.addEventListener("input", updateCounts);
+  els.metaDescription.addEventListener("input", updateCounts);
+  els.slug.addEventListener("input", updateFullUrl);
+  els.category.addEventListener("change", updateFullUrl);
+  els.imageAlt.addEventListener("input", () => { els.imgEl.alt = els.imageAlt.value; });
+  els.html.addEventListener("input", () => { refreshPreview(); });
+
+  document.querySelectorAll("[data-view]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-view]").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const html = btn.getAttribute("data-view") === "html";
+      els.html.style.display = html ? "block" : "none";
+      els.preview.style.display = html ? "none" : "block";
+      if (!html) refreshPreview();
+    });
+  });
+
+  /* ---------- init ---------- */
+  (async function init() {
+    await loadCategories();
+    await loadPost();
+    enableGate();
+  })();
+</script>
+<script src="/admin/admin-shell.js"></script>
+
+</body>
+</html>
