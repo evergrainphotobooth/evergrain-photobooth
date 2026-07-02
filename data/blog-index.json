@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-02T08:39:13.378Z",
+  "generated_at": "2026-07-02T08:56:04.045Z",
   "categories": [
     {
       "name": "Tips & Guides",
@@ -13,6 +13,20 @@
     }
   ],
   "posts": [
+    {
+      "title": "How to Create a Guest Experience They’ll Talk About After the Wedding",
+      "slug": "create-unforgettable-wedding-guest-experience",
+      "url": "/a-thousand-words/weddings/create-unforgettable-wedding-guest-experience",
+      "category": {
+        "name": "Weddings",
+        "slug": "weddings"
+      },
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/how-to-create-a-guest-experience-theyll-talk-about-after-the-wedding-mr39orviii26v.jpg",
+      "imageAlt": "A newlywed couple and their wedding guests smiling and posing for a photo in front of a beautiful floral backdrop at a luxury open air photo booth, creating an unforgettable wedding guest experience.",
+      "date": "2026-07-02T08:56:03.172+00:00",
+      "dateLabel": "July 2, 2026",
+      "excerpt": "Planning your big day in LA or OC? Discover expert tips to craft an unforgettable wedding guest experience that leaves a lasting impression and keeps guests…"
+    },
     {
       "title": "Why a Photobooth Is the Secret Ingredient for an Unforgettable LA Wedding",
       "slug": "why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding",
