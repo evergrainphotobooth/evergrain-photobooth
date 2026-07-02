@@ -19,6 +19,12 @@ function splitKeywords(raw) {
     .filter(Boolean);
 }
 
+// Detect PostgREST's "table not created yet" response so we can guide setup.
+const NEED_SQL = "The keywords table isn't set up yet. Run scripts/sql/blog-keywords.sql in your Supabase SQL Editor, then reload this page.";
+function missingTable(status, text) {
+  return status === 404 || /PGRST205|schema cache|does not exist/i.test(String(text || ""));
+}
+
 export async function handleKeywords(req, res) {
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -43,7 +49,12 @@ export async function handleKeywords(req, res) {
   // ---------- GET ----------
   if (req.method === "GET") {
     const r = await fetch(`${SB}?select=id,keyword&order=keyword.asc`, { headers: H });
-    if (!r.ok) return res.status(500).json({ error: "Failed to load keywords" });
+    if (!r.ok) {
+      const t = await r.text();
+      if (missingTable(r.status, t)) return res.status(200).json({ ok: true, keywords: [], setup_needed: true, message: NEED_SQL });
+      console.error("keyword list:", r.status, t);
+      return res.status(500).json({ error: "Failed to load keywords" });
+    }
     return res.status(200).json({ ok: true, keywords: await r.json() });
   }
 
@@ -70,7 +81,9 @@ export async function handleKeywords(req, res) {
         body: JSON.stringify(toInsert.map(keyword => ({ keyword }))),
       });
       if (!r.ok && r.status !== 409) {
-        console.error("keyword insert:", await r.text());
+        const t = await r.text();
+        if (missingTable(r.status, t)) return res.status(400).json({ error: NEED_SQL });
+        console.error("keyword insert:", r.status, t);
         return res.status(500).json({ error: "Add failed" });
       }
     }

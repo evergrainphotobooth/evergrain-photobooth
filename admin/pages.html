@@ -371,7 +371,13 @@
     kwList.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
     const r = await fetch("/api/admin/blog-categories?resource=keywords");
     if (!r.ok) { kwList.innerHTML = `<div class="empty-state"><h3>Couldn't load keywords</h3></div>`; return; }
-    keywords = (await r.json()).keywords || [];
+    const data = await r.json();
+    if (data.setup_needed) {
+      keywords = [];
+      kwList.innerHTML = `<div class="empty-state"><h3>One setup step left</h3><p>${esc(data.message)}</p></div>`;
+      return;
+    }
+    keywords = data.keywords || [];
     renderKeywords();
   }
 
