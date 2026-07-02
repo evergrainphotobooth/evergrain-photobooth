@@ -344,7 +344,7 @@
   }
   async function loadKeywords() {
     try {
-      const r = await fetch("/api/admin/blog-keywords");
+      const r = await fetch("/api/admin/blog-categories?resource=keywords");
       if (r.ok) state.keywords = ((await r.json()).keywords || []).map(k => k.keyword);
     } catch (e) { /* non-fatal — coverage panel just shows the empty state */ }
     renderKeywordUsage();

@@ -5,9 +5,14 @@
    PATCH  /api/admin/blog-categories        → { id, name?, blurb?, slug? } update
    DELETE /api/admin/blog-categories?id=UUID                          delete
    Categories map to /candid-moments/[slug].
+
+   Also hosts the targeted-keywords resource at ?resource=keywords, which
+   delegates to _lib/blog-keywords.js — kept here (rather than its own
+   route file) to stay under Vercel Hobby's 12-function limit.
    ========================================================= */
 
 import { requireAuth } from "../_lib/auth.js";
+import { handleKeywords } from "../_lib/blog-keywords.js";
 
 function slugify(s) {
   return String(s || "")
@@ -21,6 +26,12 @@ function slugify(s) {
 }
 
 async function handler(req, res) {
+  // Sub-resource: targeted keywords (?resource=keywords) — auth already done.
+  const { searchParams } = new URL(req.url, `https://${req.headers.host}`);
+  if (searchParams.get("resource") === "keywords") {
+    return handleKeywords(req, res);
+  }
+
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     return res.status(500).json({ error: "Server misconfigured" });

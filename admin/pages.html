@@ -369,7 +369,7 @@
 
   async function loadKeywords() {
     kwList.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
-    const r = await fetch("/api/admin/blog-keywords");
+    const r = await fetch("/api/admin/blog-categories?resource=keywords");
     if (!r.ok) { kwList.innerHTML = `<div class="empty-state"><h3>Couldn't load keywords</h3></div>`; return; }
     keywords = (await r.json()).keywords || [];
     renderKeywords();
@@ -386,7 +386,7 @@
     kwList.querySelectorAll("[data-del-kw]").forEach(btn =>
       btn.addEventListener("click", async () => {
         btn.disabled = true;
-        const r = await fetch(`/api/admin/blog-keywords?id=${encodeURIComponent(btn.getAttribute("data-del-kw"))}`, { method: "DELETE" });
+        const r = await fetch(`/api/admin/blog-categories?resource=keywords&id=${encodeURIComponent(btn.getAttribute("data-del-kw"))}`, { method: "DELETE" });
         if (r.ok) await loadKeywords(); else { btn.disabled = false; alert("Delete failed"); }
       }));
   }
@@ -397,7 +397,7 @@
     const val = newKwInput.value.trim();
     if (!val) { newKwInput.focus(); return; }
     addKwBtn.disabled = true; addKwBtn.textContent = "Adding…";
-    const r = await fetch("/api/admin/blog-keywords", {
+    const r = await fetch("/api/admin/blog-categories?resource=keywords", {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ keyword: val }),
     });
     addKwBtn.disabled = false; addKwBtn.textContent = "Add";
