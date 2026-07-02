@@ -17,6 +17,8 @@ import { join } from "node:path";
 
 const SITE = "https://evergrainphotobooth.com";
 const SKIP_DIRS = new Set(["node_modules", ".git", "admin", "experiments", "api"]);
+// Not real URLs: the blog category page is a template served via rewrite.
+const SKIP_FILES = new Set(["a-thousand-words/category.html"]);
 const TODAY = new Date().toISOString().slice(0, 10);
 
 function findHtml(dir, out = []) {
@@ -25,7 +27,7 @@ function findHtml(dir, out = []) {
     const p = join(dir, f);
     const s = statSync(p);
     if (s.isDirectory()) findHtml(p, out);
-    else if (f.endsWith(".html")) out.push(p);
+    else if (f.endsWith(".html") && !SKIP_FILES.has(p.replace(/^\.\//, ""))) out.push(p);
   }
   return out;
 }

@@ -237,6 +237,17 @@ export function renderPostFile(post) {
     mainEntityOfPage: url,
   };
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
+      { "@type": "ListItem", position: 2, name: "A Thousand Words", item: `${SITE}/${HUB_DIR}` },
+      { "@type": "ListItem", position: 3, name: c.name, item: `${SITE}/${HUB_DIR}/${c.slug}` },
+      { "@type": "ListItem", position: 4, name: title, item: url },
+    ],
+  };
+
   const content = `<!doctype html>
 <html lang="en">
 <head>
@@ -258,6 +269,7 @@ ${HEAD_FONTS}
 <link rel="stylesheet" href="../../css/blog.css" />
 <link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(breadcrumbLd)}</script>
 ${GTAG}
 </head>
 <body>

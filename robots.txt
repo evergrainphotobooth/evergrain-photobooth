@@ -6,4 +6,23 @@ Disallow: /admin/
 Disallow: /experiments/
 Disallow: /api/
 
+# AI assistants and answer engines are welcome to read and cite our content.
+# (Multiple user-agents share one rule group so the same crawl rules apply to each.)
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: Claude-Web
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Amazonbot
+Allow: /
+Disallow: /admin/
+Disallow: /experiments/
+Disallow: /api/
+
 Sitemap: https://evergrainphotobooth.com/sitemap.xml

@@ -20,7 +20,32 @@ const data = JSON.parse(readFileSync(join(ROOT, "data", "areas.json"), "utf8"));
 
 // -------- Shared chunks (navbar, footer, cart aside, marquee placeholder) --------
 
-const head = (title, description, depth, canonicalPath) => {
+const SITE = "https://evergrainphotobooth.com";
+
+// BreadcrumbList JSON-LD from the same items the visible breadcrumb uses.
+// The last item has no href → use the page's own canonical path.
+const ldBreadcrumb = (items, canonicalPath) =>
+  `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem", position: i + 1, name: it.label,
+      item: SITE + (it.href || canonicalPath),
+    })),
+  })}</script>`;
+
+// FAQPage JSON-LD from [question, answer] pairs.
+const ldFaq = (qa) =>
+  `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: qa.map(([q, a]) => ({
+      "@type": "Question", name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  })}</script>`;
+
+const head = (title, description, depth, canonicalPath, extraHead = "") => {
   const up = "../".repeat(depth);
   return `<!doctype html>
 <html lang="en">
@@ -45,7 +70,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-N7ERDKCDX7');
 </script>
-</head>
+${extraHead}</head>
 <body>
 
 <a class="skip-link" href="#main">Skip to content</a>
@@ -276,10 +301,11 @@ const breadcrumb = (items, modifier = "") => {
 
 function buildIndex() {
   const depth = 1;
-  const heroCrumbs = breadcrumb([
+  const crumbs = [
     { label: "Home", href: "/" },
     { label: "Areas We Serve" }
-  ], "breadcrumb--hero");
+  ];
+  const heroCrumbs = breadcrumb(crumbs, "breadcrumb--hero");
 
   const cards = data.regions.map(r => `
         <a class="region-card reveal" href="/areas-we-serve/${r.slug}">
@@ -294,7 +320,7 @@ function buildIndex() {
           </div>
         </a>`).join("");
 
-  const html = head("Areas We Serve — Evergrain Photobooth", "Luxury DSLR photobooth rental across Greater Los Angeles, Orange County, and the Ventura edge. See all the neighborhoods we serve.", depth, "/areas-we-serve")
+  const html = head("Areas We Serve — Evergrain Photobooth", "Luxury DSLR photobooth rental across Greater Los Angeles, Orange County, and the Ventura edge. See all the neighborhoods we serve.", depth, "/areas-we-serve", ldBreadcrumb(crumbs, "/areas-we-serve"))
     + header(depth)
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
@@ -328,11 +354,12 @@ function buildIndex() {
 
 function buildRegion(region) {
   const depth = 1;
-  const heroCrumbs = breadcrumb([
+  const crumbs = [
     { label: "Home", href: "/" },
     { label: "Areas We Serve", href: "/areas-we-serve" },
     { label: region.name }
-  ], "breadcrumb--hero");
+  ];
+  const heroCrumbs = breadcrumb(crumbs, "breadcrumb--hero");
 
   const cards = region.neighborhoods.map(n => `
         <a class="neighborhood-card reveal" href="/areas-we-serve/${region.slug}/${n.slug}">
@@ -391,7 +418,7 @@ function buildRegion(region) {
     </div>
   </section>` : "";
 
-  const html = head(metaTitle, metaDescription, depth, `/areas-we-serve/${region.slug}`)
+  const html = head(metaTitle, metaDescription, depth, `/areas-we-serve/${region.slug}`, ldBreadcrumb(crumbs, `/areas-we-serve/${region.slug}`))
     + header(depth)
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
@@ -440,12 +467,13 @@ ${addonsSection(depth)}
 
 function buildNeighborhood(region, n) {
   const depth = 2;
-  const heroCrumbs = breadcrumb([
+  const crumbs = [
     { label: "Home", href: "/" },
     { label: "Areas We Serve", href: "/areas-we-serve" },
     { label: region.name, href: `/areas-we-serve/${region.slug}` },
     { label: n.name }
-  ], "breadcrumb--hero");
+  ];
+  const heroCrumbs = breadcrumb(crumbs, "breadcrumb--hero");
 
   // Backward-compatible fallback for neighborhoods that lack the expanded fields
   const metaTitle = n.metaTitle || `${n.name} Photobooth Rental — Evergrain Photobooth`;
@@ -493,7 +521,13 @@ function buildNeighborhood(region, n) {
     </div>
   </section>` : "";
 
-  const html = head(metaTitle, metaDescription, depth, `/areas-we-serve/${region.slug}/${n.slug}`)
+  const nbhdPath = `/areas-we-serve/${region.slug}/${n.slug}`;
+  const faqQa = [
+    [`Do you serve ${n.name}?`, `Yes — ${n.name} is well within our ${region.name} service area. Travel is included in our standard pricing for this neighborhood.`],
+    [`How early do you arrive for setup?`, `We arrive 60–90 minutes before your start time. Setup is on us — not your clock. If your venue needs us even earlier, our Early Setup add-on covers it.`],
+    [`Can we customize for our event?`, `Yes — custom welcome screens, photo templates, rear-display reels, and backdrops are all add-ons in our Package List. Designed with you, built around your event.`],
+  ];
+  const html = head(metaTitle, metaDescription, depth, nbhdPath, ldBreadcrumb(crumbs, nbhdPath) + ldFaq(faqQa))
     + header(depth)
     + `<main id="main">
   <section class="page-hero topo-bg topo-bg--strong">
