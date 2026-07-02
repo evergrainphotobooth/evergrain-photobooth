@@ -30,9 +30,14 @@
     return m ? decodeURIComponent(m[1]) : null;
   }
 
+  // A post can belong to several categories; fall back to the single primary.
+  function catsOf(p) {
+    return (Array.isArray(p.categories) && p.categories.length) ? p.categories : (p.category ? [p.category] : []);
+  }
+
   function filtered() {
     if (!activeCat) return POSTS;
-    return POSTS.filter((p) => p.category && p.category.slug === activeCat);
+    return POSTS.filter((p) => catsOf(p).some((c) => c && c.slug === activeCat));
   }
 
   function cardHTML(p) {
@@ -134,7 +139,7 @@
     if (MODE !== "hub" || !tabsEl) return;
     // Categories that actually have published posts, in the index's order.
     const bySlug = new Map();
-    POSTS.forEach((p) => { if (p.category && !bySlug.has(p.category.slug)) bySlug.set(p.category.slug, p.category.name); });
+    POSTS.forEach((p) => catsOf(p).forEach((c) => { if (c && c.slug && !bySlug.has(c.slug)) bySlug.set(c.slug, c.name); }));
     const cats = Array.from(bySlug, ([slug, name]) => ({ slug, name }));
     const tab = (label, slug) =>
       `<button type="button" class="filter-pill${(activeCat === slug || (!activeCat && slug === null)) ? " is-active" : ""}" data-cat="${slug === null ? "" : esc(slug)}">${esc(label)}</button>`;

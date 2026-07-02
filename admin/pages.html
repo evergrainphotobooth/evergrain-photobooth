@@ -55,7 +55,11 @@
           <h2 class="admin-card__title" style="margin:0;">A Thousand Words — Blog</h2>
           <p class="card-head__meta">Posts live at <span class="blog-path">/a-thousand-words/[category]/[slug]</span></p>
         </div>
-        <a href="/admin/blog-editor" class="btn btn--primary btn--sm">+ Add Blog</a>
+        <div style="display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;">
+          <span class="text-meta" data-redirect-status></span>
+          <button type="button" class="btn btn--ghost btn--sm" data-check-redirects title="Turn any blog URL changes into 301 redirects so old links don't 404">Check for redirects</button>
+          <a href="/admin/blog-editor" class="btn btn--primary btn--sm">+ Add Blog</a>
+        </div>
       </div>
 
       <div data-posts-table>
@@ -413,6 +417,32 @@
   }
   addKwBtn.addEventListener("click", addKeywords);
   newKwInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addKeywords(); } });
+
+  /* ---------------- Check for redirects ---------------- */
+  const redirectBtn = document.querySelector("[data-check-redirects]");
+  const redirectStatus = document.querySelector("[data-redirect-status]");
+  redirectBtn.addEventListener("click", async () => {
+    redirectBtn.disabled = true;
+    const orig = redirectBtn.textContent;
+    redirectBtn.textContent = "Checking…";
+    redirectStatus.textContent = "";
+    try {
+      const r = await fetch("/api/admin/blog-posts?task=check-redirects", { method: "POST" });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Check failed");
+      const changed = (d.added || 0) + (d.updated || 0);
+      redirectStatus.style.color = "#2F7A4F";
+      redirectStatus.textContent = changed
+        ? `✓ Added ${d.added} · updated ${d.updated} redirect(s) — deploying`
+        : `✓ No new redirects needed (${d.total || 0} in place)`;
+    } catch (err) {
+      redirectStatus.style.color = "#B4462F";
+      redirectStatus.textContent = err.message || "Check failed";
+    } finally {
+      redirectBtn.disabled = false;
+      redirectBtn.textContent = orig;
+    }
+  });
 
   loadPosts();
   loadCategories();

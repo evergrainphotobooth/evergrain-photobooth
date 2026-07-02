@@ -36,6 +36,18 @@
   .inline-row { display:flex; gap:.6rem; align-items:flex-end; flex-wrap:wrap; }
   .inline-row .field { margin:0; flex:1; min-width:220px; }
   .field__hint { font-size:.75rem; color:var(--gray-500); margin-top:.3rem; }
+
+  /* Multi-category control */
+  .cat-multi { display:flex; flex-direction:column; gap:.4rem; }
+  .cat-opt { display:flex; align-items:center; justify-content:space-between; gap:.75rem;
+             padding:.5rem .7rem; border:1px solid var(--line,#ece7df); border-radius:10px; background:#fff; }
+  .cat-opt.is-checked { border-color:var(--brass,#a47a2a); background:var(--wash,#faf7f1); }
+  .cat-opt__label { display:flex; align-items:center; gap:.55rem; font-size:.92rem; cursor:pointer; margin:0; }
+  .cat-opt__label input { width:16px; height:16px; accent-color:var(--brass,#a47a2a); }
+  .cat-primary { font:inherit; font-size:.74rem; font-weight:600; border:1px solid var(--line,#ddd6c9);
+                 background:#fff; color:var(--gray-500); border-radius:999px; padding:.22rem .6rem; cursor:pointer; white-space:nowrap; }
+  .cat-primary:disabled { opacity:.4; cursor:default; }
+  .cat-opt.is-primary .cat-primary { background:var(--brass,#a47a2a); color:#fff; border-color:var(--brass,#a47a2a); }
   .count { font-weight:600; }
   .count.ok { color:#2F7A4F; } .count.bad { color:#B4462F; }
 
@@ -158,12 +170,10 @@
         <span>Title set</span>
       </div>
 
-      <div class="field" style="margin-top:1rem;max-width:340px;">
-        <label class="field__label" for="f-category">Category</label>
-        <select class="field__select" id="f-category">
-          <option value="">Uncategorized</option>
-        </select>
-        <div class="field__hint">Reflects as /a-thousand-words/[category]/[slug]</div>
+      <div class="field" style="margin-top:1rem;max-width:460px;">
+        <label class="field__label">Categories</label>
+        <div class="cat-multi" data-cat-multi></div>
+        <div class="field__hint">Check every category this post belongs to. The <strong>★ primary</strong> sets the URL: /a-thousand-words/[primary]/[slug]</div>
       </div>
     </div>
 
@@ -299,7 +309,7 @@
     title: $("#f-title"),
     setTitleBtn: $("[data-set-title]"),
     titleSet: $("[data-title-set]"),
-    category: $("#f-category"),
+    catMulti: $("[data-cat-multi]"),
     imageUrl: $("#f-image-url"),
     imageFilename: $("#f-image-filename"),
     uploadBtn: $("[data-upload]"),
@@ -451,8 +461,32 @@
     if (r.ok) { state.status = "draft"; state.scheduledAt = null; renderStatusPill(); setSaveStatus("Schedule cancelled", true); }
     else setSaveStatus("Couldn't cancel schedule", false);
   }
+  // ----- multi-category control (checkboxes + a single ★ primary) -----
+  const catSel = new Set();   // ids the post belongs to
+  let primaryCat = null;      // id that drives the URL
+
+  function renderCatMulti() {
+    if (!state.categories.length) {
+      els.catMulti.innerHTML = `<p class="text-meta">No categories yet — add them in <a href="/admin/pages">Pages → Blog Categories</a>.</p>`;
+      return;
+    }
+    if (primaryCat && !catSel.has(primaryCat)) primaryCat = null;
+    if (!primaryCat && catSel.size) primaryCat = [...catSel][0];
+    els.catMulti.innerHTML = state.categories.map(c => {
+      const checked = catSel.has(c.id), isP = c.id === primaryCat;
+      return `<div class="cat-opt${checked ? " is-checked" : ""}${isP ? " is-primary" : ""}">
+          <label class="cat-opt__label"><input type="checkbox" data-cat-check value="${c.id}" ${checked ? "checked" : ""}/><span>${esc(c.name)}</span></label>
+          <button type="button" class="cat-primary" data-cat-primary="${c.id}" ${checked ? "" : "disabled"} title="Set as the primary (URL) category">${isP ? "★ Primary" : "Set primary"}</button>
+        </div>`;
+    }).join("");
+    els.catMulti.querySelectorAll("[data-cat-check]").forEach(cb =>
+      cb.addEventListener("change", () => { cb.checked ? catSel.add(cb.value) : catSel.delete(cb.value); renderCatMulti(); updateFullUrl(); }));
+    els.catMulti.querySelectorAll("[data-cat-primary]").forEach(btn =>
+      btn.addEventListener("click", () => { const id = btn.getAttribute("data-cat-primary"); if (catSel.has(id)) { primaryCat = id; renderCatMulti(); updateFullUrl(); } }));
+  }
+
   function updateFullUrl() {
-    const cat = state.categories.find(c => c.id === els.category.value);
+    const cat = state.categories.find(c => c.id === primaryCat);
     const catPart = cat ? cat.slug + "/" : "";
     els.fullUrl.textContent = `/a-thousand-words/${catPart}${els.slug.value || ""}`;
   }
@@ -528,8 +562,7 @@
     if (!r.ok) return;
     const { categories } = await r.json();
     state.categories = categories || [];
-    els.category.innerHTML = `<option value="">Uncategorized</option>` +
-      state.categories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join("");
+    renderCatMulti();
   }
 
   /* ---------- checklist ---------- */
@@ -556,7 +589,10 @@
     state.scheduledAt = p.scheduled_at || null;
     state.checklist = Array.isArray(p.checklist) ? p.checklist : [];
     els.title.value = p.title || "";
-    els.category.value = p.category_id || "";
+    catSel.clear();
+    (Array.isArray(p.category_ids) && p.category_ids.length ? p.category_ids : [p.category_id]).filter(Boolean).forEach(id => catSel.add(id));
+    primaryCat = p.category_id || (catSel.size ? [...catSel][0] : null);
+    renderCatMulti();
     els.primaryKeyword.value = p.primary_keyword || "";
     els.metaTitle.value = p.meta_title || "";
     els.metaDescription.value = p.meta_description || "";
@@ -605,12 +641,12 @@
       if (!state.id) {
         r = await fetch("/api/admin/blog-posts", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, category_id: els.category.value || null }),
+          body: JSON.stringify({ title, category_id: primaryCat || null, categoryIds: [...catSel] }),
         });
       } else {
         r = await fetch("/api/admin/blog-posts", {
           method: "PATCH", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: state.id, title, category_id: els.category.value || null }),
+          body: JSON.stringify({ id: state.id, title, category_id: primaryCat || null, categoryIds: [...catSel] }),
         });
       }
       const d = await r.json().catch(() => ({}));
@@ -731,7 +767,7 @@
   els.generateBtn.addEventListener("click", async () => {
     if (!state.id) { alert("Set a title first."); return; }
     if (els.html.value.trim() && !confirm("Generating will replace the current content. Continue?")) return;
-    const cat = state.categories.find(c => c.id === els.category.value);
+    const cat = state.categories.find(c => c.id === primaryCat);
     els.generateBtn.disabled = true;
     els.genStatus.innerHTML = `<span class="loading"></span> Writing your blog… this can take 20–40 seconds.`;
     try {
@@ -776,7 +812,8 @@
     return {
       id: state.id,
       title: els.title.value.trim(),
-      category_id: els.category.value || null,
+      category_id: primaryCat || null,
+      categoryIds: [...catSel],
       primaryKeyword: els.primaryKeyword.value.trim(),
       metaTitle: els.metaTitle.value.trim(),
       metaDescription: els.metaDescription.value.trim(),
@@ -830,7 +867,6 @@
   els.metaTitle.addEventListener("input", updateCounts);
   els.metaDescription.addEventListener("input", updateCounts);
   els.slug.addEventListener("input", updateFullUrl);
-  els.category.addEventListener("change", updateFullUrl);
   els.imageAlt.addEventListener("input", () => { els.imgEl.alt = els.imageAlt.value; });
   els.html.addEventListener("input", () => { refreshPreview(); });
 

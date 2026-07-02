@@ -63,14 +63,18 @@ async function handler(req, res) {
     if (!resp.ok) return res.status(500).json({ error: "Failed to load categories" });
     const categories = await resp.json();
 
-    // Post counts per category (one lightweight query).
+    // Post counts per category — a post counts for every category it belongs to
+    // (its full membership plus its primary, in case a draft predates the array).
     const countsResp = await fetch(
-      `${SUPABASE_URL}/rest/v1/blog_posts?select=category_id`,
+      `${SUPABASE_URL}/rest/v1/blog_posts?select=category_id,category_ids`,
       { headers: H }
     );
     const rows = countsResp.ok ? await countsResp.json() : [];
     const counts = {};
-    for (const r of rows) counts[r.category_id] = (counts[r.category_id] || 0) + 1;
+    for (const r of rows) {
+      const ids = new Set([...(Array.isArray(r.category_ids) ? r.category_ids : []), r.category_id].filter(Boolean));
+      for (const id of ids) counts[id] = (counts[id] || 0) + 1;
+    }
     for (const c of categories) c.post_count = counts[c.id] || 0;
 
     return res.status(200).json({ ok: true, categories });
@@ -121,7 +125,26 @@ async function handler(req, res) {
     const url = new URL(req.url, `https://${req.headers.host}`);
     const id = url.searchParams.get("id");
     if (!id) return res.status(400).json({ error: "id required" });
-    // Posts referencing this category have category_id set NULL via FK (on delete set null).
+
+    // Detach from every post first: drop the id from category_ids, and if it was
+    // a post's primary, promote the next remaining category (or null).
+    const POSTS = `${SUPABASE_URL}/rest/v1/blog_posts`;
+    const affResp = await fetch(
+      `${POSTS}?select=id,category_id,category_ids&or=(category_id.eq.${encodeURIComponent(id)},category_ids.cs.{${encodeURIComponent(id)}})`,
+      { headers: H }
+    );
+    if (affResp.ok) {
+      const affected = await affResp.json();
+      for (const p of (affected || [])) {
+        const ids = (Array.isArray(p.category_ids) ? p.category_ids : []).filter(x => x !== id);
+        const newPrimary = p.category_id === id ? (ids[0] || null) : p.category_id;
+        await fetch(`${POSTS}?id=eq.${encodeURIComponent(p.id)}`, {
+          method: "PATCH", headers: { ...H, "Content-Type": "application/json" },
+          body: JSON.stringify({ category_id: newPrimary, category_ids: ids }),
+        }).catch(() => {});
+      }
+    }
+
     const resp = await fetch(`${SB}?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: H });
     if (!resp.ok) { console.error("cat delete:", await resp.text()); return res.status(500).json({ error: "Delete failed" }); }
     const siteSync = await refreshIndex();

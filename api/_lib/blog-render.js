@@ -13,7 +13,7 @@
      postUrl(post)                            → "/a-thousand-words/<cat>/<slug>"
    ========================================================= */
 
-import { commitTree, getFile } from "./github.js";
+import { commitTree, getFile, getJson, putJson } from "./github.js";
 
 const SITE = "https://evergrainphotobooth.com";
 const HUB_DIR = "a-thousand-words";
@@ -70,12 +70,84 @@ async function sb(env, path) {
   return r.json();
 }
 
+function sbHeaders(env) {
+  return {
+    apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+    Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+    "Content-Type": "application/json",
+  };
+}
+
+/* URL (no .html) for a repo file path: a-thousand-words/x/y.html → /a-thousand-words/x/y */
+export function urlFromPath(p) {
+  return "/" + String(p || "").replace(/\.html$/i, "").replace(/^\/+/, "");
+}
+
+/* Record that fromUrl should 301 → toUrl. Collapses chains and drops a stale
+   redirect away from a URL that just went live again. */
+export async function recordRedirect(env, fromUrl, toUrl, postId) {
+  if (!fromUrl || !toUrl || fromUrl === toUrl) return;
+  const base = `${env.SUPABASE_URL}/rest/v1/blog_redirects`;
+  const h = sbHeaders(env);
+  await fetch(`${base}?to_path=eq.${encodeURIComponent(fromUrl)}`, { method: "PATCH", headers: h, body: JSON.stringify({ to_path: toUrl }) }).catch(() => {});
+  await fetch(`${base}?from_path=eq.${encodeURIComponent(toUrl)}`, { method: "DELETE", headers: h }).catch(() => {});
+  await fetch(base, { method: "POST", headers: { ...h, Prefer: "resolution=merge-duplicates" }, body: JSON.stringify({ from_path: fromUrl, to_path: toUrl, post_id: postId || null }) }).catch(() => {});
+}
+
+export async function setPublishedPath(env, id, path) {
+  await fetch(`${env.SUPABASE_URL}/rest/v1/blog_posts?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH", headers: sbHeaders(env), body: JSON.stringify({ published_path: path }),
+  }).catch(() => {});
+}
+
+/* Materialize recorded redirects into vercel.json as 301s. Idempotent —
+   safe to run any time; only commits when something actually changed. */
+export async function applyRedirects(env) {
+  const rows = await sb(env, "blog_redirects?select=from_path,to_path,created_at&order=created_at.desc");
+  const file = await getJson("vercel.json");
+  if (!file) throw new Error("vercel.json not found in repo");
+  const data = file.data || {};
+  const redirects = Array.isArray(data.redirects) ? data.redirects : [];
+  const bySource = new Map(redirects.map(r => [r.source, r]));
+  let added = 0, updated = 0;
+  for (const r of rows) {
+    if (!r.from_path || !r.to_path || r.from_path === r.to_path) continue;
+    const existing = bySource.get(r.from_path);
+    if (!existing) {
+      const entry = { source: r.from_path, destination: r.to_path, permanent: true };
+      redirects.push(entry); bySource.set(r.from_path, entry); added++;
+    } else if (existing.destination !== r.to_path) {
+      existing.destination = r.to_path; updated++;
+    }
+  }
+  const monthAgo = Date.now() - 30 * 864e5;
+  const recent = rows.filter(r => new Date(r.created_at).getTime() >= monthAgo).length;
+  if (added || updated) {
+    data.redirects = redirects;
+    await putJson("vercel.json", data, file.sha, `Blog: apply ${added + updated} URL redirect(s)`);
+  }
+  return { ok: true, added, updated, total: rows.length, recent };
+}
+
 async function fetchIndexData(env) {
   const posts = await sb(env,
-    `blog_posts?select=title,slug,image_url,image_alt,meta_description,content_html,published_at,created_at,blog_categories(name,slug)` +
+    `blog_posts?select=title,slug,image_url,image_alt,meta_description,content_html,published_at,created_at,category_ids,blog_categories(name,slug)` +
     `&status=eq.published&order=published_at.desc.nullslast`);
-  const categories = await sb(env, `blog_categories?select=name,slug,blurb&order=name.asc`);
+  const categories = await sb(env, `blog_categories?select=id,name,slug,blurb&order=name.asc`);
   return { posts, categories };
+}
+
+// Resolve a post's full category membership (primary first, then the rest).
+function categoriesOf(post, catList) {
+  const byId = new Map((catList || []).map(c => [c.id, c]));
+  const primary = catOf(post);
+  const out = [primary];
+  const seen = new Set([primary.slug]);
+  for (const id of (Array.isArray(post.category_ids) ? post.category_ids : [])) {
+    const c = byId.get(id);
+    if (c && c.slug && !seen.has(c.slug)) { out.push({ name: c.name, slug: c.slug }); seen.add(c.slug); }
+  }
+  return out;
 }
 
 function buildIndexFile({ posts, categories }) {
@@ -88,7 +160,8 @@ function buildIndexFile({ posts, categories }) {
         title: p.title,
         slug: p.slug,
         url: `/${HUB_DIR}/${c.slug}/${p.slug}`,
-        category: { name: c.name, slug: c.slug },
+        category: { name: c.name, slug: c.slug },          // primary (drives the URL)
+        categories: categoriesOf(p, categories),           // every category it appears under
         image: p.image_url || "",
         imageAlt: p.image_alt || p.title || "",
         date: p.published_at || p.created_at || null,
@@ -346,5 +419,6 @@ export async function publishScheduled(env) {
     p.status = "published"; p.published_at = nowIso; // reflect for rendering
   }
   await syncSite(env, { putPosts: due }, `Blog: publish ${due.length} scheduled post(s)`);
+  for (const p of due) { try { await setPublishedPath(env, p.id, postPath(p)); } catch { /* best-effort */ } }
   return { ok: true, published: due.length };
 }

@@ -8,7 +8,7 @@
    ========================================================= */
 
 import { requireAuth } from "../_lib/auth.js";
-import { syncSite, postPath, publishScheduled } from "../_lib/blog-render.js";
+import { syncSite, postPath, postUrl, publishScheduled, recordRedirect, setPublishedPath, urlFromPath, applyRedirects } from "../_lib/blog-render.js";
 
 function slugify(s) {
   return String(s || "")
@@ -37,6 +37,7 @@ const FIELD_MAP = {
   title: "title",
   slug: "slug",
   category_id: "category_id",
+  categoryIds: "category_ids",
   primaryKeyword: "primary_keyword",
   metaTitle: "meta_title",
   metaDescription: "meta_description",
@@ -61,6 +62,14 @@ async function handler(req, res) {
   const SB = `${SUPABASE_URL}/rest/v1/blog_posts`;
   const env = { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY };
 
+  // "Check for redirects" — turn recorded blog URL changes into vercel.json 301s.
+  const taskParam = new URL(req.url, `https://${req.headers.host}`).searchParams.get("task");
+  if (taskParam === "check-redirects") {
+    if (!process.env.GITHUB_TOKEN) return res.status(500).json({ error: "GITHUB_TOKEN not set" });
+    try { return res.status(200).json(await applyRedirects(env)); }
+    catch (e) { console.error("check-redirects:", e); return res.status(500).json({ error: String(e.message || e) }); }
+  }
+
   // Fetch one row with its category embed (for rendering / path diffing).
   const fetchRow = async (id, select) => {
     const r = await fetch(`${SB}?id=eq.${encodeURIComponent(id)}&select=${select}`, { headers: H });
@@ -75,14 +84,25 @@ async function handler(req, res) {
     const newPub = full && full.status === "published";
     const oldPub = oldRow && oldRow.status === "published";
     if (!newPub && !oldPub) return { ok: true, noop: true };
+    const newPath = postPath(full);
     const putPosts = newPub ? [full] : [];
     const delPaths = [];
+
+    // 301 when a published post's URL moved (slug or primary category changed).
+    if (newPub && oldRow && oldRow.published_path && oldRow.published_path !== newPath) {
+      delPaths.push(oldRow.published_path);
+      try { await recordRedirect(env, urlFromPath(oldRow.published_path), postUrl(full), full.id); }
+      catch (e) { console.error("record redirect:", e); }
+    }
+    // Remove the immediately-prior file too if it changed / was unpublished.
     if (oldPub) {
       const oldPath = postPath({ slug: oldRow.slug, blog_categories: oldRow.blog_categories });
-      if (!newPub || oldPath !== postPath(full)) delPaths.push(oldPath);
+      if ((!newPub || oldPath !== newPath) && !delPaths.includes(oldPath)) delPaths.push(oldPath);
     }
     try {
-      return await syncSite(env, { putPosts, delPaths }, `Blog: ${newPub ? "publish" : "unpublish"} ${full.slug}`);
+      const r = await syncSite(env, { putPosts, delPaths }, `Blog: ${newPub ? "publish" : "unpublish"} ${full.slug}`);
+      if (newPub) { try { await setPublishedPath(env, full.id, newPath); } catch (e) { console.error("set published_path:", e); } }
+      return r;
     } catch (e) {
       console.error("blog site sync:", e);
       return { ok: false, error: String(e.message || e) };
@@ -125,10 +145,14 @@ async function handler(req, res) {
   if (req.method === "POST") {
     const b = readBody();
     if (!b.title || !b.title.trim()) return res.status(400).json({ error: "title required" });
+    const primary = b.category_id || null;
+    const ids = Array.isArray(b.categoryIds) ? b.categoryIds.filter(Boolean) : [];
+    if (primary && !ids.includes(primary)) ids.push(primary);
     const row = {
       title: b.title.trim(),
       slug: b.slug ? slugify(b.slug) : slugify(b.title),
-      category_id: b.category_id || null,
+      category_id: primary,
+      category_ids: [...new Set(ids)],
       status: "draft",
     };
     const resp = await fetch(SB, {
@@ -148,11 +172,17 @@ async function handler(req, res) {
     if (!b.id) return res.status(400).json({ error: "id required" });
 
     // Snapshot pre-update state so we can diff the public URL/status.
-    const oldRow = await fetchRow(b.id, "slug,status,blog_categories(slug)");
+    const oldRow = await fetchRow(b.id, "slug,status,published_path,blog_categories(slug)");
 
     const patch = { updated_at: new Date().toISOString() };
     for (const [inKey, col] of Object.entries(FIELD_MAP)) {
       if (b[inKey] !== undefined) patch[col] = b[inKey];
+    }
+    // The primary category must always be part of the full membership list.
+    if (patch.category_ids !== undefined || patch.category_id !== undefined) {
+      let ids = Array.isArray(patch.category_ids) ? patch.category_ids.filter(Boolean) : undefined;
+      if (ids && patch.category_id && !ids.includes(patch.category_id)) ids.push(patch.category_id);
+      if (ids) patch.category_ids = [...new Set(ids)];
     }
     if (patch.slug !== undefined) patch.slug = slugify(patch.slug);
     if (patch.content_html !== undefined) patch.word_count = wordCountFromHtml(patch.content_html);
