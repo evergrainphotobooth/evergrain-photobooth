@@ -83,7 +83,8 @@ export default async function handler(req, res) {
   set("estimated_total", payload.estimatedTotal || null);
   set("referral", payload.referral || null);
   set("message", payload.message || null);
-  set("source_page", payload.sourcePage || null);
+  // sourcePage is captured inside raw_payload below (no dedicated column, so the
+  // live form never depends on a migration). The CMS reads raw_payload.sourcePage.
   cols.last_step = step;
   cols.completed = !isPartial;           // true only on the final completion call
   cols.raw_payload = payload;

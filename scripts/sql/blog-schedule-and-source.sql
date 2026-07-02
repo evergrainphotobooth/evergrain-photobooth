@@ -16,10 +16,10 @@ alter table public.blog_posts add constraint blog_posts_status_check
 create index if not exists blog_posts_scheduled_idx
   on public.blog_posts (scheduled_at) where status = 'scheduled';
 
--- 2) Inquiries: which page the inquiry was submitted from ----------------
-alter table public.inquiries add column if not exists source_page text;
+-- (Inquiry source-page tracking needs NO migration — it is captured inside
+--  the existing inquiries.raw_payload JSON and read from there by the CMS.)
 
--- 3) Auto-publish scheduler (precise, plan-independent) ------------------
+-- 2) Auto-publish scheduler (precise, plan-independent) ------------------
 -- Runs the publish endpoint every 5 minutes so scheduled posts go live at
 -- (approximately) their chosen time. Requires the pg_cron + pg_net extensions
 -- (Supabase → Database → Extensions → enable "pg_cron" and "pg_net"), a

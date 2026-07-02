@@ -39,7 +39,7 @@ async function handler(req, res) {
     if (completed === "true" || completed === "false") filter += `&completed=eq.${completed}`;
 
     const resp = await fetch(
-      `${SUPABASE_URL}/rest/v1/inquiries?select=id,created_at,name,email,phone,event_date,event_type,venue_city,status,selected_package,estimated_total,completed,last_step,source_page${filter}&order=created_at.desc&limit=${limit}`,
+      `${SUPABASE_URL}/rest/v1/inquiries?select=id,created_at,name,email,phone,event_date,event_type,venue_city,status,selected_package,estimated_total,completed,last_step,sourcePage:raw_payload->>sourcePage${filter}&order=created_at.desc&limit=${limit}`,
       { headers: baseHeaders }
     );
     if (!resp.ok) {
