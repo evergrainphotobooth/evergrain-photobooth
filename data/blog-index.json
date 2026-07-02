@@ -1,5 +1,31 @@
 {
-  "generated_at": null,
-  "categories": [],
-  "posts": []
+  "generated_at": "2026-07-02T08:38:41.905Z",
+  "categories": [
+    {
+      "name": "Tips & Guides",
+      "slug": "tips-and-guides",
+      "blurb": "Practical advice for planning an unforgettable photo booth experience."
+    },
+    {
+      "name": "Weddings",
+      "slug": "weddings",
+      "blurb": ""
+    }
+  ],
+  "posts": [
+    {
+      "title": "Why a Photobooth Is the Secret Ingredient for an Unforgettable LA Wedding",
+      "slug": "why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding",
+      "url": "/a-thousand-words/uncategorized/why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding",
+      "category": {
+        "name": "A Thousand Words",
+        "slug": "uncategorized"
+      },
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding-mr348cjzforbm.jpg",
+      "imageAlt": "Guests having fun at a luxury open-air DSLR LA wedding photo booth with custom backdrop and props, celebrating an unforgettable LA wedding",
+      "date": "2026-07-02T06:25:37.274+00:00",
+      "dateLabel": "July 2, 2026",
+      "excerpt": "Discover how an LA wedding photo booth rental transforms your celebration into an unforgettable experience. Capture genuine moments with Evergrain's luxury…"
+    }
+  ]
 }
