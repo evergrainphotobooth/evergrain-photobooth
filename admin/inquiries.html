@@ -192,7 +192,7 @@
         <td>${fmtDate(r.event_date)}</td>
         <td>${esc(r.selected_package || "—")}<div class="text-meta">${esc(r.estimated_total || "")}</div></td>
         <td>${statusPill(r.status || "new")}</td>
-        <td class="text-meta">${fmtDateTime(r.created_at)}</td>
+        <td class="text-meta">${fmtDateTime(r.created_at)}${r.source_page ? `<div class="text-meta" title="Submitted from ${esc(r.source_page)}">↳ ${esc(r.source_page === "/" ? "Home" : r.source_page.replace(/^\//, ""))}</div>` : ""}</td>
       </tr>
     `).join("");
 
@@ -307,6 +307,7 @@
 
       <div class="detail-section-title">Meta</div>
       ${row("Submitted", fmtDateTime(i.created_at))}
+      ${row("Submitted from", i.source_page, i.source_page ? `${i.source_page}` : null)}
       ${row("Heard about us", i.referral)}
 
       <div class="detail-section-title">Internal notes</div>

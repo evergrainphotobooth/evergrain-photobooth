@@ -15,6 +15,20 @@
   .back-link { font-size:.85rem; color:var(--brass, #a47a2a); text-decoration:none; }
   .back-link:hover { text-decoration:underline; }
   .editor-top__actions { display:flex; align-items:center; gap:.6rem; }
+  .sched-wrap { position:relative; }
+  .sched-pop { position:absolute; top:calc(100% + .5rem); right:0; z-index:40; width:280px;
+               background:#fff; border:1px solid var(--line,#e4ded3); border-radius:12px; padding:1rem;
+               box-shadow:0 18px 44px -22px rgba(45,34,22,.55); }
+  .sched-pop__title { font-weight:600; font-size:.9rem; margin-bottom:.6rem; }
+  .sched-pop .field { margin:0 0 .7rem; }
+  .sched-time { display:flex; align-items:center; gap:.35rem; }
+  .sched-time .field__select { padding:.4rem .5rem; }
+  .sched-pop__actions { display:flex; gap:.5rem; margin-top:.3rem; }
+  .sched-pop__err { color:#B4462F; font-size:.8rem; margin-bottom:.5rem; }
+  .sched-banner { margin:.85rem 0 0; padding:.7rem 1rem; border-radius:10px;
+                  background:#F4E9CE; border:1px solid #E1CD97; color:#6B531B; font-size:.9rem;
+                  display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+  .sched-banner button { background:none; border:0; color:#6B531B; font:inherit; text-decoration:underline; cursor:pointer; }
 
   .card-title { font-family:"Fraunces",serif; font-weight:400; font-size:1.15rem; margin:0 0 .25rem; color:var(--gray-900,#1a1410); }
   .card-sub { font-size:.83rem; color:var(--gray-500); margin:0 0 1rem; }
@@ -102,9 +116,31 @@
         <span class="save-status" data-save-status></span>
         <span data-status-pill></span>
         <button type="button" class="btn btn--ghost btn--sm" data-save disabled>Save draft</button>
+        <div class="sched-wrap">
+          <button type="button" class="btn btn--ghost btn--sm" data-schedule disabled>Schedule</button>
+          <div class="sched-pop" data-schedule-pop hidden>
+            <div class="sched-pop__title">Schedule publish</div>
+            <div class="field"><label class="field__label" for="sch-date">Date</label>
+              <input class="field__input" id="sch-date" type="date" data-sch-date /></div>
+            <div class="field"><label class="field__label">Time</label>
+              <div class="sched-time">
+                <select class="field__select" data-sch-h aria-label="Hour"></select>
+                <span>:</span>
+                <select class="field__select" data-sch-m aria-label="Minute"></select>
+                <select class="field__select" data-sch-ap aria-label="AM/PM"><option>AM</option><option>PM</option></select>
+              </div>
+            </div>
+            <div class="sched-pop__err" data-sch-err hidden></div>
+            <div class="sched-pop__actions">
+              <button type="button" class="btn btn--brass btn--sm" data-sch-confirm>Schedule publish</button>
+              <button type="button" class="btn btn--ghost btn--sm" data-sch-cancel>Cancel</button>
+            </div>
+          </div>
+        </div>
         <button type="button" class="btn btn--primary btn--sm" data-publish disabled>Publish</button>
       </div>
     </div>
+    <div class="sched-banner" data-scheduled-banner hidden></div>
 
     <!-- 1. Title -->
     <div class="admin-card">
@@ -127,7 +163,7 @@
         <select class="field__select" id="f-category">
           <option value="">Uncategorized</option>
         </select>
-        <div class="field__hint">Reflects as /candid-moments/[category]/[slug]</div>
+        <div class="field__hint">Reflects as /a-thousand-words/[category]/[slug]</div>
       </div>
     </div>
 
@@ -253,6 +289,7 @@
   const state = {
     id: params.get("id") || null,
     status: "draft",
+    scheduledAt: null,
     checklist: [],
     categories: [],
     keywords: [],
@@ -299,6 +336,16 @@
     publishBtn: $("[data-publish]"),
     saveStatus: $("[data-save-status]"),
     statusPill: $("[data-status-pill]"),
+    scheduleBtn: $("[data-schedule]"),
+    schedulePop: $("[data-schedule-pop]"),
+    schDate: $("[data-sch-date]"),
+    schH: $("[data-sch-h]"),
+    schM: $("[data-sch-m]"),
+    schAp: $("[data-sch-ap]"),
+    schConfirm: $("[data-sch-confirm]"),
+    schCancel: $("[data-sch-cancel]"),
+    schErr: $("[data-sch-err]"),
+    scheduledBanner: $("[data-scheduled-banner]"),
     // uploaded image URL lives here (Supabase public URL), separate from the paste box
     _uploadedUrl: "",
   };
@@ -317,15 +364,97 @@
     els.saveStatus.style.color = ok === false ? "#B4462F" : (ok ? "#2F7A4F" : "var(--gray-500)");
   }
   function renderStatusPill() {
-    const published = state.status === "published";
-    const color = published ? "#2F7A4F" : "#8A7B5C";
-    els.statusPill.innerHTML = `<span class="status-pill" style="background:${color}1F;"><span class="status-pill__dot" style="background:${color};"></span>${published ? "Published" : "Draft"}</span>`;
-    els.publishBtn.textContent = published ? "Unpublish" : "Publish";
+    const map = {
+      published: { color: "#2F7A4F", label: "Published" },
+      scheduled: { color: "#C69A2E", label: "Scheduled" },
+      draft:     { color: "#8A7B5C", label: "Draft" },
+    };
+    const m = map[state.status] || map.draft;
+    els.statusPill.innerHTML = `<span class="status-pill" style="background:${m.color}1F;"><span class="status-pill__dot" style="background:${m.color};"></span>${m.label}</span>`;
+    els.publishBtn.textContent = state.status === "published" ? "Unpublish" : "Publish";
+    renderScheduledBanner();
+  }
+
+  /* ---------- scheduling ---------- */
+  function fmtSchedule(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    return d.toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+  }
+  function renderScheduledBanner() {
+    if (state.status === "scheduled" && state.scheduledAt) {
+      els.scheduledBanner.hidden = false;
+      els.scheduledBanner.innerHTML = `<span>⏳ Scheduled to publish on <strong>${esc(fmtSchedule(state.scheduledAt))}</strong></span><button type="button" data-cancel-schedule>Cancel schedule</button>`;
+      els.scheduledBanner.querySelector("[data-cancel-schedule]").addEventListener("click", cancelSchedule);
+    } else {
+      els.scheduledBanner.hidden = true;
+      els.scheduledBanner.innerHTML = "";
+    }
+  }
+  function fillTimeSelects() {
+    for (let h = 1; h <= 12; h++) els.schH.insertAdjacentHTML("beforeend", `<option value="${h}">${h}</option>`);
+    for (let m = 0; m < 60; m += 5) { const mm = String(m).padStart(2, "0"); els.schM.insertAdjacentHTML("beforeend", `<option value="${mm}">${mm}</option>`); }
+  }
+  function openSchedulePop() {
+    if (!state.id) { alert("Set a title first."); return; }
+    // Default to the current schedule, else ~1 hour from now, rounded to 5 min.
+    const base = state.scheduledAt ? new Date(state.scheduledAt) : new Date(Date.now() + 60 * 60 * 1000);
+    base.setMinutes(Math.ceil(base.getMinutes() / 5) * 5, 0, 0);
+    const y = base.getFullYear(), mo = String(base.getMonth() + 1).padStart(2, "0"), d = String(base.getDate()).padStart(2, "0");
+    els.schDate.value = `${y}-${mo}-${d}`;
+    els.schDate.min = new Date().toISOString().slice(0, 10);
+    let h = base.getHours(); const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12;
+    els.schH.value = String(h);
+    els.schM.value = String(Math.floor(base.getMinutes() / 5) * 5).padStart(2, "0");
+    els.schAp.value = ap;
+    els.schErr.hidden = true;
+    els.schedulePop.hidden = false;
+  }
+  function closeSchedulePop() { els.schedulePop.hidden = true; }
+  function scheduleIso() {
+    if (!els.schDate.value) return null;
+    let h = parseInt(els.schH.value, 10) % 12;
+    if (els.schAp.value === "PM") h += 12;
+    const [y, mo, d] = els.schDate.value.split("-").map(Number);
+    const dt = new Date(y, mo - 1, d, h, parseInt(els.schM.value, 10), 0, 0); // local time
+    return isNaN(dt) ? null : dt;
+  }
+  async function confirmSchedule() {
+    const dt = scheduleIso();
+    if (!dt) { els.schErr.textContent = "Pick a date and time."; els.schErr.hidden = false; return; }
+    if (dt.getTime() <= Date.now() + 30000) { els.schErr.textContent = "Choose a time in the future."; els.schErr.hidden = false; return; }
+    els.schConfirm.disabled = true; els.schConfirm.textContent = "Scheduling…";
+    try {
+      const r = await fetch("/api/admin/blog-posts", {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...collectPayload(), status: "scheduled", scheduledAt: dt.toISOString() }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Schedule failed");
+      state.status = "scheduled"; state.scheduledAt = dt.toISOString();
+      closeSchedulePop();
+      renderStatusPill();
+      setSaveStatus("Scheduled ✓", true);
+    } catch (err) {
+      els.schErr.textContent = err.message || "Schedule failed"; els.schErr.hidden = false;
+    } finally {
+      els.schConfirm.disabled = false; els.schConfirm.textContent = "Schedule publish";
+    }
+  }
+  async function cancelSchedule() {
+    if (!confirm("Cancel the scheduled publish and return this post to draft?")) return;
+    const r = await fetch("/api/admin/blog-posts", {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: state.id, status: "draft", scheduledAt: null }),
+    });
+    if (r.ok) { state.status = "draft"; state.scheduledAt = null; renderStatusPill(); setSaveStatus("Schedule cancelled", true); }
+    else setSaveStatus("Couldn't cancel schedule", false);
   }
   function updateFullUrl() {
     const cat = state.categories.find(c => c.id === els.category.value);
     const catPart = cat ? cat.slug + "/" : "";
-    els.fullUrl.textContent = `/candid-moments/${catPart}${els.slug.value || ""}`;
+    els.fullUrl.textContent = `/a-thousand-words/${catPart}${els.slug.value || ""}`;
   }
   function updateCounts() {
     const mt = els.metaTitle.value.length;
@@ -389,6 +518,7 @@
     els.generateBtn.disabled = !hasTitle;
     els.saveBtn.disabled = !hasTitle;
     els.publishBtn.disabled = !hasTitle;
+    els.scheduleBtn.disabled = !hasTitle;
     els.genHint.hidden = hasTitle;
   }
 
@@ -423,6 +553,7 @@
   function fromRow(p) {
     state.id = p.id;
     state.status = p.status || "draft";
+    state.scheduledAt = p.scheduled_at || null;
     state.checklist = Array.isArray(p.checklist) ? p.checklist : [];
     els.title.value = p.title || "";
     els.category.value = p.category_id || "";
@@ -668,6 +799,7 @@
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.error || "Save failed");
       state.status = d.post?.status || state.status;
+      if (state.status !== "scheduled") state.scheduledAt = null;
       renderStatusPill();
       setSaveStatus(labelDone + " ✓", true);
     } catch (err) {
@@ -682,6 +814,17 @@
     persist({ status: publishing ? "published" : "draft" }, els.publishBtn,
             publishing ? "Publishing…" : "Unpublishing…", publishing ? "Published" : "Unpublished");
   });
+
+  /* ---------- schedule wiring ---------- */
+  fillTimeSelects();
+  els.scheduleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (els.schedulePop.hidden) openSchedulePop(); else closeSchedulePop();
+  });
+  els.schConfirm.addEventListener("click", confirmSchedule);
+  els.schCancel.addEventListener("click", closeSchedulePop);
+  els.schedulePop.addEventListener("click", (e) => e.stopPropagation());
+  document.addEventListener("click", () => { if (!els.schedulePop.hidden) closeSchedulePop(); });
 
   /* ---------- live wiring ---------- */
   els.metaTitle.addEventListener("input", updateCounts);

@@ -1,7 +1,7 @@
 -- =========================================================
 -- Evergrain CMS — Blog tables (run once in Supabase SQL Editor)
--- Blogs live under /candid-moments, categories under
--- /candid-moments/[category-slug]. Content is authored + stored here;
+-- Blogs live under /a-thousand-words, categories under
+-- /a-thousand-words/[category-slug]. Content is authored + stored here;
 -- public rendering is a later phase.
 -- =========================================================
 
@@ -19,7 +19,7 @@ create table if not exists public.blog_categories (
 create table if not exists public.blog_posts (
   id                uuid primary key default gen_random_uuid(),
   title             text not null,        -- H1 on the page
-  slug              text unique,          -- /candid-moments/[category]/[slug]
+  slug              text unique,          -- /a-thousand-words/[category]/[slug]
   category_id       uuid references public.blog_categories(id) on delete set null,
   primary_keyword   text,
   meta_title        text,                 -- ~50–60 chars

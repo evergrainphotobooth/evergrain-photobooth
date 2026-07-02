@@ -83,6 +83,7 @@ export default async function handler(req, res) {
   set("estimated_total", payload.estimatedTotal || null);
   set("referral", payload.referral || null);
   set("message", payload.message || null);
+  set("source_page", payload.sourcePage || null);
   cols.last_step = step;
   cols.completed = !isPartial;           // true only on the final completion call
   cols.raw_payload = payload;

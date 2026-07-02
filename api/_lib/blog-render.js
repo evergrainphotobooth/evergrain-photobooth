@@ -9,16 +9,16 @@
    Exports:
      syncSite(env, { putPosts, delPaths })  → commit post files + fresh index
      renderPostFile(post)                    → { path, content }
-     postPath(post)                          → "candid-moments/<cat>/<slug>.html"
-     postUrl(post)                            → "/candid-moments/<cat>/<slug>"
+     postPath(post)                          → "a-thousand-words/<cat>/<slug>.html"
+     postUrl(post)                            → "/a-thousand-words/<cat>/<slug>"
    ========================================================= */
 
 import { commitTree, getFile } from "./github.js";
 
 const SITE = "https://evergrainphotobooth.com";
-const HUB_DIR = "candid-moments";
+const HUB_DIR = "a-thousand-words";
 const INDEX_PATH = "data/blog-index.json";
-const UNCATEGORIZED = { name: "Candid Moments", slug: "uncategorized" };
+const UNCATEGORIZED = { name: "A Thousand Words", slug: "uncategorized" };
 
 /* ---------- helpers ---------- */
 const esc = (s) => String(s ?? "")
@@ -50,7 +50,7 @@ function dateLabel(iso) {
 
 function catOf(post) {
   const c = post.blog_categories;
-  if (c && c.slug) return { name: c.name || "Candid Moments", slug: c.slug };
+  if (c && c.slug) return { name: c.name || "A Thousand Words", slug: c.slug };
   return UNCATEGORIZED;
 }
 
@@ -180,7 +180,7 @@ const FOOTER = `<footer class="site-footer">
         <img src="../../assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" />
         <p class="footer__tagline" data-cms-tagline>A photobooth experience built around the camera — never around the gimmick.</p>
       </div>
-      <div><h4>Explore</h4><ul class="footer__list"><li><a href="/our-story">Our Story</a></li><li><a href="/the-booth">The Booth</a></li><li><a href="/packages">Packages</a></li><li><a href="/candid-moments">Candid Moments</a></li></ul></div>
+      <div><h4>Explore</h4><ul class="footer__list"><li><a href="/our-story">Our Story</a></li><li><a href="/the-booth">The Booth</a></li><li><a href="/packages">Packages</a></li><li><a href="/a-thousand-words">A Thousand Words</a></li></ul></div>
       <div><h4>Resources</h4><ul class="footer__list"><li><a href="/faq">FAQ</a></li><li><a href="#inquiry">Request a Quote</a></li><li><a href="/get-started">Get Started</a></li><li><a href="/areas-we-serve">Areas We Serve</a></li></ul></div>
       <div><h4>Contact</h4><ul class="footer__list"><li><a href="mailto:evergrainphotobooth@gmail.com" data-cms-email>evergrainphotobooth@gmail.com</a></li><li><a href="tel:+16265608330" data-cms-phone>(626) 560-8330</a></li><li data-cms-location>Los Angeles, CA</li></ul></div>
     </div>
@@ -217,7 +217,7 @@ const GTAG = `<script async src="https://www.googletagmanager.com/gtag/js?id=G-N
 export function renderPostFile(post) {
   const c = catOf(post);
   const url = `${SITE}/${HUB_DIR}/${c.slug}/${post.slug}`;
-  const title = post.title || "Candid Moments";
+  const title = post.title || "A Thousand Words";
   const metaTitle = post.meta_title || `${title} | Evergrain Photobooth`;
   const metaDesc = post.meta_description || excerptOf(post);
   const img = post.image_url || "";
@@ -265,8 +265,8 @@ ${HEADER}
 <main id="main">
   <section class="blog-hero"${heroStyle}>
     <div class="container">
-      <nav class="breadcrumb breadcrumb--hero" aria-label="Breadcrumb"><a class="breadcrumb__link" href="/">Home</a> <span class="breadcrumb__sep">›</span> <a class="breadcrumb__link" href="/candid-moments">Candid Moments</a> <span class="breadcrumb__sep">›</span> <a class="breadcrumb__link" href="/candid-moments/${esc(c.slug)}">${esc(c.name)}</a> <span class="breadcrumb__sep">›</span> <span class="breadcrumb__current" aria-current="page">${esc(title)}</span></nav>
-      <div class="blog-hero__meta"><a class="blog-hero__cat" href="/candid-moments/${esc(c.slug)}">${esc(c.name)}</a>${published ? `<span class="blog-hero__date">${esc(dateLabel(published))}</span>` : ""}</div>
+      <nav class="breadcrumb breadcrumb--hero" aria-label="Breadcrumb"><a class="breadcrumb__link" href="/">Home</a> <span class="breadcrumb__sep">›</span> <a class="breadcrumb__link" href="/a-thousand-words">A Thousand Words</a> <span class="breadcrumb__sep">›</span> <a class="breadcrumb__link" href="/a-thousand-words/${esc(c.slug)}">${esc(c.name)}</a> <span class="breadcrumb__sep">›</span> <span class="breadcrumb__current" aria-current="page">${esc(title)}</span></nav>
+      <div class="blog-hero__meta"><a class="blog-hero__cat" href="/a-thousand-words/${esc(c.slug)}">${esc(c.name)}</a>${published ? `<span class="blog-hero__date">${esc(dateLabel(published))}</span>` : ""}</div>
       <h1 class="blog-hero__title">${esc(title)}</h1>
     </div>
   </section>
@@ -276,7 +276,7 @@ ${HEADER}
       <div class="blog-article__body">
 ${post.content_html || "<p>Coming soon.</p>"}
       </div>
-      <div class="blog-article__back"><a href="/candid-moments" class="link-arrow">← Back to Candid Moments</a></div>
+      <div class="blog-article__back"><a href="/a-thousand-words" class="link-arrow">← Back to A Thousand Words</a></div>
     </div>
   </article>
 
@@ -308,4 +308,31 @@ export async function syncSite(env, { putPosts = [], delPaths = [] } = {}, messa
 /* Rebuild only the index (category changes, etc.) */
 export async function syncIndexOnly(env, message) {
   return syncSite(env, {}, message || "Blog: refresh index");
+}
+
+/* Cron entry: publish any 'scheduled' posts whose time has arrived. Flips them
+   to published in Supabase, then renders their pages + rebuilds the index in
+   one commit. Returns { ok, published }. */
+export async function publishScheduled(env) {
+  if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) throw new Error("Supabase env missing");
+  const nowIso = new Date().toISOString();
+  const due = await sb(env,
+    `blog_posts?status=eq.scheduled&scheduled_at=lte.${encodeURIComponent(nowIso)}&select=*,blog_categories(name,slug)`);
+  if (!Array.isArray(due) || due.length === 0) return { ok: true, published: 0 };
+
+  const H = {
+    apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+    Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+    "Content-Type": "application/json",
+  };
+  for (const p of due) {
+    await fetch(`${env.SUPABASE_URL}/rest/v1/blog_posts?id=eq.${encodeURIComponent(p.id)}`, {
+      method: "PATCH",
+      headers: H,
+      body: JSON.stringify({ status: "published", published_at: nowIso, scheduled_at: null, updated_at: nowIso }),
+    });
+    p.status = "published"; p.published_at = nowIso; // reflect for rendering
+  }
+  await syncSite(env, { putPosts: due }, `Blog: publish ${due.length} scheduled post(s)`);
+  return { ok: true, published: due.length };
 }

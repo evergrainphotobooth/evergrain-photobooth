@@ -84,7 +84,7 @@ IMAGE
 
 ON-PAGE SEO EXTRAS
 - Add a Table of Contents (anchor links to the H2 sections) near the top.
-- Add at least one internal link to a relevant Evergrain page. Valid internal paths: /packages, /add-ons, /the-booth, /our-story, /faq, /get-started, /areas-we-serve, and category/landing pages under /candid-moments. Use root-relative hrefs.
+- Add at least one internal link to a relevant Evergrain page. Valid internal paths: /packages, /add-ons, /the-booth, /our-story, /faq, /get-started, /areas-we-serve, and category/landing pages under /a-thousand-words. Use root-relative hrefs.
 - Add at least one external link to a genuinely trustworthy, relevant source (real, well-known domains only).
 - Include a short FAQ section (2–4 Q&As) near the end using <h2>Frequently Asked Questions</h2> and <h3> for each question.
 

@@ -289,6 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const fd = new FormData(form);
       const d = Object.fromEntries(fd.entries());
       d.interestedAddons = fd.getAll("interestedAddons");
+      d.sourcePage = location.pathname; // which page the inquiry came from (invisible tracker)
       return d;
     };
 

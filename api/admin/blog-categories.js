@@ -4,7 +4,7 @@
    POST   /api/admin/blog-categories        → { name, blurb? }        create
    PATCH  /api/admin/blog-categories        → { id, name?, blurb?, slug? } update
    DELETE /api/admin/blog-categories?id=UUID                          delete
-   Categories map to /candid-moments/[slug].
+   Categories map to /a-thousand-words/[slug].
 
    Also hosts the targeted-keywords resource at ?resource=keywords, which
    delegates to _lib/blog-keywords.js — kept here (rather than its own

@@ -1,5 +1,5 @@
 /* =========================================================
-   Candid Moments — hub + category listing behaviour.
+   A Thousand Words — hub + category listing behaviour.
    Reads /data/blog-index.json (committed on publish) and renders the
    entry grid with category tabs (hub only), fade-in-left reveal on scroll,
    and pagination (20 per page). One script drives both page types via the
@@ -25,8 +25,8 @@
   let revealObserver = null;
 
   function categorySlugFromPath() {
-    // /candid-moments/<slug>  → <slug>
-    const m = location.pathname.replace(/\/+$/, "").match(/\/candid-moments\/([^/]+)$/);
+    // /a-thousand-words/<slug>  → <slug>
+    const m = location.pathname.replace(/\/+$/, "").match(/\/a-thousand-words\/([^/]+)$/);
     return m ? decodeURIComponent(m[1]) : null;
   }
 
@@ -38,7 +38,7 @@
   function cardHTML(p) {
     const img = p.image
       ? `<img class="blog-card__img" src="${esc(p.image)}" alt="${esc(p.imageAlt || p.title)}" loading="lazy" />`
-      : `<span class="blog-card__img--empty">Candid Moments</span>`;
+      : `<span class="blog-card__img--empty">A Thousand Words</span>`;
     return `
       <a class="blog-card" href="${esc(p.url)}">
         <div class="blog-card__imgwrap">${img}</div>
@@ -117,7 +117,7 @@
 
     if (list.length === 0) {
       gridEl.innerHTML = "";
-      if (statusEl) statusEl.innerHTML = `<div class="blog-empty"><h3>Nothing here yet.</h3><p>New Candid Moments stories are on the way.</p></div>`;
+      if (statusEl) statusEl.innerHTML = `<div class="blog-empty"><h3>Nothing here yet.</h3><p>New A Thousand Words stories are on the way.</p></div>`;
       renderPager(1);
       return;
     }
@@ -158,7 +158,7 @@
     const slug = categorySlugFromPath();
     activeCat = slug;
     const meta = (categories || []).find((c) => c.slug === slug);
-    const name = meta ? meta.name : (slug || "Candid Moments").replace(/-/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
+    const name = meta ? meta.name : (slug || "A Thousand Words").replace(/-/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
     const titleEl = root.querySelector("[data-cat-title]");
     const blurbEl = root.querySelector("[data-cat-blurb]");
     if (titleEl) titleEl.textContent = name;
@@ -166,10 +166,10 @@
       if (meta && meta.blurb) { blurbEl.textContent = meta.blurb; blurbEl.hidden = false; }
       else blurbEl.hidden = true;
     }
-    document.title = `${name} — Candid Moments | Evergrain Photobooth`;
+    document.title = `${name} — A Thousand Words | Evergrain Photobooth`;
     let canon = document.querySelector('link[rel="canonical"]');
     if (!canon) { canon = document.createElement("link"); canon.rel = "canonical"; document.head.appendChild(canon); }
-    canon.href = `${location.origin}/candid-moments/${slug}`;
+    canon.href = `${location.origin}/a-thousand-words/${slug}`;
   }
 
   async function init() {

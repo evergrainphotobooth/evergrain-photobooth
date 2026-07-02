@@ -52,8 +52,8 @@
     <div class="admin-card">
       <div class="card-head">
         <div>
-          <h2 class="admin-card__title" style="margin:0;">Candid Moments — Blog</h2>
-          <p class="card-head__meta">Posts live at <span class="blog-path">/candid-moments/[category]/[slug]</span></p>
+          <h2 class="admin-card__title" style="margin:0;">A Thousand Words — Blog</h2>
+          <p class="card-head__meta">Posts live at <span class="blog-path">/a-thousand-words/[category]/[slug]</span></p>
         </div>
         <a href="/admin/blog-editor" class="btn btn--primary btn--sm">+ Add Blog</a>
       </div>
@@ -68,7 +68,7 @@
       <div class="card-head">
         <div>
           <h2 class="admin-card__title" style="margin:0;">Blog Categories</h2>
-          <p class="card-head__meta">Each becomes <span class="blog-path">/candid-moments/[slug]</span> with its own header blurb</p>
+          <p class="card-head__meta">Each becomes <span class="blog-path">/a-thousand-words/[slug]</span> with its own header blurb</p>
         </div>
       </div>
 
@@ -210,23 +210,24 @@
   }
 
   function statusPill(status) {
-    const published = status === "published";
-    const color = published ? "#2F7A4F" : "#8A7B5C";
-    const label = published ? "Published" : "Draft";
+    const map = { published: ["#2F7A4F", "Published"], scheduled: ["#C69A2E", "Scheduled"], draft: ["#8A7B5C", "Draft"] };
+    const [color, label] = map[status] || map.draft;
     return `<span class="status-pill" style="background:${color}1F;"><span class="status-pill__dot" style="background:${color};"></span>${label}</span>`;
   }
 
   function renderPosts(posts) {
     if (posts.length === 0) {
-      postsTable.innerHTML = `<div class="empty-state"><h3>No blogs yet.</h3><p>Click “+ Add Blog” to write your first Candid Moments post.</p></div>`;
+      postsTable.innerHTML = `<div class="empty-state"><h3>No blogs yet.</h3><p>Click “+ Add Blog” to write your first A Thousand Words post.</p></div>`;
       return;
     }
     const rows = posts.map(p => {
       const cat = p.blog_categories ? esc(p.blog_categories.name) : `<span class="text-meta">Uncategorized</span>`;
-      const date = p.status === "published" ? fmtDate(p.published_at || p.created_at) : fmtDate(p.created_at);
+      const date = p.status === "published" ? fmtDate(p.published_at || p.created_at)
+        : p.status === "scheduled" && p.scheduled_at ? `⏳ ${fmtDate(p.scheduled_at)}`
+        : fmtDate(p.created_at);
       return `
         <tr>
-          <td><strong>${esc(p.title)}</strong> ${statusPill(p.status)}<div class="blog-path">/candid-moments/${p.blog_categories ? esc(p.blog_categories.slug) + "/" : ""}${esc(p.slug || "")}</div></td>
+          <td><strong>${esc(p.title)}</strong> ${statusPill(p.status)}<div class="blog-path">/a-thousand-words/${p.blog_categories ? esc(p.blog_categories.slug) + "/" : ""}${esc(p.slug || "")}</div></td>
           <td>${(p.word_count ?? 0).toLocaleString()}</td>
           <td>${cat}</td>
           <td class="text-meta">${date}</td>
@@ -268,7 +269,7 @@
       <div class="cat-item" data-cat-id="${c.id}">
         <div class="cat-item__main">
           <div class="cat-item__name">${esc(c.name)}<span class="cat-count">${c.post_count || 0} post${c.post_count === 1 ? "" : "s"}</span></div>
-          <div class="blog-path">/candid-moments/${esc(c.slug)}</div>
+          <div class="blog-path">/a-thousand-words/${esc(c.slug)}</div>
           ${c.blurb ? `<p class="cat-item__blurb">${esc(c.blurb)}</p>` : `<p class="cat-item__blurb" style="opacity:.6;">No blurb set.</p>`}
           <div data-cat-edit-slot></div>
         </div>
@@ -297,7 +298,7 @@
           <input class="field__input" data-e-name type="text" value="${esc(c.name)}" />
         </div>
         <div class="field">
-          <label class="field__label">Slug <span class="text-meta">(/candid-moments/…)</span></label>
+          <label class="field__label">Slug <span class="text-meta">(/a-thousand-words/…)</span></label>
           <input class="field__input" data-e-slug type="text" value="${esc(c.slug)}" />
         </div>
         <div class="field">

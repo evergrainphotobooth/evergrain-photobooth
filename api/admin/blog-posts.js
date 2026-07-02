@@ -8,7 +8,7 @@
    ========================================================= */
 
 import { requireAuth } from "../_lib/auth.js";
-import { syncSite, postPath } from "../_lib/blog-render.js";
+import { syncSite, postPath, publishScheduled } from "../_lib/blog-render.js";
 
 function slugify(s) {
   return String(s || "")
@@ -46,6 +46,7 @@ const FIELD_MAP = {
   contentHtml: "content_html",
   checklist: "checklist",
   status: "status",
+  scheduledAt: "scheduled_at",
 };
 
 async function handler(req, res) {
@@ -112,7 +113,7 @@ async function handler(req, res) {
 
     // Summary list for the table view.
     const resp = await fetch(
-      `${SB}?select=id,title,slug,word_count,status,created_at,published_at,category_id,blog_categories(name,slug)&order=created_at.desc`,
+      `${SB}?select=id,title,slug,word_count,status,created_at,published_at,scheduled_at,category_id,blog_categories(name,slug)&order=created_at.desc`,
       { headers: H }
     );
     if (!resp.ok) { console.error("posts list:", await resp.text()); return res.status(500).json({ error: "Failed to load posts" }); }
@@ -155,7 +156,8 @@ async function handler(req, res) {
     }
     if (patch.slug !== undefined) patch.slug = slugify(patch.slug);
     if (patch.content_html !== undefined) patch.word_count = wordCountFromHtml(patch.content_html);
-    if (b.status === "published" && !patch.published_at) patch.published_at = new Date().toISOString();
+    if (b.status === "published") { if (!patch.published_at) patch.published_at = new Date().toISOString(); patch.scheduled_at = null; }
+    if (b.status === "draft") patch.scheduled_at = null; // cancelling a schedule
 
     const resp = await fetch(`${SB}?id=eq.${encodeURIComponent(b.id)}`, {
       method: "PATCH",
@@ -198,4 +200,22 @@ async function handler(req, res) {
   return res.status(405).json({ error: "Method not allowed" });
 }
 
-export default requireAuth(handler);
+// Default export: Vercel-cron branch (publish due scheduled posts) runs BEFORE
+// auth, guarded by CRON_SECRET; everything else goes through requireAuth.
+export default async function (req, res) {
+  const url = new URL(req.url, `https://${req.headers.host}`);
+  if (url.searchParams.get("task") === "publish-scheduled") {
+    const secret = process.env.CRON_SECRET;
+    const auth = req.headers.authorization || "";
+    if (!secret || auth !== `Bearer ${secret}`) return res.status(401).json({ error: "Unauthorized" });
+    try {
+      const env = { SUPABASE_URL: process.env.SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY };
+      const result = await publishScheduled(env);
+      return res.status(200).json(result);
+    } catch (e) {
+      console.error("cron publish-scheduled:", e);
+      return res.status(500).json({ error: String(e.message || e) });
+    }
+  }
+  return requireAuth(handler)(req, res);
+}
