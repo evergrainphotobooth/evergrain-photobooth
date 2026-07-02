@@ -7,8 +7,5 @@
   ],
   "rewrites": [
     { "source": "/a-thousand-words/:category", "destination": "/a-thousand-words/category" }
-  ],
-  "crons": [
-    { "path": "/api/admin/blog-posts?task=publish-scheduled", "schedule": "*/10 * * * *" }
   ]
 }

@@ -18,3 +18,23 @@ create index if not exists blog_posts_scheduled_idx
 
 -- 2) Inquiries: which page the inquiry was submitted from ----------------
 alter table public.inquiries add column if not exists source_page text;
+
+-- 3) Auto-publish scheduler (precise, plan-independent) ------------------
+-- Runs the publish endpoint every 5 minutes so scheduled posts go live at
+-- (approximately) their chosen time. Requires the pg_cron + pg_net extensions
+-- (Supabase → Database → Extensions → enable "pg_cron" and "pg_net"), a
+-- CRON_SECRET env var set in Vercel, and the SAME secret pasted below.
+--
+--   create extension if not exists pg_cron;
+--   create extension if not exists pg_net;
+--
+--   select cron.schedule(
+--     'publish-scheduled-blogs',
+--     '*/5 * * * *',
+--     $$ select net.http_get(
+--          url     := 'https://evergrainphotobooth.com/api/admin/blog-posts?task=publish-scheduled',
+--          headers := jsonb_build_object('Authorization', 'Bearer REPLACE_WITH_YOUR_CRON_SECRET')
+--        ); $$
+--   );
+--
+-- To change or remove it later:  select cron.unschedule('publish-scheduled-blogs');
