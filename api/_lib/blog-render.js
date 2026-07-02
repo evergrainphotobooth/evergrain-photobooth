@@ -222,7 +222,7 @@ export function renderPostFile(post) {
   const metaDesc = post.meta_description || excerptOf(post);
   const img = post.image_url || "";
   const published = post.published_at || post.created_at;
-  const heroStyle = img ? ` style="background-image:linear-gradient(rgba(26,20,16,.45),rgba(26,20,16,.65)),url('${esc(img)}')"` : "";
+  const heroStyle = img ? ` style="background-image:url('${esc(img)}')"` : ""; /* green overlay is in css/blog.css (.blog-hero::before) */
 
   const jsonLd = {
     "@context": "https://schema.org",
