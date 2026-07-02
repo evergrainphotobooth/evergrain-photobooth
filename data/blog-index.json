@@ -1,6 +1,11 @@
 {
-  "generated_at": "2026-07-02T08:56:04.045Z",
+  "generated_at": "2026-07-02T17:02:26.491Z",
   "categories": [
+    {
+      "name": "Southern California Celebrations",
+      "slug": "southern-california-celebrations",
+      "blurb": "A collection of event ideas, planning tips, and hosting inspiration for weddings, parties, and private gatherings throughout Southern California."
+    },
     {
       "name": "Tips & Guides",
       "slug": "tips-and-guides",
@@ -21,6 +26,12 @@
         "name": "Weddings",
         "slug": "weddings"
       },
+      "categories": [
+        {
+          "name": "Weddings",
+          "slug": "weddings"
+        }
+      ],
       "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/how-to-create-a-guest-experience-theyll-talk-about-after-the-wedding-mr39orviii26v.jpg",
       "imageAlt": "A newlywed couple and their wedding guests smiling and posing for a photo in front of a beautiful floral backdrop at a luxury open air photo booth, creating an unforgettable wedding guest experience.",
       "date": "2026-07-02T08:56:03.172+00:00",
@@ -35,6 +46,12 @@
         "name": "Weddings",
         "slug": "weddings"
       },
+      "categories": [
+        {
+          "name": "Weddings",
+          "slug": "weddings"
+        }
+      ],
       "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding-mr348cjzforbm.jpg",
       "imageAlt": "Guests having fun at a luxury open-air DSLR LA wedding photo booth with custom backdrop and props, celebrating an unforgettable LA wedding",
       "date": "2026-07-02T06:25:37.274+00:00",
