@@ -179,7 +179,9 @@ button { font: inherit; cursor: pointer; }
   border: 1px solid var(--gray-200);
   border-radius: var(--radius);
   padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
+.admin-card:last-child { margin-bottom: 0; }
 .admin-card__title {
   font-family: var(--font-eyebrow);
   font-size: 0.7rem;

@@ -1,17 +1,19 @@
 /* =========================================================
    Upload image API (admin)
    POST /api/admin/upload-image
-     body: { url, filename? }
-   Fetches an image from a pasted URL server-side and stores it in the
-   Supabase Storage "media" bucket under blog/, returning the public URL.
-   Gives the file a descriptive, slugified name (keyword-aware filenames
-   are part of the blog SEO spec).  requireAuth-gated.
+     body: { url, filename? }                 → upload from a URL
+     body: { action: "stock", title, ... }    → recommend royalty-free stock
+   Fetches an image from a URL server-side and stores it in the Supabase
+   Storage "media" bucket under images/blogs/, returning the public URL.
+   The "stock" action delegates to _lib/stock-image.js (kept off a separate
+   route to stay under Vercel Hobby's 12-function limit).  requireAuth-gated.
    ========================================================= */
 
 import { requireAuth } from "../_lib/auth.js";
+import { recommendStock } from "../_lib/stock-image.js";
 
 const BUCKET = "media";
-const PREFIX = "blog";
+const PREFIX = "images/blogs";
 const MAX_BYTES = 12 * 1024 * 1024; // 12 MB safety cap
 
 const EXT_BY_MIME = {
@@ -37,11 +39,15 @@ function slugify(s) {
 async function handler(req, res) {
   if (req.method !== "POST") { res.setHeader("Allow", "POST"); return res.status(405).json({ error: "Method not allowed" }); }
 
-  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return res.status(500).json({ error: "Server misconfigured" });
-
   let b = req.body || {};
   if (typeof b === "string") { try { b = JSON.parse(b); } catch { return res.status(400).json({ error: "Invalid JSON" }); } }
+
+  // Stock-image recommendation (no Supabase needed) — AI-assisted search of a
+  // royalty-free library. The chosen result is then uploaded via the URL path.
+  if (b.action === "stock") return recommendStock(req, res, b);
+
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return res.status(500).json({ error: "Server misconfigured" });
 
   const src = (b.url || "").trim();
   if (!src) return res.status(400).json({ error: "url required" });

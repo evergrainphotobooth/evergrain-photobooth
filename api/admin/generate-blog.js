@@ -80,7 +80,7 @@ READABILITY
 - Intro 100–150 · Background 150–200 · Key tips/steps/sections 500–600 · Common mistakes/extra advice 100–150 · Conclusion + CTA ~100.
 
 IMAGE
-- Include EXACTLY ONE <img> in the body, placed where it best supports the topic. Use the provided image URL. Give it descriptive alt text that naturally includes the primary keyword when appropriate, and a short descriptive title. Never use generic alt like "image".
+- The featured image is ALSO shown as the blog's header background, so do NOT open the article with it. Place EXACTLY ONE <img> (the same provided featured image URL) further down the body, at the spot where it best supports the flow — next to a relevant section, never as the first element. Give it descriptive alt text that naturally includes the primary keyword when appropriate, and a short descriptive title. Never use generic alt like "image".
 
 ON-PAGE SEO EXTRAS
 - Add a Table of Contents (anchor links to the H2 sections) near the top.
