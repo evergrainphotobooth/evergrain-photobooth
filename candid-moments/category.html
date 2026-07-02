@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Candid Moments | Evergrain Photobooth</title>
+<meta name="description" content="Candid Moments — the Evergrain Photobooth blog." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/components.css" />
+<link rel="stylesheet" href="/css/pages.css" />
+<link rel="stylesheet" href="/css/blog.css" />
+<link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N7ERDKCDX7"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-N7ERDKCDX7');</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container">
+    <nav class="nav" aria-label="Primary">
+      <a href="/" class="nav__logo"><img src="/assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" /></a>
+      <ul class="nav__menu">
+        <li><a href="/our-story" class="nav__link">Our Story</a></li>
+        <li><a href="/the-booth" class="nav__link">The Booth</a></li>
+        <li><a href="/packages" class="nav__link">Packages</a></li>
+        <li><a href="/add-ons" class="nav__link">Add-Ons</a></li>
+        <li><a href="/faq" class="nav__link">FAQ</a></li>
+      </ul>
+      <div class="nav__actions">
+        <button type="button" class="nav__cart" data-cart-toggle aria-label="Open Package List">
+          <span>List</span><span class="nav__cart-count" data-count="0">0</span>
+        </button>
+        <button type="button" class="nav__toggle" aria-label="Toggle navigation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h18M3 12h18M3 17h18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="main" data-blog-root data-mode="category">
+  <section class="page-hero topo-bg">
+    <div class="container">
+      <div style="max-width:760px;">
+        <nav class="breadcrumb breadcrumb--hero" aria-label="Breadcrumb"><a class="breadcrumb__link" href="/">Home</a> <span class="breadcrumb__sep">›</span> <a class="breadcrumb__link" href="/candid-moments">Candid Moments</a></nav>
+        <h1 data-cat-title>Candid Moments.</h1>
+        <p class="lede" data-cat-blurb hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section blog-listing">
+    <div class="container">
+      <div class="blog-grid" data-blog-grid></div>
+      <div class="blog-loading" data-blog-status><span class="loading"></span></div>
+      <nav class="blog-pagination" data-blog-pagination aria-label="Pagination"></nav>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__logo">
+        <img src="/assets/logos/FullLogo_White.svg" alt="Evergrain Photobooth" />
+        <p class="footer__tagline" data-cms-tagline>A photobooth experience built around the camera — never around the gimmick.</p>
+      </div>
+      <div><h4>Explore</h4><ul class="footer__list"><li><a href="/our-story">Our Story</a></li><li><a href="/the-booth">The Booth</a></li><li><a href="/packages">Packages</a></li><li><a href="/candid-moments">Candid Moments</a></li></ul></div>
+      <div><h4>Resources</h4><ul class="footer__list"><li><a href="/faq">FAQ</a></li><li><a href="/get-started">Request a Quote</a></li><li><a href="/get-started">Get Started</a></li><li><a href="/areas-we-serve">Areas We Serve</a></li></ul></div>
+      <div><h4>Contact</h4><ul class="footer__list"><li><a href="mailto:evergrainphotobooth@gmail.com" data-cms-email>evergrainphotobooth@gmail.com</a></li><li><a href="tel:+16265608330" data-cms-phone>(626) 560-8330</a></li><li data-cms-location>Los Angeles, CA</li></ul></div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2025</span> Evergrain Photobooth. All rights reserved.</span>
+      <span><a href="/privacy-policy">Privacy Policy</a> · <a href="/terms">Terms &amp; Conditions</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="cart-overlay" data-cart-overlay></div>
+<aside class="cart" data-cart aria-label="Your Package List" role="dialog" aria-modal="true">
+  <div class="cart__header">
+    <h2 class="cart__title">Your Package List</h2>
+    <button type="button" class="cart__close" data-cart-close aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M6 18L18 6"/></svg></button>
+  </div>
+  <div class="cart__body" data-cart-body></div>
+  <div class="cart__footer" data-cart-footer>
+    <div class="cart__total"><span class="cart__total-label">Estimated Total</span><span class="cart__total-amount" data-cart-total>$0</span></div>
+    <a href="/get-started" class="btn btn--primary btn--block" data-cart-checkout>Request a Quote</a>
+    <p class="cart__note"><button type="button" data-cart-clear style="background:none;border:0;color:var(--bark);cursor:pointer;font:inherit;text-decoration:underline;">Clear list</button> · Final pricing confirmed after consult.</p>
+  </div>
+</aside>
+
+<script src="/js/cart.js"></script>
+<script src="/js/script.js"></script>
+<script src="/js/animations.js"></script>
+<script src="/js/blog-hub.js"></script>
+</body>
+</html>

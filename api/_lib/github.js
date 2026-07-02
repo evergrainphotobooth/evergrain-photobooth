@@ -152,3 +152,67 @@ export async function commitMultiple(files, message) {
 
   return newCommitSha;
 }
+
+/* Commit upserts AND deletions atomically (Tree API).
+   `put` = [{ path, content }], `del` = [path, ...]
+   Deletions are expressed as tree entries with sha:null. Returns commit SHA. */
+export async function commitTree({ put = [], del = [] }, message) {
+  const headers = authHeaders();
+  const json = { ...headers, "Content-Type": "application/json" };
+
+  const refRes = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/git/refs/heads/${BRANCH}`,
+    { headers }
+  );
+  if (!refRes.ok) throw new Error(`Get ref failed: ${await refRes.text()}`);
+  const latestCommitSha = (await refRes.json()).object.sha;
+
+  const commitRes = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/git/commits/${latestCommitSha}`,
+    { headers }
+  );
+  if (!commitRes.ok) throw new Error(`Get commit failed: ${await commitRes.text()}`);
+  const baseTreeSha = (await commitRes.json()).tree.sha;
+
+  // Blobs for upserts.
+  const putEntries = await Promise.all(
+    put.map(async (f) => {
+      const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/git/blobs`, {
+        method: "POST",
+        headers: json,
+        body: JSON.stringify({ content: Buffer.from(f.content, "utf8").toString("base64"), encoding: "base64" }),
+      });
+      if (!r.ok) throw new Error(`Blob ${f.path}: ${await r.text()}`);
+      return { path: f.path, mode: "100644", type: "blob", sha: (await r.json()).sha };
+    })
+  );
+  // Deletions: sha:null removes the path from the tree.
+  const delEntries = del.map((path) => ({ path, mode: "100644", type: "blob", sha: null }));
+
+  const tree = [...putEntries, ...delEntries];
+  if (tree.length === 0) return latestCommitSha; // nothing to do
+
+  const treeRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/git/trees`, {
+    method: "POST",
+    headers: json,
+    body: JSON.stringify({ base_tree: baseTreeSha, tree }),
+  });
+  if (!treeRes.ok) throw new Error(`Create tree: ${await treeRes.text()}`);
+  const newTreeSha = (await treeRes.json()).sha;
+
+  const newCommitRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/git/commits`, {
+    method: "POST",
+    headers: json,
+    body: JSON.stringify({ message, tree: newTreeSha, parents: [latestCommitSha] }),
+  });
+  if (!newCommitRes.ok) throw new Error(`Create commit: ${await newCommitRes.text()}`);
+  const newCommitSha = (await newCommitRes.json()).sha;
+
+  const updateRefRes = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/git/refs/heads/${BRANCH}`,
+    { method: "PATCH", headers: json, body: JSON.stringify({ sha: newCommitSha }) }
+  );
+  if (!updateRefRes.ok) throw new Error(`Update ref: ${await updateRefRes.text()}`);
+
+  return newCommitSha;
+}

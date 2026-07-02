@@ -13,6 +13,7 @@
 
 import { requireAuth } from "../_lib/auth.js";
 import { handleKeywords } from "../_lib/blog-keywords.js";
+import { syncIndexOnly } from "../_lib/blog-render.js";
 
 function slugify(s) {
   return String(s || "")
@@ -41,6 +42,14 @@ async function handler(req, res) {
     Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
   };
   const SB = `${SUPABASE_URL}/rest/v1/blog_categories`;
+  const env = { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY };
+
+  // Refresh the public blog index (tabs + category names/blurbs). Best-effort.
+  const refreshIndex = async () => {
+    if (!process.env.GITHUB_TOKEN) return { ok: false, skipped: "GITHUB_TOKEN not set" };
+    try { return await syncIndexOnly(env, "Blog: category change"); }
+    catch (e) { console.error("category index sync:", e); return { ok: false, error: String(e.message || e) }; }
+  };
 
   const readBody = () => {
     let p = req.body || {};
@@ -82,7 +91,8 @@ async function handler(req, res) {
     if (resp.status === 409) return res.status(409).json({ error: "A category with that name/slug already exists" });
     if (!resp.ok) { console.error("cat create:", await resp.text()); return res.status(500).json({ error: "Create failed" }); }
     const rows = await resp.json();
-    return res.status(200).json({ ok: true, category: rows[0] });
+    const siteSync = await refreshIndex();
+    return res.status(200).json({ ok: true, category: rows[0], siteSync });
   }
 
   // ---------- PATCH: update ----------
@@ -102,7 +112,8 @@ async function handler(req, res) {
     if (resp.status === 409) return res.status(409).json({ error: "That slug is already in use" });
     if (!resp.ok) { console.error("cat update:", await resp.text()); return res.status(500).json({ error: "Update failed" }); }
     const rows = await resp.json();
-    return res.status(200).json({ ok: true, category: Array.isArray(rows) ? rows[0] : rows });
+    const siteSync = await refreshIndex();
+    return res.status(200).json({ ok: true, category: Array.isArray(rows) ? rows[0] : rows, siteSync });
   }
 
   // ---------- DELETE ----------
@@ -113,7 +124,8 @@ async function handler(req, res) {
     // Posts referencing this category have category_id set NULL via FK (on delete set null).
     const resp = await fetch(`${SB}?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: H });
     if (!resp.ok) { console.error("cat delete:", await resp.text()); return res.status(500).json({ error: "Delete failed" }); }
-    return res.status(200).json({ ok: true });
+    const siteSync = await refreshIndex();
+    return res.status(200).json({ ok: true, siteSync });
   }
 
   res.setHeader("Allow", "GET, POST, PATCH, DELETE");

@@ -8,6 +8,7 @@
    ========================================================= */
 
 import { requireAuth } from "../_lib/auth.js";
+import { syncSite, postPath } from "../_lib/blog-render.js";
 
 function slugify(s) {
   return String(s || "")
@@ -57,6 +58,35 @@ async function handler(req, res) {
     Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
   };
   const SB = `${SUPABASE_URL}/rest/v1/blog_posts`;
+  const env = { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY };
+
+  // Fetch one row with its category embed (for rendering / path diffing).
+  const fetchRow = async (id, select) => {
+    const r = await fetch(`${SB}?id=eq.${encodeURIComponent(id)}&select=${select}`, { headers: H });
+    if (!r.ok) return null;
+    const rows = await r.json();
+    return Array.isArray(rows) ? rows[0] : rows;
+  };
+
+  // Reflect a post change onto the public static site (best-effort; never blocks the DB op).
+  const reflectPost = async (oldRow, full) => {
+    if (!process.env.GITHUB_TOKEN) return { ok: false, skipped: "GITHUB_TOKEN not set" };
+    const newPub = full && full.status === "published";
+    const oldPub = oldRow && oldRow.status === "published";
+    if (!newPub && !oldPub) return { ok: true, noop: true };
+    const putPosts = newPub ? [full] : [];
+    const delPaths = [];
+    if (oldPub) {
+      const oldPath = postPath({ slug: oldRow.slug, blog_categories: oldRow.blog_categories });
+      if (!newPub || oldPath !== postPath(full)) delPaths.push(oldPath);
+    }
+    try {
+      return await syncSite(env, { putPosts, delPaths }, `Blog: ${newPub ? "publish" : "unpublish"} ${full.slug}`);
+    } catch (e) {
+      console.error("blog site sync:", e);
+      return { ok: false, error: String(e.message || e) };
+    }
+  };
 
   const readBody = () => {
     let p = req.body || {};
@@ -116,6 +146,9 @@ async function handler(req, res) {
     const b = readBody();
     if (!b.id) return res.status(400).json({ error: "id required" });
 
+    // Snapshot pre-update state so we can diff the public URL/status.
+    const oldRow = await fetchRow(b.id, "slug,status,blog_categories(slug)");
+
     const patch = { updated_at: new Date().toISOString() };
     for (const [inKey, col] of Object.entries(FIELD_MAP)) {
       if (b[inKey] !== undefined) patch[col] = b[inKey];
@@ -132,7 +165,12 @@ async function handler(req, res) {
     if (resp.status === 409) return res.status(409).json({ error: "That slug is already in use" });
     if (!resp.ok) { console.error("post update:", await resp.text()); return res.status(500).json({ error: "Update failed" }); }
     const rows = await resp.json();
-    return res.status(200).json({ ok: true, post: Array.isArray(rows) ? rows[0] : rows });
+    const post = Array.isArray(rows) ? rows[0] : rows;
+
+    // Full row (with category name/slug) for rendering, then reflect to the site.
+    const full = (await fetchRow(b.id, "*,blog_categories(name,slug)")) || post;
+    const siteSync = await reflectPost(oldRow, full);
+    return res.status(200).json({ ok: true, post, siteSync });
   }
 
   // ---------- DELETE ----------
@@ -140,9 +178,20 @@ async function handler(req, res) {
     const url = new URL(req.url, `https://${req.headers.host}`);
     const id = url.searchParams.get("id");
     if (!id) return res.status(400).json({ error: "id required" });
+
+    // Grab the row first so we can remove its published page.
+    const row = await fetchRow(id, "slug,status,blog_categories(slug)");
+
     const resp = await fetch(`${SB}?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: H });
     if (!resp.ok) { console.error("post delete:", await resp.text()); return res.status(500).json({ error: "Delete failed" }); }
-    return res.status(200).json({ ok: true });
+
+    let siteSync = { ok: true, noop: true };
+    if (row && row.status === "published" && process.env.GITHUB_TOKEN) {
+      try {
+        siteSync = await syncSite(env, { delPaths: [postPath({ slug: row.slug, blog_categories: row.blog_categories })] }, `Blog: delete ${row.slug}`);
+      } catch (e) { console.error("blog delete sync:", e); siteSync = { ok: false, error: String(e.message || e) }; }
+    }
+    return res.status(200).json({ ok: true, siteSync });
   }
 
   res.setHeader("Allow", "GET, POST, PATCH, DELETE");
