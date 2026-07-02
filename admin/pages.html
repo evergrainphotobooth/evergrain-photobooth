@@ -33,6 +33,13 @@
   .table-edit-btn { white-space:nowrap; }
   .site-pages-list { list-style:none; padding:0; margin:0; font-size:.9rem; line-height:1.9; }
   details.ref-card > summary { cursor:pointer; font-weight:600; color:var(--gray-700); }
+  /* keyword chips */
+  .kw-chips { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .kw-chip { display:inline-flex; align-items:center; gap:.4rem; font-size:.85rem; font-weight:500;
+             background:var(--wash,#f3efe8); color:var(--gray-800,#2c2620); border-radius:999px; padding:.35rem .35rem .35rem .75rem; }
+  .kw-chip__x { border:0; background:rgba(0,0,0,.06); color:var(--gray-600); width:20px; height:20px; border-radius:50%;
+                cursor:pointer; line-height:1; font-size:.9rem; display:grid; place-items:center; }
+  .kw-chip__x:hover { background:#B4462F; color:#fff; }
 </style>
 </head>
 <body>
@@ -80,6 +87,28 @@
           <input class="field__input" id="new-cat-blurb" type="text" placeholder="Short intro shown on the category page" />
         </div>
         <button type="button" class="btn btn--brass btn--sm" data-add-cat>Add category</button>
+      </div>
+    </div>
+
+    <!-- ============ Targeted keywords ============ -->
+    <div class="admin-card">
+      <div class="card-head">
+        <div>
+          <h2 class="admin-card__title" style="margin:0;">Targeted Keywords</h2>
+          <p class="card-head__meta">The AI generator weaves these into every blog naturally. Add the SEO terms you want to rank for.</p>
+        </div>
+      </div>
+
+      <div data-kw-list>
+        <div class="empty-state"><span class="loading"></span></div>
+      </div>
+
+      <div class="add-row">
+        <div class="field field--grow">
+          <label class="field__label" for="new-kw">Add keyword(s)</label>
+          <input class="field__input" id="new-kw" type="text" placeholder="e.g. Los Angeles photo booth rental  (comma- or line-separated to add several)" />
+        </div>
+        <button type="button" class="btn btn--brass btn--sm" data-add-kw>Add</button>
       </div>
     </div>
 
@@ -334,8 +363,53 @@
     }
   });
 
+  /* ---------------- Targeted keywords ---------------- */
+  const kwList = document.querySelector("[data-kw-list]");
+  let keywords = [];
+
+  async function loadKeywords() {
+    kwList.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
+    const r = await fetch("/api/admin/blog-keywords");
+    if (!r.ok) { kwList.innerHTML = `<div class="empty-state"><h3>Couldn't load keywords</h3></div>`; return; }
+    keywords = (await r.json()).keywords || [];
+    renderKeywords();
+  }
+
+  function renderKeywords() {
+    if (keywords.length === 0) {
+      kwList.innerHTML = `<p class="text-meta" style="padding:.25rem 0;">No keywords yet — add the terms you want the generator to target.</p>`;
+      return;
+    }
+    kwList.innerHTML = `<div class="kw-chips">` + keywords.map(k =>
+      `<span class="kw-chip">${esc(k.keyword)}<button type="button" class="kw-chip__x" data-del-kw="${k.id}" aria-label="Remove ${esc(k.keyword)}">×</button></span>`
+    ).join("") + `</div>`;
+    kwList.querySelectorAll("[data-del-kw]").forEach(btn =>
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        const r = await fetch(`/api/admin/blog-keywords?id=${encodeURIComponent(btn.getAttribute("data-del-kw"))}`, { method: "DELETE" });
+        if (r.ok) await loadKeywords(); else { btn.disabled = false; alert("Delete failed"); }
+      }));
+  }
+
+  const addKwBtn = document.querySelector("[data-add-kw]");
+  const newKwInput = document.querySelector("#new-kw");
+  async function addKeywords() {
+    const val = newKwInput.value.trim();
+    if (!val) { newKwInput.focus(); return; }
+    addKwBtn.disabled = true; addKwBtn.textContent = "Adding…";
+    const r = await fetch("/api/admin/blog-keywords", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ keyword: val }),
+    });
+    addKwBtn.disabled = false; addKwBtn.textContent = "Add";
+    if (r.ok) { newKwInput.value = ""; await loadKeywords(); }
+    else { const d = await r.json().catch(() => ({})); alert(d.error || "Could not add keyword(s)."); }
+  }
+  addKwBtn.addEventListener("click", addKeywords);
+  newKwInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addKeywords(); } });
+
   loadPosts();
   loadCategories();
+  loadKeywords();
 </script>
 <script src="/admin/admin-shell.js"></script>
 

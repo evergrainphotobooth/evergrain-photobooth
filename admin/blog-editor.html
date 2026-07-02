@@ -61,6 +61,18 @@
   .chk-note { font-size:.8rem; color:var(--gray-600); margin-top:.15rem; }
   .chk-summary { font-size:.85rem; color:var(--gray-600); margin:0 0 .9rem; }
 
+  /* Targeted keyword coverage */
+  .kw-summary { font-size:.85rem; color:var(--gray-600); margin:0 0 .9rem; }
+  .kw-usage { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .kw-uchip { display:inline-flex; align-items:center; gap:.45rem; font-size:.84rem; border-radius:999px;
+              padding:.3rem .35rem .3rem .7rem; border:1px solid transparent; }
+  .kw-uchip.is-used { background:#2F7A4F1F; color:#215c3a; border-color:#2F7A4F33; }
+  .kw-uchip.is-unused { background:var(--wash,#f3efe8); color:var(--gray-500); }
+  .kw-uchip__n { min-width:20px; height:20px; padding:0 .35rem; border-radius:999px; display:grid; place-items:center;
+                 font-size:.72rem; font-weight:700; }
+  .kw-uchip.is-used .kw-uchip__n { background:#2F7A4F; color:#fff; }
+  .kw-uchip.is-unused .kw-uchip__n { background:rgba(0,0,0,.08); color:var(--gray-600); }
+
   .save-status { font-size:.83rem; color:var(--gray-500); }
   .disabled-note { font-size:.8rem; color:var(--gray-500); }
 </style>
@@ -184,7 +196,15 @@
       <textarea class="field__textarea" data-html style="display:none;min-height:340px;font-family:ui-monospace,monospace;font-size:.82rem;line-height:1.5;"></textarea>
     </div>
 
-    <!-- 6. Final checklist -->
+    <!-- 6. Targeted keyword coverage -->
+    <div class="admin-card" data-keywords-card>
+      <h2 class="card-title">Targeted keyword coverage</h2>
+      <p class="card-sub" style="margin-bottom:.75rem;">How many of your targeted keywords (managed in Pages) show up in this draft. Green = used.</p>
+      <p class="kw-summary" data-kw-summary></p>
+      <div class="kw-usage" data-kw-usage></div>
+    </div>
+
+    <!-- 7. Final checklist -->
     <div class="admin-card" data-checklist-card hidden>
       <h2 class="card-title">Final checklist</h2>
       <p class="chk-summary" data-chk-summary></p>
@@ -204,6 +224,7 @@
     status: "draft",
     checklist: [],
     categories: [],
+    keywords: [],
   };
 
   const els = {
@@ -237,6 +258,8 @@
     checklistCard: $("[data-checklist-card]"),
     checklist: $("[data-checklist]"),
     chkSummary: $("[data-chk-summary]"),
+    kwUsage: $("[data-kw-usage]"),
+    kwSummary: $("[data-kw-summary]"),
     saveBtn: $("[data-save]"),
     publishBtn: $("[data-publish]"),
     saveStatus: $("[data-save-status]"),
@@ -283,6 +306,48 @@
   function refreshPreview() {
     els.preview.innerHTML = els.html.value || `<p class="text-meta">Nothing yet — generate or paste HTML.</p>`;
     updateWordCount();
+    renderKeywordUsage();
+  }
+
+  /* ---------- targeted keyword coverage ---------- */
+  function contentText() {
+    return String(els.html.value || "")
+      .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&")
+      .replace(/\s+/g, " ");
+  }
+  function countOccurrences(haystackLower, kw) {
+    const needle = String(kw).toLowerCase().trim();
+    if (!needle) return 0;
+    const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const m = haystackLower.match(new RegExp(escaped, "g"));
+    return m ? m.length : 0;
+  }
+  function renderKeywordUsage() {
+    const list = state.keywords || [];
+    if (list.length === 0) {
+      els.kwSummary.textContent = "";
+      els.kwUsage.innerHTML = `<p class="text-meta">No targeted keywords yet — add them in <a href="/admin/pages">Pages → Targeted Keywords</a>.</p>`;
+      return;
+    }
+    const hay = contentText().toLowerCase();
+    let used = 0, total = 0;
+    const chips = list.map(kw => {
+      const n = countOccurrences(hay, kw);
+      if (n > 0) used++;
+      total += n;
+      return `<span class="kw-uchip ${n > 0 ? "is-used" : "is-unused"}">${esc(kw)}<span class="kw-uchip__n">${n}</span></span>`;
+    }).join("");
+    els.kwSummary.textContent = `${used} of ${list.length} keywords used · ${total} total ${total === 1 ? "mention" : "mentions"}`;
+    els.kwUsage.innerHTML = chips;
+  }
+  async function loadKeywords() {
+    try {
+      const r = await fetch("/api/admin/blog-keywords");
+      if (r.ok) state.keywords = ((await r.json()).keywords || []).map(k => k.keyword);
+    } catch (e) { /* non-fatal — coverage panel just shows the empty state */ }
+    renderKeywordUsage();
   }
   function enableGate() {
     const hasTitle = !!state.id;
@@ -538,7 +603,7 @@
 
   /* ---------- init ---------- */
   (async function init() {
-    await loadCategories();
+    await Promise.all([loadCategories(), loadKeywords()]);
     await loadPost();
     enableGate();
   })();

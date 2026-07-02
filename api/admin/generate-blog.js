@@ -63,6 +63,11 @@ SEO
 - Clean URL slug (kebab-case, no stop-word bloat).
 - Write for people first; never keyword-stuff.
 
+TARGETED KEYWORDS
+- You may be given a list of targeted keywords. Work in AS MANY of them as you naturally can, and use each AS OFTEN as reads naturally — spread them across the title, headings, intro, body, FAQ, image alt, and conclusion.
+- Non-negotiable: the copy must sound like an experienced human wrote it, never like AI-generated or keyword-stuffed text. Organic, natural phrasing ALWAYS wins over keyword count. If a keyword cannot be used without sounding forced, robotic, or repetitive, leave it out.
+- Vary phrasing and use natural variations/synonyms of the keywords so density feels effortless. Prefer weaving a keyword into a sentence that carries real meaning over dropping it in mechanically.
+
 CONTENT QUALITY
 - Answer the reader's main question clearly with useful examples, tips, or steps.
 - Practical, not vague. Include original insight / expert commentary (you're the photo booth expert).
@@ -113,10 +118,25 @@ async function handler(req, res) {
   const title = (b.title || "").trim();
   if (!title) return res.status(400).json({ error: "title required" });
 
+  // Pull the global targeted-keyword list (best effort — generation still works without it).
+  let keywords = [];
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+  if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+      const kr = await fetch(`${SUPABASE_URL}/rest/v1/blog_keywords?select=keyword&order=keyword.asc`, {
+        headers: { apikey: SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
+      });
+      if (kr.ok) keywords = (await kr.json()).map(r => r.keyword).filter(Boolean);
+    } catch (e) { console.error("keyword fetch failed:", e); }
+  }
+
   const imageUrl = (b.imageUrl || "").trim();
   const userMsg = [
     `Write the blog article. Working title: "${title}".`,
     b.categoryName ? `Category context: ${b.categoryName}.` : "",
+    keywords.length
+      ? `Targeted keywords — weave in as many as you naturally can, as often as reads organically (never forced, never keyword-stuffed, always human-sounding): ${keywords.join(", ")}.`
+      : "",
     imageUrl
       ? `Use this exact image URL for the single required <img>: ${imageUrl}${b.imageAlt ? ` (preferred alt: "${b.imageAlt}")` : ""}${b.imageTitle ? ` (preferred title: "${b.imageTitle}")` : ""}.`
       : `No image URL was provided — still include one <img>, but leave src="" and set the checklist image items to pass:false with a note to add an image URL.`,
