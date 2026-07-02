@@ -2,16 +2,17 @@
    Generate Blog API (admin)
    POST /api/admin/generate-blog
      body: { title, categoryName?, imageUrl?, imageAlt?, imageTitle? }
-   Calls the Anthropic API with the Evergrain blog spec baked into the
-   system prompt and returns a structured, SEO-optimized draft:
+   Calls the Google Gemini API (free tier) with the Evergrain blog spec
+   baked into the system prompt and returns a structured, SEO-optimized draft:
      { metaTitle, metaDescription, slug, primaryKeyword,
        contentHtml, wordCount, checklist:[{item,pass,note}] }
-   Requires ANTHROPIC_API_KEY.  requireAuth-gated.
+   Requires GEMINI_API_KEY (free from https://aistudio.google.com/apikey).
+   Override the model with GEMINI_MODEL if desired.  requireAuth-gated.
    ========================================================= */
 
 import { requireAuth } from "../_lib/auth.js";
 
-const MODEL = "claude-sonnet-5";
+const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
 function slugify(s) {
   return String(s || "").toLowerCase().trim()
@@ -104,8 +105,8 @@ ${CHECKLIST.map((c, i) => `${i + 1}. ${c}`).join("\n")}`;
 async function handler(req, res) {
   if (req.method !== "POST") { res.setHeader("Allow", "POST"); return res.status(405).json({ error: "Method not allowed" }); }
 
-  const { ANTHROPIC_API_KEY } = process.env;
-  if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: "ANTHROPIC_API_KEY not configured" });
+  const { GEMINI_API_KEY } = process.env;
+  if (!GEMINI_API_KEY) return res.status(500).json({ error: "GEMINI_API_KEY not configured" });
 
   let b = req.body || {};
   if (typeof b === "string") { try { b = JSON.parse(b); } catch { return res.status(400).json({ error: "Invalid JSON" }); } }
@@ -124,29 +125,41 @@ async function handler(req, res) {
 
   let aiText;
   try {
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 8000,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: userMsg }],
-      }),
-    });
+    const r = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "x-goog-api-key": GEMINI_API_KEY,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ role: "user", parts: [{ text: userMsg }] }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 16384,
+            // Force raw JSON output (no code fences / prose to strip).
+            responseMimeType: "application/json",
+          },
+        }),
+      }
+    );
     if (!r.ok) {
       const detail = await r.text();
-      console.error("Anthropic error:", detail);
+      console.error("Gemini error:", r.status, detail);
       return res.status(502).json({ error: "The blog generator is unavailable right now. Please try again." });
     }
     const data = await r.json();
-    aiText = (data.content || []).filter(p => p.type === "text").map(p => p.text).join("");
+    const cand = (data.candidates && data.candidates[0]) || null;
+    // Safety block or empty candidate → no usable content.
+    if (!cand || cand.finishReason === "SAFETY" || cand.finishReason === "PROHIBITED_CONTENT") {
+      console.error("Gemini blocked/empty:", JSON.stringify(data).slice(0, 500));
+      return res.status(502).json({ error: "The generator declined this title. Try rephrasing it." });
+    }
+    aiText = (cand.content?.parts || []).map(p => p.text || "").join("");
   } catch (err) {
-    console.error("Anthropic fetch failed:", err);
+    console.error("Gemini fetch failed:", err);
     return res.status(502).json({ error: "Could not reach the blog generator." });
   }
 
