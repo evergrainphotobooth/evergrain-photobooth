@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-02T19:31:54.951Z",
+  "generated_at": "2026-07-03T03:10:21.959Z",
   "categories": [
     {
       "name": "Luxury Party Inspiration",
@@ -7,14 +7,14 @@
       "blurb": "Elegant ideas for creating a premium event atmosphere, from beautiful backdrops and lighting to interactive guest experiences."
     },
     {
+      "name": "Photo Booth Planning Guides",
+      "slug": "photo-booth-planning-guides",
+      "blurb": "Practical advice for planning an unforgettable photo booth experience."
+    },
+    {
       "name": "Southern California Celebrations",
       "slug": "southern-california-celebrations",
       "blurb": "A collection of event ideas, planning tips, and hosting inspiration for weddings, parties, and private gatherings throughout Southern California."
-    },
-    {
-      "name": "Tips & Guides",
-      "slug": "tips-and-guides",
-      "blurb": "Practical advice for planning an unforgettable photo booth experience."
     },
     {
       "name": "Weddings",
@@ -37,8 +37,8 @@
           "slug": "weddings"
         },
         {
-          "name": "Tips & Guides",
-          "slug": "tips-and-guides"
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
         }
       ],
       "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/easy-photo-booth-pose-ideas-for-weddings-and-events-mr3wai7f02o0f.jpg",
