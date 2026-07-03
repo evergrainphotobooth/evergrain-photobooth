@@ -1,6 +1,11 @@
 {
-  "generated_at": "2026-07-03T03:13:09.636Z",
+  "generated_at": "2026-07-03T03:13:39.076Z",
   "categories": [
+    {
+      "name": "Corporate Events & Brand Activations",
+      "slug": "corporate-events-and-brand-activations",
+      "blurb": "Guides for companies, agencies, planners, and brands looking to create a polished guest experience. Learn how custom templates, branded prints, and thoughtful booth design can support corporate events, launches, holiday parties, and activations."
+    },
     {
       "name": "Luxury Party Inspiration",
       "slug": "luxury-party-inspiration",
@@ -15,11 +20,6 @@
       "name": "Weddings",
       "slug": "weddings",
       "blurb": "Inspiration and planning advice for weddings, showers, birthdays, engagements, quinceañeras, anniversaries, and private celebrations. Explore photo booth ideas that feel elevated, personal, and beautifully matched to the moment."
-    },
-    {
-      "name": "Weddings & Celebrations",
-      "slug": "weddings-and-celebrations",
-      "blurb": "A collection of event ideas, planning tips, and hosting inspiration for weddings, parties, and private gatherings throughout Southern California."
     }
   ],
   "posts": [
