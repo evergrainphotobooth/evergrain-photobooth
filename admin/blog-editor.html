@@ -73,6 +73,26 @@
   .img-attr { font-size:.72rem; color:var(--gray-500); margin-top:.4rem; }
   .img-attr a { color:var(--brass,#a47a2a); }
 
+  /* Media manager (repeatable images/videos) */
+  .media-list { display:flex; flex-direction:column; gap:.85rem; }
+  .media-row { border:1px solid var(--line,#ece7df); border-radius:14px; padding:1rem; background:#fff; }
+  .media-row.is-featured { border-color:var(--brass,#a47a2a); box-shadow:0 0 0 1px rgba(164,122,42,.25); }
+  .media-row__head { display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin-bottom:.75rem; }
+  .media-badge { font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:var(--brass,#a47a2a); border-radius:999px; padding:.2rem .6rem; }
+  .media-badge--num { background:var(--wash,#e9e2d6); color:var(--gray-600); }
+  .media-row__actions { display:flex; gap:.4rem; }
+  .media-tabs { display:flex; flex-wrap:wrap; gap:.35rem; margin-bottom:.75rem; }
+  .media-tab { font:inherit; font-size:.76rem; padding:.32rem .7rem; border-radius:999px; border:1px solid var(--line,#ddd6c9); background:#fff; color:var(--gray-600); cursor:pointer; }
+  .media-tab.is-active { background:var(--ink,#1a1410); color:#fff; border-color:var(--ink,#1a1410); }
+  .media-pane { }
+  .media-preview img, .media-preview video { max-width:100%; max-height:240px; border-radius:12px; border:1px solid var(--line,#ece7df); display:block; background:#000; }
+  .media-preview .video-embed { position:relative; width:100%; max-width:440px; aspect-ratio:16/9; }
+  .media-preview .video-embed iframe { width:100%; height:100%; border:0; border-radius:12px; }
+  .media-meta { font-family:ui-monospace,monospace; font-size:.7rem; color:var(--gray-500); word-break:break-all; margin-top:.4rem; }
+  .media-altrow { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.8rem; }
+  .media-altrow .field { margin:0; flex:1; min-width:200px; }
+  .link-btn { background:none; border:0; padding:0; color:var(--brass,#a47a2a); font:inherit; cursor:pointer; text-decoration:underline; font-size:.8rem; }
+
   /* Rendered preview of the generated HTML */
   .blog-preview { border:1px solid var(--line,#ece7df); border-radius:14px; padding:1.5rem 1.6rem; background:#fff; max-height:520px; overflow:auto; }
   .blog-preview h1 { font-family:"Fraunces",serif; font-weight:400; font-size:1.7rem; line-height:1.2; margin:0 0 1rem; color:#1a1410; }
@@ -177,53 +197,12 @@
       </div>
     </div>
 
-    <!-- 2. Featured image (either/or: upload your own OR AI-recommended stock) -->
+    <!-- 2. Blog images & videos (multiple; first = featured) -->
     <div class="admin-card">
-      <h2 class="card-title">Featured image</h2>
-      <p class="card-sub">One image per post — it becomes the header background and is also placed once in the body where it flows. Choose <strong>one</strong> option below.</p>
-
-      <!-- Option A: upload your own -->
-      <p class="opt-label">Option A — Upload your own</p>
-      <div class="inline-row">
-        <div class="field">
-          <label class="field__label" for="f-image-url">Image URL</label>
-          <input class="field__input" id="f-image-url" type="url" placeholder="https://…/photo.jpg" />
-        </div>
-        <div class="field" style="flex:0 1 240px;">
-          <label class="field__label" for="f-image-filename">Filename (optional, descriptive)</label>
-          <input class="field__input" id="f-image-filename" type="text" placeholder="wedding-photo-booth" />
-        </div>
-        <button type="button" class="btn btn--brass btn--sm" data-upload>Upload to Supabase</button>
-      </div>
-
-      <div class="or-divider">or</div>
-
-      <!-- Option B: AI-recommended royalty-free stock -->
-      <p class="opt-label">Option B — Use a stock image</p>
-      <div class="inline-row" style="align-items:center;">
-        <button type="button" class="btn btn--ghost btn--sm" data-find-stock>Find a stock image</button>
-        <span class="gen-status" data-stock-status></span>
-      </div>
-      <p class="stock-note">Our AI searches a royalty-free library from your title. Click one to use it — it uploads to Supabase automatically.</p>
-      <div class="stock-grid" data-stock-grid hidden></div>
-
-      <!-- Chosen image (shared by both options) -->
-      <div class="img-preview" data-img-preview hidden>
-        <img data-img-el alt="" />
-        <div class="img-url" data-img-url></div>
-        <div class="img-attr" data-img-attr></div>
-      </div>
-
-      <div class="inline-row" style="margin-top:1rem;">
-        <div class="field">
-          <label class="field__label" for="f-image-alt">Image alt text</label>
-          <input class="field__input" id="f-image-alt" type="text" placeholder="Descriptive, keyword-aware alt text" />
-        </div>
-        <div class="field">
-          <label class="field__label" for="f-image-title">Image title</label>
-          <input class="field__input" id="f-image-title" type="text" placeholder="Short descriptive title" />
-        </div>
-      </div>
+      <h2 class="card-title">Blog images &amp; videos</h2>
+      <p class="card-sub">Add as many images and videos as you like. The <strong>first</strong> is the featured item — it becomes the header background and is placed once in the body; the rest are woven in where they fit. On <strong>Generate</strong>, the AI writes SEO/AEO alt text &amp; a title for every item.</p>
+      <div class="media-list" data-media-list></div>
+      <button type="button" class="btn btn--ghost btn--sm" data-add-media style="margin-top:.9rem;">+ Add image / video</button>
     </div>
 
     <!-- 3. Generate -->
@@ -310,18 +289,8 @@
     setTitleBtn: $("[data-set-title]"),
     titleSet: $("[data-title-set]"),
     catMulti: $("[data-cat-multi]"),
-    imageUrl: $("#f-image-url"),
-    imageFilename: $("#f-image-filename"),
-    uploadBtn: $("[data-upload]"),
-    findStockBtn: $("[data-find-stock]"),
-    stockStatus: $("[data-stock-status]"),
-    stockGrid: $("[data-stock-grid]"),
-    imgPreview: $("[data-img-preview]"),
-    imgEl: $("[data-img-el]"),
-    imgUrlLabel: $("[data-img-url]"),
-    imgAttr: $("[data-img-attr]"),
-    imageAlt: $("#f-image-alt"),
-    imageTitle: $("#f-image-title"),
+    mediaList: $("[data-media-list]"),
+    addMediaBtn: $("[data-add-media]"),
     generateBtn: $("[data-generate]"),
     genStatus: $("[data-gen-status]"),
     genHint: $("[data-gen-hint]"),
@@ -356,11 +325,10 @@
     schCancel: $("[data-sch-cancel]"),
     schErr: $("[data-sch-err]"),
     scheduledBanner: $("[data-scheduled-banner]"),
-    // uploaded image URL lives here (Supabase public URL), separate from the paste box
-    _uploadedUrl: "",
   };
 
-  const uploadedImageUrl = () => els._uploadedUrl;
+  // The post's ordered media list (images + videos). state.media[0] is featured.
+  state.media = state.media || [];
 
   /* ---------- helpers ---------- */
   function wordCountFromHtml(html) {
@@ -597,13 +565,16 @@
     els.metaTitle.value = p.meta_title || "";
     els.metaDescription.value = p.meta_description || "";
     els.slug.value = p.slug || "";
-    els.imageAlt.value = p.image_alt || "";
-    els.imageTitle.value = p.image_title || "";
     els.html.value = p.content_html || "";
-    if (p.image_url) {
-      els._uploadedUrl = p.image_url;
-      showImage(p.image_url);
+    // Load the media list (fall back to the legacy single featured image).
+    if (Array.isArray(p.media) && p.media.length) {
+      state.media = p.media.map(m => ({ type: m.type || "image", url: m.url || "", alt: m.alt || "", title: m.title || "", source: m.source || "", provider: m.provider || "", embed: m.embed || "", _opt: "A" }));
+    } else if (p.image_url) {
+      state.media = [{ type: "image", url: p.image_url, alt: p.image_alt || "", title: p.image_title || "", source: "upload", provider: "file", _opt: "A" }];
+    } else {
+      state.media = [];
     }
+    renderMedia();
     if (p.title) els.titleSet.hidden = false;
     if (p.content_html || p.meta_title) { els.seoCard.hidden = false; els.contentCard.hidden = false; }
     renderChecklist();
@@ -622,13 +593,215 @@
     fromRow(post);
   }
 
-  function showImage(url) {
-    els.imgEl.src = url;
-    els.imgEl.alt = els.imageAlt.value || "";
-    els.imgUrlLabel.textContent = url;
-    els.imgAttr.innerHTML = "";
-    els.imgPreview.hidden = false;
+  /* ================= Media manager (images + videos) ================= */
+  const MEDIA_OPTS = [
+    { k: "A", label: "Upload image" },
+    { k: "B", label: "Choose from library" },
+    { k: "C", label: "Stock image" },
+    { k: "D", label: "Upload video" },
+    { k: "E", label: "Video from URL" },
+  ];
+  function blankMedia() { return { type: "image", url: "", alt: "", title: "", source: "", provider: "", embed: "", _opt: "A" }; }
+
+  // Strip transient (_-prefixed) keys before sending to the API.
+  function cleanMedia() {
+    return state.media.filter(m => m.url || m.embed).map(m => ({
+      type: m.type, url: m.url || "", alt: m.alt || "", title: m.title || "",
+      source: m.source || "", provider: m.provider || "", embed: m.embed || "",
+    }));
   }
+
+  function detectVideoUrl(raw) {
+    const u = (raw || "").trim(); if (!u) return null; let m;
+    if ((m = u.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/i)))
+      return { type: "video", provider: "youtube", url: u, embed: `https://www.youtube.com/embed/${m[1]}`, source: "video-url" };
+    if ((m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/i)))
+      return { type: "video", provider: "vimeo", url: u, embed: `https://player.vimeo.com/video/${m[1]}`, source: "video-url" };
+    if (/\.(mp4|webm|ogg|ogv|mov|m4v)(\?|#|$)/i.test(u))
+      return { type: "video", provider: "file", url: u, embed: "", source: "video-url" };
+    return null;
+  }
+
+  function mediaPreviewHTML(m) {
+    if (m.type === "video") {
+      if (m.provider === "file" && m.url) return `<video controls preload="metadata" src="${esc(m.url)}"></video><div class="media-meta">${esc(m.url)}</div>`;
+      if (m.embed) return `<div class="video-embed"><iframe src="${esc(m.embed)}" allowfullscreen loading="lazy"></iframe></div><div class="media-meta">${esc(m.url || m.embed)}</div>`;
+    }
+    return `<img src="${esc(m.url)}" alt="${esc(m.alt || "")}" /><div class="media-meta">${esc(m.url)}</div>`;
+  }
+
+  function mediaRowHTML(m, i) {
+    const featured = i === 0;
+    const head = `<div class="media-row__head">
+        <span class="media-badge${featured ? "" : " media-badge--num"}">${featured ? "★ Featured" : "Media " + (i + 1)}</span>
+        <div class="media-row__actions">
+          ${featured ? "" : `<button type="button" class="btn btn--ghost btn--sm" data-mi="${i}" data-act="feature">Make featured</button>`}
+          <button type="button" class="btn btn--danger btn--sm" data-mi="${i}" data-act="remove">Remove</button>
+        </div></div>`;
+    if (m.url || m.embed) {
+      return `<div class="media-row${featured ? " is-featured" : ""}">
+        ${head}
+        <div class="media-preview">${mediaPreviewHTML(m)}</div>
+        ${m._attr ? `<div class="img-attr">${m._attr}</div>` : ""}
+        <div class="media-altrow">
+          <div class="field"><label class="field__label">Alt text</label><input class="field__input" data-mi="${i}" data-fld="alt" value="${esc(m.alt || "")}" placeholder="Descriptive, keyword-aware" /></div>
+          <div class="field"><label class="field__label">Title</label><input class="field__input" data-mi="${i}" data-fld="title" value="${esc(m.title || "")}" placeholder="Short descriptive title" /></div>
+        </div>
+        <button type="button" class="link-btn" data-mi="${i}" data-act="replace" style="margin-top:.55rem;">Replace this ${m.type}</button>
+      </div>`;
+    }
+    const tabs = MEDIA_OPTS.map(o => `<button type="button" class="media-tab${m._opt === o.k ? " is-active" : ""}" data-mi="${i}" data-act="opt" data-opt="${o.k}">${o.label}</button>`).join("");
+    return `<div class="media-row${featured ? " is-featured" : ""}">${head}<div class="media-tabs">${tabs}</div><div class="media-pane">${mediaPaneHTML(m, i)}</div></div>`;
+  }
+
+  function mediaPaneHTML(m, i) {
+    const busy = m._busy ? `<span class="gen-status"><span class="loading"></span> ${esc(m._busy)}</span>` : "";
+    const status = m._status ? `<div class="stock-note" style="color:${m._statusErr ? "#B4462F" : "var(--gray-600)"}">${esc(m._status)}</div>` : "";
+    if (m._opt === "A") return `<div class="inline-row">
+        <div class="field"><label class="field__label">Image URL</label><input class="field__input" data-mi="${i}" data-inp="url" type="url" placeholder="https://…/photo.jpg" value="${esc(m._url || "")}" /></div>
+        <button type="button" class="btn btn--brass btn--sm" data-mi="${i}" data-act="upload-img">Upload</button></div>${busy}${status}`;
+    if (m._opt === "B") {
+      const grid = Array.isArray(m._results) ? `<div class="stock-grid">${m._results.map((f, k) => `<button type="button" class="stock-item" data-mi="${i}" data-act="pick-lib" data-k="${k}"><img src="${esc(f.url)}" loading="lazy" alt="" /><div class="stock-item__meta">${esc(f.name)}</div></button>`).join("")}</div>` : "";
+      return `<button type="button" class="btn btn--ghost btn--sm" data-mi="${i}" data-act="browse">Browse the blog media folder</button>${busy}${status}${grid}`;
+    }
+    if (m._opt === "C") {
+      const grid = Array.isArray(m._results) ? `<div class="stock-grid">${m._results.map((img, k) => `<button type="button" class="stock-item" data-mi="${i}" data-act="pick-stock" data-k="${k}" title="${esc(img.title || "")}"><img src="${esc(img.thumbnail || img.url)}" loading="lazy" alt="" /><div class="stock-item__meta">${esc(img.license || img.source || "royalty-free")}</div></button>`).join("")}</div>` : "";
+      return `<div class="inline-row">
+          <div class="field"><label class="field__label">Search term</label><input class="field__input" data-mi="${i}" data-inp="q" type="text" placeholder="e.g. wedding photo booth guests" value="${esc(m._q || "")}" /></div>
+          <button type="button" class="btn btn--brass btn--sm" data-mi="${i}" data-act="stock-search">Search</button>
+          <button type="button" class="btn btn--ghost btn--sm" disabled title="Needs a paid image model — coming soon">Generate with AI ✨</button>
+        </div><p class="stock-note">Royalty-free results from Openverse — click one to use it (uploaded to Supabase).</p>${busy}${status}${grid}`;
+    }
+    if (m._opt === "D") return `<div class="inline-row">
+        <div class="field"><label class="field__label">Video file</label><input class="field__input" data-mi="${i}" data-act="video-file" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mp4,.webm,.ogg,.ogv,.mov,.m4v" /></div>
+      </div><p class="stock-note">MP4 or WebM recommended for the widest browser support — uploads straight to Supabase.</p>${busy}${status}`;
+    return `<div class="inline-row">
+        <div class="field"><label class="field__label">Video URL</label><input class="field__input" data-mi="${i}" data-inp="vurl" type="url" placeholder="YouTube / Vimeo link, or a direct .mp4 URL" value="${esc(m._vurl || "")}" /></div>
+        <button type="button" class="btn btn--brass btn--sm" data-mi="${i}" data-act="video-url">Use</button></div>${busy}${status}`;
+  }
+
+  function renderMedia() {
+    els.mediaList.innerHTML = state.media.length
+      ? state.media.map((m, i) => mediaRowHTML(m, i)).join("")
+      : `<p class="text-meta" style="padding:.4rem 0;">No media yet — add the featured image or video below.</p>`;
+  }
+
+  function mStatus(i, msg, isErr) { const m = state.media[i]; if (m) { m._status = msg; m._statusErr = !!isErr; renderMedia(); } }
+  function mBusy(i, msg) { const m = state.media[i]; if (m) { m._busy = msg || ""; renderMedia(); } }
+
+  function setMediaImage(i, url, source) {
+    const m = state.media[i]; if (!m) return;
+    m.type = "image"; m.url = url; m.embed = ""; m.provider = "file"; m.source = source || "upload";
+    m._busy = ""; m._status = ""; m._results = null;
+    renderMedia(); setSaveStatus("Media set ✓", true);
+  }
+
+  async function uploadImageUrl(i) {
+    const m = state.media[i]; const url = (m._url || "").trim();
+    if (!url) { mStatus(i, "Paste an image URL first.", true); return; }
+    mBusy(i, "Uploading…");
+    try {
+      const r = await fetch("/api/admin/upload-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url, filename: els.slug.value || els.title.value }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Upload failed");
+      setMediaImage(i, d.url, "upload");
+    } catch (err) { mBusy(i, ""); mStatus(i, err.message || "Upload failed", true); }
+  }
+
+  async function browseLibrary(i) {
+    mBusy(i, "Loading library…");
+    try {
+      const r = await fetch("/api/admin/upload-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "list" }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Couldn't load library");
+      const m = state.media[i]; m._busy = ""; m._results = d.files || [];
+      m._status = m._results.length ? "" : "No images in the folder yet — upload one first.";
+      renderMedia();
+    } catch (err) { mBusy(i, ""); mStatus(i, err.message || "Couldn't load library", true); }
+  }
+
+  async function stockSearch(i) {
+    const m = state.media[i]; const q = (m._q || els.title.value || "").trim();
+    if (!q) { mStatus(i, "Type a search term first.", true); return; }
+    mBusy(i, "Searching royalty-free images…");
+    try {
+      const r = await fetch("/api/admin/upload-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "stock", title: q, primaryKeyword: els.primaryKeyword.value.trim(), keywords: state.keywords }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Search failed");
+      const mm = state.media[i]; mm._busy = ""; mm._results = d.images || [];
+      mm._status = mm._results.length ? "" : (d.message || "No results — try a different term.");
+      renderMedia();
+    } catch (err) { mBusy(i, ""); mStatus(i, err.message || "Search failed", true); }
+  }
+
+  async function pickStock(i, img) {
+    if (!img) return;
+    mBusy(i, "Uploading the selected image…");
+    try {
+      const r = await fetch("/api/admin/upload-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: img.url, filename: els.slug.value || els.title.value }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Upload failed");
+      const m = state.media[i];
+      const parts = [];
+      if (img.creator) parts.push(`by ${esc(img.creator)}`);
+      if (img.license) parts.push(esc(img.license));
+      if (img.source) parts.push(esc(img.source));
+      m._attr = parts.length ? `Royalty-free · ${parts.join(" · ")}${img.landing ? ` — <a href="${esc(img.landing)}" target="_blank" rel="noopener">source</a>` : ""}` : "";
+      if (!m.alt && img.title) m.alt = img.title;
+      setMediaImage(i, d.url, "stock");
+    } catch (err) { mBusy(i, ""); mStatus(i, err.message || "Upload failed", true); }
+  }
+
+  async function uploadVideoFile(i, file) {
+    if (!/\.(mp4|webm|ogg|ogv|mov|m4v)$/i.test(file.name)) { mStatus(i, "Unsupported type. Use MP4, WebM, OGG, or MOV.", true); return; }
+    mBusy(i, "Uploading video…");
+    try {
+      const ext = (file.name.match(/\.([a-z0-9]+)$/i) || [, "mp4"])[1];
+      const sr = await fetch("/api/admin/upload-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "sign-upload", filename: els.slug.value || els.title.value, ext }) });
+      const sd = await sr.json().catch(() => ({}));
+      if (!sr.ok) throw new Error(sd.error || "Couldn't start upload");
+      const put = await fetch(sd.uploadUrl, { method: "PUT", headers: { "Content-Type": file.type || "video/mp4", "x-upsert": "true" }, body: file });
+      if (!put.ok) throw new Error(`Upload failed (${put.status})`);
+      const m = state.media[i];
+      m.type = "video"; m.provider = "file"; m.url = sd.publicUrl; m.embed = ""; m.source = "video-upload";
+      m._busy = ""; m._status = ""; m._results = null;
+      renderMedia(); setSaveStatus("Video uploaded ✓", true);
+    } catch (err) { mBusy(i, ""); mStatus(i, err.message || "Video upload failed", true); }
+  }
+
+  function useVideoUrl(i) {
+    const m = state.media[i]; const det = detectVideoUrl(m._vurl);
+    if (!det) { mStatus(i, "Enter a YouTube/Vimeo link or a direct video URL (.mp4/.webm/…).", true); return; }
+    Object.assign(m, det); m._status = ""; m._busy = ""; renderMedia();
+    setSaveStatus("Video added ✓", true);
+  }
+
+  // Delegated events on the media list + add button.
+  els.mediaList.addEventListener("input", (e) => {
+    const t = e.target, i = +t.getAttribute("data-mi"); if (isNaN(i) || !state.media[i]) return;
+    if (t.dataset.fld) state.media[i][t.dataset.fld] = t.value;   // alt/title live (no re-render)
+    else if (t.dataset.inp) state.media[i]["_" + t.dataset.inp] = t.value;
+  });
+  els.mediaList.addEventListener("change", (e) => {
+    const t = e.target, i = +t.getAttribute("data-mi"); if (isNaN(i) || !state.media[i]) return;
+    if (t.dataset.act === "video-file" && t.files && t.files[0]) uploadVideoFile(i, t.files[0]);
+  });
+  els.mediaList.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-act]"); if (!btn) return;
+    const i = +btn.getAttribute("data-mi"); if (isNaN(i) || !state.media[i]) return;
+    const act = btn.getAttribute("data-act"), m = state.media[i];
+    if (act === "opt") { m._opt = btn.getAttribute("data-opt"); m._results = null; m._status = ""; renderMedia(); }
+    else if (act === "remove") { state.media.splice(i, 1); renderMedia(); }
+    else if (act === "feature") { const [x] = state.media.splice(i, 1); state.media.unshift(x); renderMedia(); }
+    else if (act === "replace") { m.url = ""; m.embed = ""; m._results = null; m._status = ""; m._attr = ""; renderMedia(); }
+    else if (act === "upload-img") uploadImageUrl(i);
+    else if (act === "browse") browseLibrary(i);
+    else if (act === "stock-search") stockSearch(i);
+    else if (act === "pick-lib") setMediaImage(i, m._results[+btn.getAttribute("data-k")].url, "supabase");
+    else if (act === "pick-stock") pickStock(i, m._results[+btn.getAttribute("data-k")]);
+    else if (act === "video-url") useVideoUrl(i);
+  });
+  els.addMediaBtn.addEventListener("click", () => { state.media.push(blankMedia()); renderMedia(); });
 
   /* ---------- Set title (create or update the post) ---------- */
   els.setTitleBtn.addEventListener("click", async () => {
@@ -673,95 +846,6 @@
     }
   });
 
-  /* ---------- Upload image ---------- */
-  els.uploadBtn.addEventListener("click", async () => {
-    const url = els.imageUrl.value.trim();
-    if (!url) { alert("Paste an image URL first."); return; }
-    els.uploadBtn.disabled = true;
-    els.uploadBtn.textContent = "Uploading…";
-    try {
-      const r = await fetch("/api/admin/upload-image", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, filename: els.imageFilename.value.trim() || els.slug.value || els.title.value }),
-      });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || "Upload failed");
-      els._uploadedUrl = d.url;
-      showImage(d.url);
-      // Clear the stock option — it's either/or.
-      els.stockGrid.hidden = true; els.stockGrid.innerHTML = ""; els.stockStatus.textContent = "";
-      setSaveStatus("Image uploaded ✓", true);
-    } catch (err) {
-      setSaveStatus(err.message || "Upload failed", false);
-      alert(err.message || "Upload failed");
-    } finally {
-      els.uploadBtn.disabled = false;
-      els.uploadBtn.textContent = "Upload to Supabase";
-    }
-  });
-
-  /* ---------- Stock image (Option B) ---------- */
-  els.findStockBtn.addEventListener("click", async () => {
-    const title = els.title.value.trim();
-    if (!title) { alert("Enter a title first — the AI uses it to find a relevant image."); return; }
-    els.findStockBtn.disabled = true;
-    els.stockStatus.innerHTML = `<span class="loading"></span> Searching royalty-free images…`;
-    els.stockGrid.hidden = true; els.stockGrid.innerHTML = "";
-    try {
-      const r = await fetch("/api/admin/upload-image", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "stock", title, primaryKeyword: els.primaryKeyword.value.trim(), keywords: state.keywords }),
-      });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || "Stock search failed");
-      if (!d.images || d.images.length === 0) { els.stockStatus.textContent = d.message || "No images found — try a different title."; return; }
-      els.stockStatus.innerHTML = `Results for “${esc(d.query)}” — click one to use it.`;
-      renderStockGrid(d.images);
-    } catch (err) {
-      els.stockStatus.innerHTML = `<span style="color:#B4462F;">${esc(err.message || "Stock search failed")}</span>`;
-    } finally {
-      els.findStockBtn.disabled = false;
-    }
-  });
-
-  function renderStockGrid(images) {
-    els.stockGrid.innerHTML = images.map((img, i) => `
-      <button type="button" class="stock-item" data-stock-i="${i}" title="${esc(img.title || "")}">
-        <img src="${esc(img.thumbnail || img.url)}" alt="${esc(img.title || "stock image")}" loading="lazy" />
-        <div class="stock-item__meta">${esc(img.license || img.source || "royalty-free")}</div>
-      </button>`).join("");
-    els.stockGrid.hidden = false;
-    els.stockGrid.querySelectorAll("[data-stock-i]").forEach(btn =>
-      btn.addEventListener("click", () => useStock(images[+btn.getAttribute("data-stock-i")])));
-  }
-
-  async function useStock(img) {
-    els.stockStatus.innerHTML = `<span class="loading"></span> Uploading the selected image to Supabase…`;
-    try {
-      const r = await fetch("/api/admin/upload-image", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: img.url, filename: els.imageFilename.value.trim() || els.slug.value || els.title.value }),
-      });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || "Upload failed");
-      els._uploadedUrl = d.url;
-      showImage(d.url);
-      // Attribution + prefill alt if empty.
-      const parts = [];
-      if (img.creator) parts.push(`by ${esc(img.creator)}`);
-      if (img.license) parts.push(esc(img.license));
-      if (img.source) parts.push(esc(img.source));
-      const link = img.landing ? ` — <a href="${esc(img.landing)}" target="_blank" rel="noopener">source</a>` : "";
-      els.imgAttr.innerHTML = parts.length ? `Royalty-free · ${parts.join(" · ")}${link}` : "";
-      if (!els.imageAlt.value && img.title) { els.imageAlt.value = img.title; els.imgEl.alt = img.title; }
-      els.imageUrl.value = ""; // keep either/or clean
-      els.stockGrid.hidden = true; els.stockGrid.innerHTML = "";
-      els.stockStatus.innerHTML = `<span style="color:#2F7A4F;font-weight:600;">✓ Stock image uploaded to Supabase.</span>`;
-      setSaveStatus("Image set ✓", true);
-    } catch (err) {
-      els.stockStatus.innerHTML = `<span style="color:#B4462F;">${esc(err.message || "Upload failed")}</span>`;
-    }
-  }
 
   /* ---------- Generate ---------- */
   els.generateBtn.addEventListener("click", async () => {
@@ -776,9 +860,7 @@
         body: JSON.stringify({
           title: els.title.value.trim(),
           categoryName: cat ? cat.name : "",
-          imageUrl: uploadedImageUrl(),
-          imageAlt: els.imageAlt.value.trim(),
-          imageTitle: els.imageTitle.value.trim(),
+          media: cleanMedia(),
         }),
       });
       const d = await r.json().catch(() => ({}));
@@ -788,8 +870,11 @@
       els.metaTitle.value = d.metaTitle || "";
       els.metaDescription.value = d.metaDescription || "";
       els.slug.value = d.slug || els.slug.value;
-      if (!els.imageAlt.value) els.imageAlt.value = d.imageAlt || "";
-      if (!els.imageTitle.value) els.imageTitle.value = d.imageTitle || "";
+      // Apply the AI-generated alt/title back onto each media item (same order).
+      if (Array.isArray(d.media)) {
+        d.media.forEach((dm, k) => { if (state.media[k]) { state.media[k].alt = dm.alt || state.media[k].alt; state.media[k].title = dm.title || state.media[k].title; } });
+        renderMedia();
+      }
       els.html.value = d.contentHtml || "";
       state.checklist = Array.isArray(d.checklist) ? d.checklist : [];
 
@@ -818,9 +903,7 @@
       metaTitle: els.metaTitle.value.trim(),
       metaDescription: els.metaDescription.value.trim(),
       slug: els.slug.value.trim(),
-      imageUrl: uploadedImageUrl(),
-      imageAlt: els.imageAlt.value.trim(),
-      imageTitle: els.imageTitle.value.trim(),
+      media: cleanMedia(),
       contentHtml: els.html.value,
       checklist: state.checklist,
     };
@@ -867,7 +950,6 @@
   els.metaTitle.addEventListener("input", updateCounts);
   els.metaDescription.addEventListener("input", updateCounts);
   els.slug.addEventListener("input", updateFullUrl);
-  els.imageAlt.addEventListener("input", () => { els.imgEl.alt = els.imageAlt.value; });
   els.html.addEventListener("input", () => { refreshPreview(); });
 
   document.querySelectorAll("[data-view]").forEach(btn => {
@@ -885,6 +967,8 @@
   (async function init() {
     await Promise.all([loadCategories(), loadKeywords()]);
     await loadPost();
+    if (!state.media.length) state.media = [blankMedia()]; // start with the featured slot
+    renderMedia();
     enableGate();
   })();
 </script>
