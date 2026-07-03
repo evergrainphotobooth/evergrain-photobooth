@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T03:14:40.721Z",
+  "generated_at": "2026-07-03T03:14:52.163Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -20,6 +20,11 @@
       "name": "Photo Booth Planning Guides",
       "slug": "photo-booth-planning-guides",
       "blurb": "Helpful guides for choosing, booking, and preparing for your photo booth experience. From pricing and setup needs to package comparisons and planning checklists, these articles help you feel confident before the event day arrives."
+    },
+    {
+      "name": "Real Events & Behind the Booth",
+      "slug": "real-events-and-behind-the-booth",
+      "blurb": "Stories, galleries, and behind-the-scenes notes from real Evergrain events. See how the booth comes to life at weddings, corporate gatherings, private parties, and brand moments across Southern California and beyond."
     },
     {
       "name": "Weddings & Celebrations",
