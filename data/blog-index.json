@@ -1,10 +1,15 @@
 {
-  "generated_at": "2026-07-03T03:14:30.251Z",
+  "generated_at": "2026-07-03T03:14:40.721Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
       "slug": "corporate-events-and-brand-activations",
       "blurb": "Guides for companies, agencies, planners, and brands looking to create a polished guest experience. Learn how custom templates, branded prints, and thoughtful booth design can support corporate events, launches, holiday parties, and activations."
+    },
+    {
+      "name": "Design, Templates & Guest Experience",
+      "slug": "design-templates-and-guest-experience",
+      "blurb": "A closer look at the visual details that shape a memorable photo booth experience. From custom print designs and backdrops to guest flow and event styling, this category explores how thoughtful design makes every photo feel intentional."
     },
     {
       "name": "Los Angeles Event Guides",
