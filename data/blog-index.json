@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T03:10:21.959Z",
+  "generated_at": "2026-07-03T03:11:19.391Z",
   "categories": [
     {
       "name": "Luxury Party Inspiration",
@@ -12,14 +12,14 @@
       "blurb": "Practical advice for planning an unforgettable photo booth experience."
     },
     {
-      "name": "Southern California Celebrations",
-      "slug": "southern-california-celebrations",
-      "blurb": "A collection of event ideas, planning tips, and hosting inspiration for weddings, parties, and private gatherings throughout Southern California."
-    },
-    {
       "name": "Weddings",
       "slug": "weddings",
       "blurb": "Modern wedding trends, creative reception ideas, and fresh inspiration to help your celebration feel current, stylish, and uniquely yours."
+    },
+    {
+      "name": "Weddings & Celebrations",
+      "slug": "wedding-and-celebrations",
+      "blurb": "A collection of event ideas, planning tips, and hosting inspiration for weddings, parties, and private gatherings throughout Southern California."
     }
   ],
   "posts": [
