@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T03:14:52.163Z",
+  "generated_at": "2026-07-03T03:15:02.593Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -20,6 +20,11 @@
       "name": "Photo Booth Planning Guides",
       "slug": "photo-booth-planning-guides",
       "blurb": "Helpful guides for choosing, booking, and preparing for your photo booth experience. From pricing and setup needs to package comparisons and planning checklists, these articles help you feel confident before the event day arrives."
+    },
+    {
+      "name": "Photo Booth Trends & Ideas",
+      "slug": "photo-booth-trends-and-ideas",
+      "blurb": "Fresh ideas, creative inspiration, and emerging trends in the world of modern photo booths. Explore what is popular, what feels timeless, and how to bring a more memorable guest experience to your next event."
     },
     {
       "name": "Real Events & Behind the Booth",
