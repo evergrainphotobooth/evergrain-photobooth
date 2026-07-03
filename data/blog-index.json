@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T03:15:02.593Z",
+  "generated_at": "2026-07-03T16:00:01.734Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,26 @@
     }
   ],
   "posts": [
+    {
+      "title": "Which Photo Booth Type Fits Your Event: Open-Air, 360, Mirror, or Enclosed",
+      "slug": "choosing-best-photo-booth-rental",
+      "url": "/a-thousand-words/photo-booth-planning-guides/choosing-best-photo-booth-rental",
+      "category": {
+        "name": "Photo Booth Planning Guides",
+        "slug": "photo-booth-planning-guides"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/car-and-coffee-mr3yzol6wimlz.jpg",
+      "imageAlt": "retro wooden rustic enclosed photo booth",
+      "date": "2026-07-03T16:00:00.22+00:00",
+      "dateLabel": "July 3, 2026",
+      "excerpt": "Discover the best photo booth rental for your event in Los Angeles & Orange County. Compare open-air, 360, mirror, and enclosed options to find your perfect…"
+    },
     {
       "title": "Easy Photo Booth Pose Ideas for Weddings and Events",
       "slug": "easy-photo-booth-pose-ideas-weddings-events",
