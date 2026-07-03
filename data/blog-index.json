@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T03:13:39.076Z",
+  "generated_at": "2026-07-03T03:14:00.259Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -17,8 +17,8 @@
       "blurb": "Helpful guides for choosing, booking, and preparing for your photo booth experience. From pricing and setup needs to package comparisons and planning checklists, these articles help you feel confident before the event day arrives."
     },
     {
-      "name": "Weddings",
-      "slug": "weddings",
+      "name": "Weddings & Celebrations",
+      "slug": "weddings-and-celebrations",
       "blurb": "Inspiration and planning advice for weddings, showers, birthdays, engagements, quinceañeras, anniversaries, and private celebrations. Explore photo booth ideas that feel elevated, personal, and beautifully matched to the moment."
     }
   ],
@@ -26,15 +26,15 @@
     {
       "title": "Easy Photo Booth Pose Ideas for Weddings and Events",
       "slug": "easy-photo-booth-pose-ideas-weddings-events",
-      "url": "/a-thousand-words/weddings/easy-photo-booth-pose-ideas-weddings-events",
+      "url": "/a-thousand-words/weddings-and-celebrations/easy-photo-booth-pose-ideas-weddings-events",
       "category": {
-        "name": "Weddings",
-        "slug": "weddings"
+        "name": "Weddings & Celebrations",
+        "slug": "weddings-and-celebrations"
       },
       "categories": [
         {
-          "name": "Weddings",
-          "slug": "weddings"
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
         },
         {
           "name": "Photo Booth Planning Guides",
@@ -50,15 +50,15 @@
     {
       "title": "How to Create a Guest Experience They’ll Talk About After the Wedding",
       "slug": "create-unforgettable-wedding-guest-experience",
-      "url": "/a-thousand-words/weddings/create-unforgettable-wedding-guest-experience",
+      "url": "/a-thousand-words/weddings-and-celebrations/create-unforgettable-wedding-guest-experience",
       "category": {
-        "name": "Weddings",
-        "slug": "weddings"
+        "name": "Weddings & Celebrations",
+        "slug": "weddings-and-celebrations"
       },
       "categories": [
         {
-          "name": "Weddings",
-          "slug": "weddings"
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
         }
       ],
       "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/how-to-create-a-guest-experience-theyll-talk-about-after-the-wedding-mr39orviii26v.jpg",
@@ -70,15 +70,15 @@
     {
       "title": "Why a Photobooth Is the Secret Ingredient for an Unforgettable LA Wedding",
       "slug": "why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding",
-      "url": "/a-thousand-words/weddings/why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding",
+      "url": "/a-thousand-words/weddings-and-celebrations/why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding",
       "category": {
-        "name": "Weddings",
-        "slug": "weddings"
+        "name": "Weddings & Celebrations",
+        "slug": "weddings-and-celebrations"
       },
       "categories": [
         {
-          "name": "Weddings",
-          "slug": "weddings"
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
         }
       ],
       "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/why-a-photobooth-is-the-secret-ingredient-for-an-unforgettable-la-wedding-mr348cjzforbm.jpg",
