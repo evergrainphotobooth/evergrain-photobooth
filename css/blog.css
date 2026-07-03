@@ -143,4 +143,10 @@
 .blog-article__body th, .blog-article__body td { border: 1px solid rgba(92, 74, 53, 0.18); padding: .6rem .8rem; text-align: left; }
 .blog-article__body th { background: var(--linen, #f3efe8); }
 .blog-article__body h2 + ul { margin-top: -.2rem; } /* table-of-contents lists sit tight under their heading */
+
+/* Media figures — images already styled above; add video + responsive embeds */
+.blog-article__body figure.blog-media { margin: 1.8rem 0; }
+.blog-article__body figure img { margin: 0; }
+.blog-article__body video { max-width: 100%; height: auto; border-radius: var(--radius, 14px); display: block; margin: 0 auto; background: #000; }
+.blog-article__body .blog-media--embed iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; border-radius: var(--radius, 14px); display: block; }
 .blog-article__back { margin-top: var(--space-xl, 3rem); }

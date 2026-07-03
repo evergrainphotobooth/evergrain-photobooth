@@ -14,7 +14,8 @@ import { recommendStock } from "../_lib/stock-image.js";
 
 const BUCKET = "media";
 const PREFIX = "images/blogs";
-const MAX_BYTES = 12 * 1024 * 1024; // 12 MB safety cap
+const VIDEO_PREFIX = "videos/blogs";
+const MAX_BYTES = 12 * 1024 * 1024; // 12 MB cap for server-side (URL) image fetches
 
 const EXT_BY_MIME = {
   "image/jpeg": "jpg",
@@ -25,6 +26,8 @@ const EXT_BY_MIME = {
   "image/avif": "avif",
   "image/svg+xml": "svg",
 };
+
+const IMG_RE = /\.(jpe?g|png|webp|gif|avif|svg)$/i;
 
 function slugify(s) {
   return String(s || "")
@@ -48,6 +51,44 @@ async function handler(req, res) {
 
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return res.status(500).json({ error: "Server misconfigured" });
+  const SBH = { apikey: SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` };
+
+  // Option B — list existing images already in media/images/blogs/ to pick from.
+  if (b.action === "list") {
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
+      method: "POST",
+      headers: { ...SBH, "Content-Type": "application/json" },
+      body: JSON.stringify({ prefix: PREFIX + "/", limit: 200, sortBy: { column: "created_at", order: "desc" } }),
+    });
+    if (!r.ok) { console.error("storage list:", r.status, await r.text()); return res.status(502).json({ error: "Couldn't list the media folder" }); }
+    const rows = await r.json();
+    const files = (Array.isArray(rows) ? rows : [])
+      .filter(f => f && f.name && IMG_RE.test(f.name))
+      .map(f => ({ name: f.name, url: `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${PREFIX}/${f.name}` }));
+    return res.status(200).json({ ok: true, files });
+  }
+
+  // Option D — direct-to-Supabase video upload: mint a signed upload URL so the
+  // browser PUTs the (potentially large) file straight to Storage, bypassing
+  // Vercel's request-body limit. Returns { uploadUrl, publicUrl }.
+  if (b.action === "sign-upload") {
+    const ext = (slugify(b.ext) || (String(b.filename || "").match(/\.([a-z0-9]{2,5})$/i)?.[1] || "mp4")).toLowerCase();
+    const base = slugify(b.filename) || "blog-video";
+    const stamp = Date.now().toString(36);
+    const rand = Math.random().toString(36).slice(2, 7);
+    const objectPath = `${VIDEO_PREFIX}/${base}-${stamp}${rand}.${ext}`;
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/upload/sign/${BUCKET}/${objectPath}`, {
+      method: "POST", headers: { ...SBH, "Content-Type": "application/json" }, body: JSON.stringify({}),
+    });
+    if (!r.ok) { console.error("sign-upload:", r.status, await r.text()); return res.status(502).json({ error: "Couldn't start the video upload" }); }
+    const d = await r.json();
+    return res.status(200).json({
+      ok: true,
+      uploadUrl: `${SUPABASE_URL}/storage/v1${d.url}`,
+      publicUrl: `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${objectPath}`,
+      path: objectPath,
+    });
+  }
 
   const src = (b.url || "").trim();
   if (!src) return res.status(400).json({ error: "url required" });

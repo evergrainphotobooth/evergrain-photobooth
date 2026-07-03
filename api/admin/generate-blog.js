@@ -79,8 +79,14 @@ READABILITY
 ~1,000-WORD LAYOUT (aim 950–1,150 words of body copy)
 - Intro 100–150 · Background 150–200 · Key tips/steps/sections 500–600 · Common mistakes/extra advice 100–150 · Conclusion + CTA ~100.
 
-IMAGE
-- The featured image is ALSO shown as the blog's header background, so do NOT open the article with it. Place EXACTLY ONE <img> (the same provided featured image URL) further down the body, at the spot where it best supports the flow — next to a relevant section, never as the first element. Give it descriptive alt text that naturally includes the primary keyword when appropriate, and a short descriptive title. Never use generic alt like "image".
+MEDIA (images & videos)
+- You are given an ordered MEDIA list. Item 1 is the FEATURED item and is ALSO shown as the page's header/hero background, so do NOT open the article with it. Weave in EVERY media item at the point in the body where it best supports the flow — the featured item mid-article, the rest at natural, relevant spots (never bunched together, never as the opening element). Use each item's EXACT provided url/embed.
+- Generate SEO/AEO-optimized attributes for every item: descriptive, keyword-aware (never stuffed) alt text, a short human-readable title, and a one-line <figcaption>. Never use generic alt like "image" or "video".
+- Embed by type:
+  · image → <figure class="blog-media"><img src="URL" alt="..." title="..." loading="lazy" /><figcaption>...</figcaption></figure>
+  · direct video (provider "file") → <figure class="blog-media"><video controls preload="metadata" playsinline><source src="URL" /></video><figcaption>...</figcaption></figure>
+  · embedded video (provider "youtube"/"vimeo") → <figure class="blog-media blog-media--embed"><iframe src="EMBED" title="..." loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><figcaption>...</figcaption></figure>
+- Do not invent media that isn't in the list, and do not omit any that is.
 
 ON-PAGE SEO EXTRAS
 - Add a Table of Contents (anchor links to the H2 sections) near the top.
@@ -89,7 +95,7 @@ ON-PAGE SEO EXTRAS
 - Include a short FAQ section (2–4 Q&As) near the end using <h2>Frequently Asked Questions</h2> and <h3> for each question.
 
 HTML RULES
-- Output the body as clean semantic HTML: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <a>, <img>, <blockquote>. Do NOT include <h1> (the title is rendered separately), and do NOT include <html>, <head>, <body>, or inline styles/scripts.
+- Output the body as clean semantic HTML: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <a>, <blockquote>, and the media tags <figure>, <figcaption>, <img>, <video>, <source>, <iframe>. Do NOT include <h1> (the title is rendered separately), and do NOT include <html>, <head>, <body>, or inline styles/scripts.
 - Give each <h2> section an id (kebab-case) so the Table of Contents can link to it.
 
 OUTPUT FORMAT
@@ -99,9 +105,10 @@ Respond with ONLY a single JSON object — no prose, no markdown code fences. Sh
   "metaTitle": string,        // 50–60 chars
   "metaDescription": string,  // 140–160 chars
   "slug": string,             // kebab-case
-  "imageAlt": string,         // descriptive, keyword-aware
-  "imageTitle": string,       // short descriptive
+  "imageAlt": string,         // descriptive, keyword-aware (featured image)
+  "imageTitle": string,       // short descriptive (featured image)
   "contentHtml": string,      // the full body HTML per the rules above
+  "media": [ { "url": string, "type": "image"|"video", "alt": string, "title": string } ],  // SAME order as the MEDIA list you were given, with the alt/title you generated for each
   "checklist": [ { "item": string, "pass": boolean, "note": string } ]  // evaluate EACH of the 12 checklist items honestly
 }
 The 12 checklist items to evaluate, in order:
@@ -131,15 +138,30 @@ async function handler(req, res) {
   }
 
   const imageUrl = (b.imageUrl || "").trim();
+  // Full media manifest — fall back to the single featured image for old callers.
+  const media = (Array.isArray(b.media) && b.media.length)
+    ? b.media
+    : (imageUrl ? [{ type: "image", url: imageUrl, alt: b.imageAlt || "", title: b.imageTitle || "", provider: "file" }] : []);
+
+  const mediaMsg = media.length
+    ? "MEDIA to weave in (use EVERY item, in this order; item 1 is featured/header):\n" +
+      media.map((m, i) => {
+        const kind = m.type === "video"
+          ? (m.provider === "file" ? "video (direct file)" : `video (${m.provider || "embed"} embed)`)
+          : "image";
+        const ref = (m.type === "video" && m.provider !== "file" && m.embed) ? `embed: ${m.embed}` : `url: ${m.url || ""}`;
+        const pref = [m.alt ? `preferred alt: "${m.alt}"` : "", m.title ? `preferred title: "${m.title}"` : ""].filter(Boolean).join(", ");
+        return `${i + 1}. ${i === 0 ? "FEATURED " : ""}${kind} — ${ref}${pref ? ` (${pref})` : ""}`;
+      }).join("\n")
+    : `No media was provided — include one <img> with src="" and set the image checklist items to pass:false with a note to add media.`;
+
   const userMsg = [
     `Write the blog article. Working title: "${title}".`,
     b.categoryName ? `Category context: ${b.categoryName}.` : "",
     keywords.length
       ? `Targeted keywords — weave in as many as you naturally can, as often as reads organically (never forced, never keyword-stuffed, always human-sounding): ${keywords.join(", ")}.`
       : "",
-    imageUrl
-      ? `Use this exact image URL for the single required <img>: ${imageUrl}${b.imageAlt ? ` (preferred alt: "${b.imageAlt}")` : ""}${b.imageTitle ? ` (preferred title: "${b.imageTitle}")` : ""}.`
-      : `No image URL was provided — still include one <img>, but leave src="" and set the checklist image items to pass:false with a note to add an image URL.`,
+    mediaMsg,
     `Return ONLY the JSON object.`,
   ].filter(Boolean).join("\n");
 
@@ -200,16 +222,26 @@ async function handler(req, res) {
   const wordCount = wordCountFromHtml(contentHtml);
   const checklist = Array.isArray(out.checklist) ? out.checklist : [];
 
+  // Merge the AI-generated alt/title back onto the input media (by order).
+  const outMedia = Array.isArray(out.media) ? out.media : [];
+  const mergedMedia = media.map((m, i) => ({
+    ...m,
+    alt: (outMedia[i] && outMedia[i].alt) || m.alt || "",
+    title: (outMedia[i] && outMedia[i].title) || m.title || "",
+  }));
+  const featured = mergedMedia.find(m => m.type === "image"); // header bg / og:image mirror
+
   return res.status(200).json({
     ok: true,
     primaryKeyword: out.primaryKeyword || "",
     metaTitle: out.metaTitle || title,
     metaDescription: out.metaDescription || "",
     slug,
-    imageUrl,
-    imageAlt: out.imageAlt || "",
-    imageTitle: out.imageTitle || "",
+    imageUrl: featured ? featured.url : imageUrl,
+    imageAlt: featured ? featured.alt : (out.imageAlt || ""),
+    imageTitle: featured ? featured.title : (out.imageTitle || ""),
     contentHtml,
+    media: mergedMedia,
     wordCount,
     checklist,
   });

@@ -44,6 +44,7 @@ const FIELD_MAP = {
   imageUrl: "image_url",
   imageAlt: "image_alt",
   imageTitle: "image_title",
+  media: "media",
   contentHtml: "content_html",
   checklist: "checklist",
   status: "status",
@@ -183,6 +184,15 @@ async function handler(req, res) {
       let ids = Array.isArray(patch.category_ids) ? patch.category_ids.filter(Boolean) : undefined;
       if (ids && patch.category_id && !ids.includes(patch.category_id)) ids.push(patch.category_id);
       if (ids) patch.category_ids = [...new Set(ids)];
+    }
+    // Mirror the featured image (first image in the media list) into the legacy
+    // columns the renderer/index/og:image use.
+    if (patch.media !== undefined) {
+      const arr = Array.isArray(patch.media) ? patch.media : [];
+      const feat = arr.find(m => m && m.type === "image" && m.url);
+      patch.image_url = feat ? feat.url : "";
+      patch.image_alt = feat ? (feat.alt || "") : "";
+      patch.image_title = feat ? (feat.title || "") : "";
     }
     if (patch.slug !== undefined) patch.slug = slugify(patch.slug);
     if (patch.content_html !== undefined) patch.word_count = wordCountFromHtml(patch.content_html);
