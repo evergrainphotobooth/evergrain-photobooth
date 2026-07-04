@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T16:00:01.734Z",
+  "generated_at": "2026-07-04T16:00:02.181Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,26 @@
     }
   ],
   "posts": [
+    {
+      "title": "iPad vs DSLR Photo Booths: The Truth Nobody Tells You Before Booking",
+      "slug": "ipad-vs-dslr-photo-booths-the-truth-before-booking",
+      "url": "/a-thousand-words/photo-booth-planning-guides/ipad-vs-dslr-photo-booths-the-truth-before-booking",
+      "category": {
+        "name": "Photo Booth Planning Guides",
+        "slug": "photo-booth-planning-guides"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/ipad-vs-dslr-photo-booths-the-truth-nobody-tells-you-before-booking-mr3zscnyafqml.jpg",
+      "imageAlt": "hand crafted wooden oak DSLR camera",
+      "date": "2026-07-04T16:00:00.154+00:00",
+      "dateLabel": "July 4, 2026",
+      "excerpt": "Discover the crucial differences between iPad and DSLR photo booth rentals for your LA or OC event. Learn why a DSLR photo booth offers superior quality and…"
+    },
     {
       "title": "Which Photo Booth Type Fits Your Event: Open-Air, 360, Mirror, or Enclosed",
       "slug": "choosing-best-photo-booth-rental",
