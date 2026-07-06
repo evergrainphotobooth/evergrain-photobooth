@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-06T04:20:01.775Z",
+  "generated_at": "2026-07-06T16:00:01.798Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "DSLR vs iPad Photo Booth: What’s the Difference?",
+      "slug": "dslr-vs-ipad-photo-booth",
+      "url": "/a-thousand-words/photo-booth-planning-guides/dslr-vs-ipad-photo-booth",
+      "category": {
+        "name": "Photo Booth Planning Guides",
+        "slug": "photo-booth-planning-guides"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        },
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/dslr-vs-ipad-photo-booth-whats-the-difference-mr4da3985vhzt.jpg",
+      "imageAlt": "A couple laughing and posing in a high-quality DSLR photo booth with professional lighting at a luxury event.",
+      "date": "2026-07-06T16:00:00.218+00:00",
+      "dateLabel": "July 6, 2026",
+      "excerpt": "Deciding between a DSLR and iPad photo booth? Learn the key differences in image quality, features, and experience to choose the best photo booth rental for…"
+    },
     {
       "title": "How Much Does a Photo Booth Rental Cost in Los Angeles?",
       "slug": "how-much-does-a-photo-booth-rental-cost-in-los-angeles",
