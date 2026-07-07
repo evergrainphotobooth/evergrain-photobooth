@@ -1484,6 +1484,34 @@ a.area-pill:hover {
   border-color: var(--evergreen);
 }
 
+/* Print-strip row above the grid: 2x6 strips + 4x6 prints, justified so they
+   share one height and the row fills the full grid width. Widths flex in
+   proportion to each format (2 vs 4), which keeps every item the same height. */
+.strips-row {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+  margin-bottom: var(--space-md);
+}
+.strips-row:empty { display: none; }
+.strips-row__item {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--linen-warm);
+}
+.strips-row__item--2x6 { flex: 2 1 0; aspect-ratio: 2 / 6; }
+.strips-row__item--4x6 { flex: 4 1 0; aspect-ratio: 4 / 6; }
+.strips-row__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.85);
+  transition: transform 600ms var(--ease-out), filter var(--dur-med);
+}
+.strips-row__item:hover img { transform: scale(1.04); filter: saturate(1); }
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 per row on desktop */
