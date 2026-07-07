@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-06T16:00:01.798Z",
+  "generated_at": "2026-07-07T16:00:01.728Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,30 @@
     }
   ],
   "posts": [
+    {
+      "title": "Wedding Photo Booth Rental Guide for Los Angeles Couples",
+      "slug": "wedding-photo-booth-rental-los-angeles-guide",
+      "url": "/a-thousand-words/weddings-and-celebrations/wedding-photo-booth-rental-los-angeles-guide",
+      "category": {
+        "name": "Weddings & Celebrations",
+        "slug": "weddings-and-celebrations"
+      },
+      "categories": [
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/wedding-photo-booth-rental-guide-for-los-angeles-couples-mr4dd2cs4i5lq.jpg",
+      "imageAlt": "Wedding guests smiling and laughing while taking photos in an open-air DSLR photo booth at a stylish Los Angeles wedding reception, showcasing a premium wedding photo booth rental experience.",
+      "date": "2026-07-07T16:00:00.173+00:00",
+      "dateLabel": "July 7, 2026",
+      "excerpt": "Planning a wedding in Los Angeles? Discover how a luxury wedding photo booth rental can add unforgettable fun and lasting memories to your special day. Get…"
+    },
     {
       "title": "DSLR vs iPad Photo Booth: What’s the Difference?",
       "slug": "dslr-vs-ipad-photo-booth",
