@@ -45,6 +45,7 @@ const FIELD_MAP = {
   imageAlt: "image_alt",
   imageTitle: "image_title",
   media: "media",
+  blogFormat: "blog_format",
   contentHtml: "content_html",
   checklist: "checklist",
   status: "status",

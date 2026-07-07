@@ -119,6 +119,7 @@ Respond with ONLY a single JSON object — no prose, no markdown code fences. Sh
   "imageAlt": string,         // descriptive, keyword-aware (featured image)
   "imageTitle": string,       // short descriptive (featured image)
   "contentHtml": string,      // the full body HTML per the rules above
+  "chosenFormat": string,     // the format key you wrote in — one of: standard, listicle, how-to, review-roundup, ultimate-guide, case-study, qa
   "media": [ { "url": string, "type": "image"|"video", "alt": string, "title": string } ],  // SAME order as the MEDIA list you were given, with the alt/title you generated for each
   "checklist": [ { "item": string, "pass": boolean, "note": string } ]  // evaluate EACH of the 12 checklist items honestly
 }
@@ -166,11 +167,29 @@ async function handler(req, res) {
       }).join("\n")
     : `No media was provided — include one <img> with src="" and set the image checklist items to pass:false with a note to add media.`;
 
-  const formatDirective = FORMATS[b.format] || FORMATS.standard;
+  // Blog format — "auto" lets the model pick, balanced by how much each format
+  // has been used so far; otherwise use the format the user selected.
+  const autoMode = b.format === "auto";
+  let formatLine;
+  if (autoMode) {
+    const counts = {};
+    if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+      try {
+        const fr = await fetch(`${SUPABASE_URL}/rest/v1/blog_posts?select=blog_format`, {
+          headers: { apikey: SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
+        });
+        if (fr.ok) for (const row of await fr.json()) { const f = row.blog_format; if (f && FORMATS[f]) counts[f] = (counts[f] || 0) + 1; }
+      } catch (e) { console.error("format counts:", e); }
+    }
+    const menu = Object.entries(FORMATS).map(([k, d]) => `- ${k} (used ${counts[k] || 0}× so far): ${d}`).join("\n");
+    formatLine = `BLOG FORMAT — CHOOSE the single best format for this title from the list below and write the whole post in it. Pick the format that genuinely fits the title best; when two fit similarly well, favor the one we've used LESS (lower count) to keep our blog mix balanced. Put the chosen format key in the "chosenFormat" output field.\n${menu}`;
+  } else {
+    formatLine = `BLOG FORMAT — write it as a ${FORMATS[b.format] || FORMATS.standard}`;
+  }
 
   const userMsg = [
     `Write the blog article. Working title: "${title}".`,
-    `BLOG FORMAT — write it as a ${formatDirective}`,
+    formatLine,
     b.categoryName ? `Category context: ${b.categoryName}.` : "",
     keywords.length
       ? `Targeted keywords — weave in as many as you naturally can, as often as reads organically (never forced, never keyword-stuffed, always human-sounding): ${keywords.join(", ")}.`
@@ -246,8 +265,14 @@ async function handler(req, res) {
   }));
   const featured = mergedMedia.find(m => m.type === "image"); // header bg / og:image mirror
 
+  // The effective format written (for "auto", what the model chose).
+  const resolvedFormat = autoMode
+    ? (FORMATS[out.chosenFormat] ? out.chosenFormat : "standard")
+    : (FORMATS[b.format] ? b.format : "standard");
+
   return res.status(200).json({
     ok: true,
+    format: resolvedFormat,
     primaryKeyword: out.primaryKeyword || "",
     metaTitle: out.metaTitle || title,
     metaDescription: out.metaDescription || "",

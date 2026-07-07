@@ -222,7 +222,8 @@
 
       <p class="opt-label" style="margin-bottom:.5rem;">Blog format</p>
       <div class="format-group" data-format-group>
-        <label class="format-opt"><input type="radio" name="blog-format" value="standard" checked /><span class="format-opt__main"><span class="format-opt__name">Standard / Informational</span><span class="format-opt__desc">Deep dive into one topic — “what is…” / “reasons why…”. Builds foundational authority.</span></span></label>
+        <label class="format-opt format-opt--auto"><input type="radio" name="blog-format" value="auto" checked /><span class="format-opt__main"><span class="format-opt__name">✨ Choose for me</span><span class="format-opt__desc">Let the AI pick the best format for your title — and balance the mix by favoring formats used less often.</span></span></label>
+        <label class="format-opt"><input type="radio" name="blog-format" value="standard" /><span class="format-opt__main"><span class="format-opt__name">Standard / Informational</span><span class="format-opt__desc">Deep dive into one topic — “what is…” / “reasons why…”. Builds foundational authority.</span></span></label>
         <label class="format-opt"><input type="radio" name="blog-format" value="listicle" /><span class="format-opt__main"><span class="format-opt__name">Listicle</span><span class="format-opt__desc">A numbered/ordered list (“Top 10…”). Scannable and highly shareable.</span></span></label>
         <label class="format-opt"><input type="radio" name="blog-format" value="how-to" /><span class="format-opt__main"><span class="format-opt__name">How-To Guide</span><span class="format-opt__desc">Step-by-step tutorial that solves one specific problem. Strong search traffic.</span></span></label>
         <label class="format-opt"><input type="radio" name="blog-format" value="review-roundup" /><span class="format-opt__main"><span class="format-opt__name">Product Review &amp; Roundup</span><span class="format-opt__desc">Compare options / “best of” / gift guides to help readers decide.</span></span></label>
@@ -597,6 +598,12 @@
       state.media = [];
     }
     renderMedia();
+    // Restore the format this post was generated in (else leave "Choose for me").
+    state.blogFormat = p.blog_format || null;
+    if (state.blogFormat) {
+      const rb = document.querySelector(`input[name="blog-format"][value="${state.blogFormat}"]`);
+      if (rb) rb.checked = true;
+    }
     if (p.title) els.titleSet.hidden = false;
     if (p.content_html || p.meta_title) { els.seoCard.hidden = false; els.contentCard.hidden = false; }
     renderChecklist();
@@ -876,18 +883,22 @@
     const cat = state.categories.find(c => c.id === primaryCat);
     els.generateBtn.disabled = true;
     els.genStatus.innerHTML = `<span class="loading"></span> Writing your blog… this can take 20–40 seconds.`;
+    const chosenInput = document.querySelector('input[name="blog-format"]:checked');
+    const requestedFormat = (chosenInput || {}).value || "auto";
     try {
       const r = await fetch("/api/admin/generate-blog", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: els.title.value.trim(),
           categoryName: cat ? cat.name : "",
-          format: (document.querySelector('input[name="blog-format"]:checked') || {}).value || "standard",
+          format: requestedFormat,
           media: cleanMedia(),
         }),
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.error || "Generation failed");
+      // Remember the effective format written (for "auto", what the AI chose).
+      state.blogFormat = d.format || (requestedFormat === "auto" ? null : requestedFormat);
 
       els.primaryKeyword.value = d.primaryKeyword || "";
       els.metaTitle.value = d.metaTitle || "";
@@ -907,7 +918,9 @@
       updateCounts();
       updateFullUrl();
       renderChecklist();
-      els.genStatus.innerHTML = `<span style="color:#2F7A4F;font-weight:600;">✓ Draft generated (${(d.wordCount||0).toLocaleString()} words).</span> Review, then Save or Publish.`;
+      const fmtNames = { standard: "Standard / Informational", listicle: "Listicle", "how-to": "How-To Guide", "review-roundup": "Product Review & Roundup", "ultimate-guide": "Ultimate / Beginner’s Guide", "case-study": "Case Study / Data Study", qa: "Questions & Answers" };
+      const chose = (requestedFormat === "auto" && d.format) ? ` <span style="color:var(--gray-600);">AI chose the <strong>${esc(fmtNames[d.format] || d.format)}</strong> format.</span>` : "";
+      els.genStatus.innerHTML = `<span style="color:#2F7A4F;font-weight:600;">✓ Draft generated (${(d.wordCount||0).toLocaleString()} words).</span>${chose} Review, then Save or Publish.`;
     } catch (err) {
       els.genStatus.innerHTML = `<span style="color:#B4462F;">${esc(err.message || "Generation failed")}</span>`;
     } finally {
@@ -927,6 +940,7 @@
       metaDescription: els.metaDescription.value.trim(),
       slug: els.slug.value.trim(),
       media: cleanMedia(),
+      blogFormat: state.blogFormat || null,
       contentHtml: els.html.value,
       checklist: state.checklist,
     };
