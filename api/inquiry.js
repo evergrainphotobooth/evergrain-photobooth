@@ -135,26 +135,40 @@ export default async function handler(req, res) {
   }
 
   // ---- Email the team via Resend — ONLY on completion (never on partial saves) ----
-  if (!isPartial && RESEND_API_KEY && INQUIRY_FROM_EMAIL && INQUIRY_TO_EMAIL) {
-    try {
-      const mailResp = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
-        body: JSON.stringify({
-          from: INQUIRY_FROM_EMAIL,
-          to: [INQUIRY_TO_EMAIL],
-          reply_to: payload.email,
-          subject: `New Inquiry — ${payload.name} for ${formatDate(payload.eventDate)}`,
-          html: renderEmail(payload),
-        }),
-      });
-      if (!mailResp.ok) console.error("Resend send failed:", await mailResp.text());
-    } catch (err) {
-      console.error("Resend error:", err);
+  let email = "not_attempted";
+  if (!isPartial) {
+    const missingEnv = ["RESEND_API_KEY", "INQUIRY_FROM_EMAIL", "INQUIRY_TO_EMAIL"].filter(k => !process.env[k]);
+    if (missingEnv.length) {
+      email = `skipped: missing env ${missingEnv.join(", ")}`;
+      console.error("Inquiry email skipped —", email);
+    } else {
+      try {
+        const mailResp = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
+          body: JSON.stringify({
+            from: INQUIRY_FROM_EMAIL,
+            to: [INQUIRY_TO_EMAIL],
+            reply_to: payload.email,
+            subject: `New Inquiry — ${payload.name} for ${formatDate(payload.eventDate)}`,
+            html: renderEmail(payload),
+          }),
+        });
+        if (mailResp.ok) {
+          email = "sent";
+        } else {
+          const detail = await mailResp.text();
+          email = `failed: ${mailResp.status} ${detail.slice(0, 200)}`;
+          console.error("Resend send failed:", mailResp.status, detail);
+        }
+      } catch (err) {
+        email = `failed: ${String(err.message || err)}`;
+        console.error("Resend error:", err);
+      }
     }
   }
 
-  return res.status(200).json({ ok: true, id: rowId });
+  return res.status(200).json({ ok: true, id: rowId, email });
 }
 
 /* ---------- Date + time formatting ---------- */
