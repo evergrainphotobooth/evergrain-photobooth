@@ -3,7 +3,9 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/candid-moments", "destination": "/a-thousand-words", "permanent": true },
-    { "source": "/candid-moments/:path*", "destination": "/a-thousand-words/:path*", "permanent": true }
+    { "source": "/candid-moments/:path*", "destination": "/a-thousand-words/:path*", "permanent": true },
+    { "source": "/a-thousand-words/weddings", "destination": "/a-thousand-words/weddings-and-celebrations", "permanent": true },
+    { "source": "/a-thousand-words/weddings/:slug*", "destination": "/a-thousand-words/weddings-and-celebrations/:slug*", "permanent": true }
   ],
   "rewrites": [
     { "source": "/a-thousand-words/:category", "destination": "/a-thousand-words/category" }
