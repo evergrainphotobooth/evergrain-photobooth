@@ -211,17 +211,8 @@ gtag('config', 'G-N7ERDKCDX7');
         <span class="eyebrow eyebrow--light">In the wild</span>
         <h2 class="display">A few past setups.</h2>
       </div>
-      <div class="setups-carousel-wrap reveal">
-        <button type="button" class="setups-carousel__arrow setups-carousel__arrow--prev" data-carousel-prev aria-label="Scroll left">‹</button>
-        <div class="setups-carousel" data-carousel aria-label="A few past setups — photo gallery">
-          <div class="setups-carousel__item"><img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/the%20booth/A%20few%20past%20setup_booth_1.jpg?width=800&height=1000&resize=cover&quality=72" alt="The Evergrain booth set up at an event" loading="lazy" /></div>
-          <div class="setups-carousel__item"><img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/the%20booth/A%20few%20past%20setup_wedding_2.jpg?width=800&height=1000&resize=cover&quality=72" alt="The Evergrain booth at a wedding" loading="lazy" /></div>
-          <div class="setups-carousel__item"><img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/the%20booth/A%20few%20past%20setup_babyshower_3.jpg?width=800&height=1000&resize=cover&quality=72" alt="Guests posing at the Evergrain booth — baby shower" loading="lazy" /></div>
-          <div class="setups-carousel__item"><img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/the%20booth/A%20few%20past%20setup_birthday_4.jpg?width=800&height=1000&resize=cover&quality=72" alt="The Evergrain booth at a birthday party" loading="lazy" /></div>
-          <div class="setups-carousel__item"><img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/the%20booth/A%20few%20past%20setup_birthday_5.jpg?width=800&height=1000&resize=cover&quality=72" alt="The Evergrain booth at a birthday party" loading="lazy" /></div>
-        </div>
-        <button type="button" class="setups-carousel__arrow setups-carousel__arrow--next" data-carousel-next aria-label="Scroll right">›</button>
-      </div>
+      <!-- Auto-scrolling marquee, populated + shuffled at runtime by js/booth-setups.js -->
+      <div class="setups-marquee reveal" data-setups-marquee aria-label="A few past setups"></div>
     </div>
   </section>
 
@@ -279,6 +270,7 @@ gtag('config', 'G-N7ERDKCDX7');
 <script src="js/cart.js"></script>
 <script src="js/script.js"></script>
 <script src="js/animations.js"></script>
+<script src="js/booth-setups.js" defer></script>
 <script src="/js/site-settings.js" defer></script>
 </body>
 </html>
