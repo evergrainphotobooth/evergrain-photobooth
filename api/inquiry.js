@@ -96,6 +96,7 @@ export default async function handler(req, res) {
   };
 
   let rowId = existingId;
+  let didInsert = false; // true when a brand-new row is created this request
 
   if (existingId) {
     // ---- UPDATE the in-progress row. Guard: only rows still completed=false,
@@ -132,16 +133,25 @@ export default async function handler(req, res) {
     }
     const rows = await ins.json().catch(() => []);
     rowId = Array.isArray(rows) && rows[0] ? rows[0].id : null;
+    didInsert = true;
   }
 
-  // ---- Email the team via Resend — ONLY on completion (never on partial saves) ----
+  // ---- Email the team via Resend ----
+  // Two triggers so no lead is ever missed:
+  //   (1) a brand-new lead's FIRST save (partial create) → "lead started" heads-up
+  //   (2) completion → full details
+  // Progressive partial UPDATES (same row, still incomplete) never email.
+  const justStarted = isPartial && didInsert;
   let email = "not_attempted";
-  if (!isPartial) {
+  if (!isPartial || justStarted) {
     const missingEnv = ["RESEND_API_KEY", "INQUIRY_FROM_EMAIL", "INQUIRY_TO_EMAIL"].filter(k => !process.env[k]);
     if (missingEnv.length) {
       email = `skipped: missing env ${missingEnv.join(", ")}`;
       console.error("Inquiry email skipped —", email);
     } else {
+      const subject = justStarted
+        ? `New lead started — ${payload.name || "someone"}`
+        : `New Inquiry — ${payload.name} for ${formatDate(payload.eventDate)}`;
       try {
         const mailResp = await fetch("https://api.resend.com/emails", {
           method: "POST",
@@ -150,8 +160,8 @@ export default async function handler(req, res) {
             from: INQUIRY_FROM_EMAIL,
             to: [INQUIRY_TO_EMAIL],
             reply_to: payload.email,
-            subject: `New Inquiry — ${payload.name} for ${formatDate(payload.eventDate)}`,
-            html: renderEmail(payload),
+            subject,
+            html: renderEmail(payload, { partial: justStarted }),
           }),
         });
         if (mailResp.ok) {
@@ -189,17 +199,22 @@ function formatTime(hhmm) {
 }
 
 /* ---------- Email template ---------- */
-function renderEmail(p) {
+function renderEmail(p, opts = {}) {
+  const partial = !!opts.partial;
   const row = (label, val) => val
     ? `<tr><td style="padding:6px 12px 6px 0;color:#5C4A35;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;vertical-align:top;white-space:nowrap;">${escapeHtml(label)}</td><td style="padding:6px 0;color:#1A1410;font-size:14px;">${escapeHtml(val)}</td></tr>`
     : "";
   const addons = Array.isArray(p.interestedAddons) ? p.interestedAddons.join(", ") : "";
+  const banner = partial
+    ? `<div style="background:#FBF3E4;border:1px solid #E4CF9E;border-radius:6px;padding:12px 14px;margin:0 0 22px;color:#5C4A35;font-size:13px;line-height:1.5;">⚠ This lead just <strong>started</strong> the inquiry form and hasn't finished submitting yet. Here's what they've entered so far — a quick reply now helps keep them warm.</div>`
+    : "";
   return `<!doctype html><html><body style="font-family:Manrope,-apple-system,BlinkMacSystemFont,sans-serif;background:#F4EDE0;margin:0;padding:32px;">
   <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;padding:36px;">
     <div style="border-bottom:2px solid #A47A2A;padding-bottom:18px;margin-bottom:24px;">
-      <p style="font-family:Inter,sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#A47A2A;margin:0 0 6px;">New Inquiry</p>
+      <p style="font-family:Inter,sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#A47A2A;margin:0 0 6px;">${partial ? "New Lead — Started" : "New Inquiry"}</p>
       <h1 style="font-family:Georgia,serif;font-weight:300;color:#1F4332;margin:0;font-size:26px;letter-spacing:-0.01em;">${escapeHtml(p.name)}</h1>
     </div>
+    ${banner}
     <table style="width:100%;border-collapse:collapse;">
       ${row("Email", p.email)}
       ${row("Phone", p.phone)}
