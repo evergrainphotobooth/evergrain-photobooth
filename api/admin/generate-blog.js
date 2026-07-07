@@ -38,11 +38,22 @@ const CHECKLIST = [
   "Are there internal and external links?",
   "Is the blog close to 1,000 words without feeling padded?",
   "Does the article solve the reader's problem?",
-  "Is there exactly one image included in the blog?",
-  "Does the image have descriptive alt text?",
-  "Does the image have a clear image title?",
+  "Is every provided image/video included in the blog?",
+  "Does each image/video have descriptive alt text?",
+  "Does each image/video have a clear title?",
   "Is there a clear next step for the reader?",
 ];
+
+// Blog-format directives — chosen by the user in the editor to steer generation.
+const FORMATS = {
+  standard: "STANDARD / INFORMATIONAL post — a deep, authoritative dive into ONE topic. Thoroughly answer the core \"what is…\" / \"why…\" questions with expert insight and useful detail; build foundational knowledge.",
+  listicle: "LISTICLE — structure the body as a clear numbered/ordered list (e.g. \"Top N…\"). Give each list item its own numbered <h2> or <h3>, keep items scannable and roughly parallel in length, and add a short intro + conclusion around the list.",
+  "how-to": "HOW-TO GUIDE — a step-by-step tutorial that solves ONE specific problem. Use sequential, numbered steps (<h2> per step and/or an <ol>), each step concrete and actionable; include what's needed up front and a clear finished outcome at the end.",
+  "review-roundup": "PRODUCT REVIEW & ROUNDUP — a comparison / \"best of\" / gift-guide. Present several options with who each is best for, pros and cons, and a clear recommendation. Frame it around Evergrain's packages, add-ons, and event-planning choices (link to /packages and /add-ons). Do NOT invent competitor claims.",
+  "ultimate-guide": "ULTIMATE / BEGINNER'S GUIDE — a comprehensive pillar post that is the \"final word\" on a broad subject. Cover the topic end-to-end across many well-organized sections; make it a permanent, bookmarkable resource (aim toward the top of the word range).",
+  "case-study": "CASE STUDY / DATA STUDY — real-world proof or research framing: a challenge → approach → results arc with concrete, specific details. Do NOT fabricate statistics, client names, or quotes; if real data isn't provided, write it explicitly as an illustrative/representative example.",
+  qa: "QUESTIONS & ANSWERS post — directly solve reader problems. Structure the body as common AND niche questions about the topic/our services, each as an <h3> (or <h2>) question with the best, complete answer beneath it; lean into a strong FAQ/Q&A structure throughout.",
+};
 
 const SYSTEM_PROMPT = `You are the content writer for Evergrain Photobooth, a luxury open-air DSLR photo booth rental serving Los Angeles and Orange County. You write SEO-optimized blog articles that read like a knowledgeable, warm human wrote them — never robotic, never keyword-stuffed.
 
@@ -90,8 +101,8 @@ MEDIA (images & videos)
 
 ON-PAGE SEO EXTRAS
 - Add a Table of Contents (anchor links to the H2 sections) near the top.
-- Add at least one internal link to a relevant Evergrain page. Valid internal paths: /packages, /add-ons, /the-booth, /our-story, /faq, /get-started, /areas-we-serve, and category/landing pages under /a-thousand-words. Use root-relative hrefs.
-- Add at least one external link to a genuinely trustworthy, relevant source (real, well-known domains only).
+- Add SEVERAL contextual internal links (with descriptive anchor text) to relevant Evergrain pages. Valid internal paths: /packages, /add-ons, /the-booth, /our-story, /faq, /get-started, /areas-we-serve, and category/landing pages under /a-thousand-words. Use root-relative hrefs.
+- Add one or two links to genuinely authoritative, relevant external sources (real, well-known domains only) — link-worthy citations that help earn backlinks. Never fabricate URLs.
 - Include a short FAQ section (2–4 Q&As) near the end using <h2>Frequently Asked Questions</h2> and <h3> for each question.
 
 HTML RULES
@@ -155,13 +166,17 @@ async function handler(req, res) {
       }).join("\n")
     : `No media was provided — include one <img> with src="" and set the image checklist items to pass:false with a note to add media.`;
 
+  const formatDirective = FORMATS[b.format] || FORMATS.standard;
+
   const userMsg = [
     `Write the blog article. Working title: "${title}".`,
+    `BLOG FORMAT — write it as a ${formatDirective}`,
     b.categoryName ? `Category context: ${b.categoryName}.` : "",
     keywords.length
       ? `Targeted keywords — weave in as many as you naturally can, as often as reads organically (never forced, never keyword-stuffed, always human-sounding): ${keywords.join(", ")}.`
       : "",
     mediaMsg,
+    `LINKS & ON-PAGE SEO — regardless of format, maximize on-page SEO: include SEVERAL contextual internal links to relevant Evergrain pages with descriptive anchor text, plus one or two links to genuinely authoritative external sources (link-worthy citations that help earn backlinks). Also apply every other on-page best practice you can: a table of contents, semantic H2/H3 structure, descriptive alt text on all media, a concise meta title/description, an FAQ section, and clear keyword-aware headings.`,
     `Return ONLY the JSON object.`,
   ].filter(Boolean).join("\n");
 

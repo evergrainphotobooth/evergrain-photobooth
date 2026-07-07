@@ -93,6 +93,16 @@
   .media-altrow .field { margin:0; flex:1; min-width:200px; }
   .link-btn { background:none; border:0; padding:0; color:var(--brass,#a47a2a); font:inherit; cursor:pointer; text-decoration:underline; font-size:.8rem; }
 
+  /* Blog format radio selector */
+  .format-group { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:.55rem; }
+  .format-opt { display:flex; align-items:flex-start; gap:.6rem; padding:.7rem .8rem; border:1px solid var(--line,#ece7df); border-radius:12px; background:#fff; cursor:pointer; }
+  .format-opt:hover { border-color:var(--brass,#a47a2a); }
+  .format-opt input { margin-top:.2rem; width:16px; height:16px; accent-color:var(--brass,#a47a2a); flex-shrink:0; }
+  .format-opt:has(input:checked) { border-color:var(--brass,#a47a2a); background:var(--wash,#faf7f1); box-shadow:0 0 0 1px rgba(164,122,42,.25); }
+  .format-opt__main { display:flex; flex-direction:column; gap:.15rem; }
+  .format-opt__name { font-weight:600; font-size:.9rem; color:var(--gray-900,#1a1410); }
+  .format-opt__desc { font-size:.78rem; color:var(--gray-600); line-height:1.4; }
+
   /* Rendered preview of the generated HTML */
   .blog-preview { border:1px solid var(--line,#ece7df); border-radius:14px; padding:1.5rem 1.6rem; background:#fff; max-height:520px; overflow:auto; }
   .blog-preview h1 { font-family:"Fraunces",serif; font-weight:400; font-size:1.7rem; line-height:1.2; margin:0 0 1rem; color:#1a1410; }
@@ -209,7 +219,19 @@
     <div class="admin-card">
       <h2 class="card-title">Generate blog</h2>
       <p class="card-sub">Writes a full ~1,000-word, SEO-optimized draft from your title, following the Evergrain blog spec, then self-checks it against the final checklist.</p>
-      <div class="inline-row" style="align-items:center;">
+
+      <p class="opt-label" style="margin-bottom:.5rem;">Blog format</p>
+      <div class="format-group" data-format-group>
+        <label class="format-opt"><input type="radio" name="blog-format" value="standard" checked /><span class="format-opt__main"><span class="format-opt__name">Standard / Informational</span><span class="format-opt__desc">Deep dive into one topic — “what is…” / “reasons why…”. Builds foundational authority.</span></span></label>
+        <label class="format-opt"><input type="radio" name="blog-format" value="listicle" /><span class="format-opt__main"><span class="format-opt__name">Listicle</span><span class="format-opt__desc">A numbered/ordered list (“Top 10…”). Scannable and highly shareable.</span></span></label>
+        <label class="format-opt"><input type="radio" name="blog-format" value="how-to" /><span class="format-opt__main"><span class="format-opt__name">How-To Guide</span><span class="format-opt__desc">Step-by-step tutorial that solves one specific problem. Strong search traffic.</span></span></label>
+        <label class="format-opt"><input type="radio" name="blog-format" value="review-roundup" /><span class="format-opt__main"><span class="format-opt__name">Product Review &amp; Roundup</span><span class="format-opt__desc">Compare options / “best of” / gift guides to help readers decide.</span></span></label>
+        <label class="format-opt"><input type="radio" name="blog-format" value="ultimate-guide" /><span class="format-opt__main"><span class="format-opt__name">Ultimate / Beginner’s Guide</span><span class="format-opt__desc">Comprehensive pillar post — the “final word” readers bookmark and share.</span></span></label>
+        <label class="format-opt"><input type="radio" name="blog-format" value="case-study" /><span class="format-opt__main"><span class="format-opt__name">Case Study / Data Study</span><span class="format-opt__desc">Real-life proof or research findings. Builds trust and earns backlinks.</span></span></label>
+        <label class="format-opt"><input type="radio" name="blog-format" value="qa" /><span class="format-opt__main"><span class="format-opt__name">Questions &amp; Answers</span><span class="format-opt__desc">Directly solves user problems — common &amp; niche questions with the best answers.</span></span></label>
+      </div>
+
+      <div class="inline-row" style="align-items:center; margin-top:1rem;">
         <button type="button" class="btn btn--primary btn--sm" data-generate disabled>Generate blog</button>
         <span class="gen-status" data-gen-status></span>
       </div>
@@ -860,6 +882,7 @@
         body: JSON.stringify({
           title: els.title.value.trim(),
           categoryName: cat ? cat.name : "",
+          format: (document.querySelector('input[name="blog-format"]:checked') || {}).value || "standard",
           media: cleanMedia(),
         }),
       });
