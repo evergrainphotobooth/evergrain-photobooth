@@ -12,10 +12,13 @@
 <link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
 <style>
   .dash-grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.25rem; }
-  .ga-tiles { display:grid; grid-template-columns:repeat(3,1fr); gap:.85rem; margin:.2rem 0 1.4rem; }
+  .ga-tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:.85rem; margin:.2rem 0 1.4rem; }
+  @media (max-width:900px){ .ga-tiles{ grid-template-columns:repeat(2,1fr); } }
   @media (max-width:560px){ .ga-tiles{ grid-template-columns:1fr; } }
   .ga-tile { border:1px solid var(--gray-200); border-radius:var(--radius); padding:1rem 1.1rem; }
+  .ga-tile--today { border-color:var(--brass,#a47a2a); background:rgba(164,122,42,.05); }
   .ga-tile__label { font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gray-500); }
+  .ga-tile__asof { text-transform:none; letter-spacing:0; font-size:.66rem; color:var(--gray-400,#9a938a); font-weight:500; margin-left:.15rem; white-space:nowrap; }
   .ga-tile__value { font-family:"Fraunces",serif; font-weight:400; font-size:1.9rem; line-height:1.1; color:var(--gray-900,#1a1410); margin-top:.25rem; }
   .dash-sub { font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gray-500); margin:0 0 .6rem; font-weight:600; }
   .rank-list { list-style:none; margin:0; padding:0; }
@@ -99,6 +102,8 @@
 <script>
   const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const n = (v) => Number(v || 0).toLocaleString();
+  // Captured when the page loads — "Today" traffic is shown as of this time.
+  const PAGE_LOADED_AT = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 
   function rankList(items, nameKey, countKey, empty) {
     if (!items || items.length === 0) return `<p class="muted-note">${empty}</p>`;
@@ -123,6 +128,7 @@
     }
     const t = a.traffic || {};
     const tiles = `<div class="ga-tiles">
+      <div class="ga-tile ga-tile--today"><div class="ga-tile__label">Today <span class="ga-tile__asof">as of ${esc(PAGE_LOADED_AT)}</span></div><div class="ga-tile__value">${n(t.today)}</div></div>
       <div class="ga-tile"><div class="ga-tile__label">Yesterday</div><div class="ga-tile__value">${n(t.yesterday)}</div></div>
       <div class="ga-tile"><div class="ga-tile__label">Last 7 days</div><div class="ga-tile__value">${n(t.last7)}</div></div>
       <div class="ga-tile"><div class="ga-tile__label">Last 30 days</div><div class="ga-tile__value">${n(t.last30)}</div></div>

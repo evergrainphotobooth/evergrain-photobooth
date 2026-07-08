@@ -69,6 +69,7 @@ async function fetchAnalytics() {
           {
             metrics: [{ name: "sessions" }],
             dateRanges: [
+              { startDate: "today", endDate: "today" },
               { startDate: "yesterday", endDate: "yesterday" },
               { startDate: "7daysAgo", endDate: "yesterday" },
               { startDate: "30daysAgo", endDate: "yesterday" },
@@ -88,8 +89,8 @@ async function fetchAnalytics() {
     const data = await r.json();
 
     // Report 0: one row per date range (GA adds an auto "dateRange" dimension).
-    const traffic = { yesterday: 0, last7: 0, last30: 0 };
-    const order = ["yesterday", "last7", "last30"];
+    const traffic = { today: 0, yesterday: 0, last7: 0, last30: 0 };
+    const order = ["today", "yesterday", "last7", "last30"];
     for (const row of (data.reports?.[0]?.rows || [])) {
       const drv = (row.dimensionValues || []).map(d => d.value).find(v => /^date_range_\d+$/.test(v || ""));
       const idx = drv ? Number(drv.split("_").pop()) : 0;
