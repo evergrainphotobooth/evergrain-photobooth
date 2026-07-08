@@ -199,44 +199,60 @@ async function handler(req, res) {
     `Return ONLY the JSON object.`,
   ].filter(Boolean).join("\n");
 
-  let aiText;
-  try {
-    const r = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-      {
+  const reqBody = JSON.stringify({
+    system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    contents: [{ role: "user", parts: [{ text: userMsg }] }],
+    generationConfig: {
+      temperature: 0.7,
+      maxOutputTokens: 16384,
+      // Force raw JSON output (no code fences / prose to strip).
+      responseMimeType: "application/json",
+    },
+  });
+
+  // Try the primary model, then a fallback model. Each Gemini model has its OWN
+  // free-tier quota, so if the primary is rate-limited/overloaded the fallback
+  // usually still works.
+  const modelChain = [MODEL];
+  for (const fb of ["gemini-2.0-flash", "gemini-flash-latest"]) if (!modelChain.includes(fb)) modelChain.push(fb);
+
+  let aiText = "", lastStatus = 0, lastDetail = "", refused = false;
+  for (const model of modelChain) {
+    let r;
+    try {
+      r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
         method: "POST",
-        headers: {
-          "x-goog-api-key": GEMINI_API_KEY,
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents: [{ role: "user", parts: [{ text: userMsg }] }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 16384,
-            // Force raw JSON output (no code fences / prose to strip).
-            responseMimeType: "application/json",
-          },
-        }),
-      }
-    );
+        headers: { "x-goog-api-key": GEMINI_API_KEY, "content-type": "application/json" },
+        body: reqBody,
+      });
+    } catch (err) { console.error(`Gemini fetch failed (${model}):`, err); lastStatus = 0; lastDetail = String(err.message || err); continue; }
+
     if (!r.ok) {
-      const detail = await r.text();
-      console.error("Gemini error:", r.status, detail);
-      return res.status(502).json({ error: "The blog generator is unavailable right now. Please try again." });
+      lastStatus = r.status; lastDetail = (await r.text()).slice(0, 400);
+      console.error(`Gemini error (${model}):`, r.status, lastDetail);
+      continue; // try the next model
     }
-    const data = await r.json();
-    const cand = (data.candidates && data.candidates[0]) || null;
-    // Safety block or empty candidate → no usable content.
-    if (!cand || cand.finishReason === "SAFETY" || cand.finishReason === "PROHIBITED_CONTENT") {
-      console.error("Gemini blocked/empty:", JSON.stringify(data).slice(0, 500));
-      return res.status(502).json({ error: "The generator declined this title. Try rephrasing it." });
-    }
-    aiText = (cand.content?.parts || []).map(p => p.text || "").join("");
-  } catch (err) {
-    console.error("Gemini fetch failed:", err);
-    return res.status(502).json({ error: "Could not reach the blog generator." });
+    const data = await r.json().catch(() => null);
+    const cand = data && data.candidates && data.candidates[0];
+    if (cand && (cand.finishReason === "SAFETY" || cand.finishReason === "PROHIBITED_CONTENT")) { refused = true; break; }
+    const text = ((cand && cand.content && cand.content.parts) || []).map(p => p.text || "").join("");
+    if (text) { aiText = text; break; }
+    lastStatus = lastStatus || 200; lastDetail = "empty response";
+    console.error(`Gemini empty (${model}):`, JSON.stringify(data).slice(0, 300));
+  }
+
+  if (refused) return res.status(502).json({ error: "The generator declined this title. Try rephrasing it." });
+  if (!aiText) {
+    // Surface the real reason so it's actually diagnosable.
+    let msg;
+    if (lastStatus === 429) msg = "Google Gemini's free-tier limit was hit (too many requests, or the daily cap). Wait a minute and try again — if it keeps failing, the daily quota resets at midnight Pacific.";
+    else if (lastStatus === 503 || lastStatus === 500) msg = "Google Gemini is overloaded right now. Please try again in a moment.";
+    else if (lastStatus === 400) msg = `Gemini rejected the request (400): ${lastDetail.slice(0, 160)}`;
+    else if (lastStatus === 403) msg = "Gemini rejected the API key (403) — check GEMINI_API_KEY in Vercel.";
+    else if (lastStatus === 404) msg = `Gemini model not found (404): ${MODEL}. Set GEMINI_MODEL to a valid model.`;
+    else if (lastStatus) msg = `The blog generator failed (HTTP ${lastStatus}). Please try again.`;
+    else msg = "Could not reach the blog generator. Please try again.";
+    return res.status(502).json({ error: msg });
   }
 
   // Parse the JSON the model returned (tolerate stray fences / prose).
