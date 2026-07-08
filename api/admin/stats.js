@@ -34,12 +34,30 @@ async function gaAccessToken(clientEmail, privateKey) {
   return (await r.json()).access_token;
 }
 
+// Robustly recover a PEM private key from an env var (handles escaped newlines,
+// stray surrounding quotes, CRLF, and a base64-encoded PEM).
+function normalizePrivateKey(raw) {
+  let key = String(raw || "").trim();
+  if (key.length > 1 && ((key[0] === '"' && key.endsWith('"')) || (key[0] === "'" && key.endsWith("'")))) {
+    key = key.slice(1, -1);
+  }
+  // If there's no PEM header, assume it's base64-encoded and decode.
+  if (!key.includes("BEGIN")) {
+    try { const dec = Buffer.from(key, "base64").toString("utf8"); if (dec.includes("BEGIN")) key = dec; } catch { /* keep as-is */ }
+  }
+  return key
+    .replace(/\\\\n/g, "\n")  // double-escaped \\n
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")    // single-escaped \n
+    .replace(/\r\n/g, "\n")   // CRLF → LF
+    .trim() + "\n";
+}
+
 async function fetchAnalytics() {
   const propId = process.env.GA4_PROPERTY_ID;
   const clientEmail = process.env.GA_SA_CLIENT_EMAIL;
-  let privateKey = process.env.GA_SA_PRIVATE_KEY;
-  if (!propId || !clientEmail || !privateKey) return { connected: false };
-  privateKey = privateKey.replace(/\\n/g, "\n"); // Vercel stores newlines escaped
+  if (!propId || !clientEmail || !process.env.GA_SA_PRIVATE_KEY) return { connected: false };
+  const privateKey = normalizePrivateKey(process.env.GA_SA_PRIVATE_KEY);
 
   try {
     const token = await gaAccessToken(clientEmail, privateKey);
