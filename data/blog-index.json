@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-07T16:00:01.728Z",
+  "generated_at": "2026-07-08T16:30:02.783Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,30 @@
     }
   ],
   "posts": [
+    {
+      "title": "Corporate Photo Booth Ideas for Los Angeles Events",
+      "slug": "corporate-photo-booth-ideas-los-angeles-events",
+      "url": "/a-thousand-words/corporate-events-and-brand-activations/corporate-photo-booth-ideas-los-angeles-events",
+      "category": {
+        "name": "Corporate Events & Brand Activations",
+        "slug": "corporate-events-and-brand-activations"
+      },
+      "categories": [
+        {
+          "name": "Corporate Events & Brand Activations",
+          "slug": "corporate-events-and-brand-activations"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/corporate-photo-booth-ideas-for-los-angeles-events-mr4dfjmk1glwa.jpg",
+      "imageAlt": "Guests enjoying a luxury open-air DSLR photo booth at a corporate event in Los Angeles, capturing fun memories.",
+      "date": "2026-07-08T16:30:00.467+00:00",
+      "dateLabel": "July 8, 2026",
+      "excerpt": "Discover creative corporate photo booth ideas for your Los Angeles event. Boost brand engagement, capture memories, and create buzz with a luxury photo booth…"
+    },
     {
       "title": "Wedding Photo Booth Rental Guide for Los Angeles Couples",
       "slug": "wedding-photo-booth-rental-los-angeles-guide",
