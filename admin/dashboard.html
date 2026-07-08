@@ -113,9 +113,12 @@
   function renderGa(a) {
     const box = document.querySelector("[data-ga]");
     if (!a || !a.connected) {
-      box.innerHTML = `<p class="muted-note">Google Analytics isn't connected yet. Once a GA4 service account is added
-        (<code>GA4_PROPERTY_ID</code>, <code>GA_SA_CLIENT_EMAIL</code>, <code>GA_SA_PRIVATE_KEY</code> in Vercel),
-        yesterday / 7-day / 30-day sessions and your top pages will show here.</p>`;
+      const err = a && a.error
+        ? `<p class="muted-note" style="color:#B4462F;margin-top:.7rem;"><strong>GA response:</strong> ${esc(a.error)}</p>`
+        : "";
+      box.innerHTML = `<p class="muted-note">Google Analytics isn't returning data yet. Confirm the three env vars are set in Vercel
+        (<code>GA4_PROPERTY_ID</code>, <code>GA_SA_CLIENT_EMAIL</code>, <code>GA_SA_PRIVATE_KEY</code>), the service account email has
+        <strong>Viewer</strong> access on the GA4 property, and the <strong>Google Analytics Data API</strong> is enabled in the Cloud project.</p>${err}`;
       return;
     }
     const t = a.traffic || {};
