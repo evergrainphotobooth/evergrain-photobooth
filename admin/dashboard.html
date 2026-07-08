@@ -10,6 +10,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/admin/admin.css" />
 <link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
+<style>
+  .dash-grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.25rem; }
+  .ga-tiles { display:grid; grid-template-columns:repeat(3,1fr); gap:.85rem; margin:.2rem 0 1.4rem; }
+  @media (max-width:560px){ .ga-tiles{ grid-template-columns:1fr; } }
+  .ga-tile { border:1px solid var(--gray-200); border-radius:var(--radius); padding:1rem 1.1rem; }
+  .ga-tile__label { font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gray-500); }
+  .ga-tile__value { font-family:"Fraunces",serif; font-weight:400; font-size:1.9rem; line-height:1.1; color:var(--gray-900,#1a1410); margin-top:.25rem; }
+  .dash-sub { font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gray-500); margin:0 0 .6rem; font-weight:600; }
+  .rank-list { list-style:none; margin:0; padding:0; }
+  .rank-row { display:flex; align-items:center; justify-content:space-between; gap:.8rem; padding:.5rem 0; border-top:1px solid var(--line,#ece7df); font-size:.92rem; }
+  .rank-row:first-child { border-top:0; }
+  .rank-row__name { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .rank-row__count { font-weight:600; color:var(--evergreen,#1F4332); background:var(--wash,#f3efe8); border-radius:999px; padding:.12rem .6rem; font-size:.8rem; flex-shrink:0; }
+  .rank-row__rank { color:var(--gray-500); font-size:.8rem; width:1.6rem; flex-shrink:0; }
+  .muted-note { font-size:.9rem; color:var(--gray-600); line-height:1.6; }
+  .muted-note code { background:var(--wash,#f3efe8); padding:.05rem .3rem; border-radius:4px; font-size:.85em; }
+  .page-path { font-family:ui-monospace,monospace; font-size:.82rem; }
+</style>
 </head>
 <body>
 
@@ -26,7 +44,7 @@
       <div class="stat-card">
         <div class="stat-card__label">This Week</div>
         <div class="stat-card__value" data-stat="thisWeek">—</div>
-        <div class="stat-card__delta">Last 7 days</div>
+        <div class="stat-card__delta">Inquiries · last 7 days</div>
       </div>
       <div class="stat-card">
         <div class="stat-card__label">Total Inquiries</div>
@@ -34,9 +52,36 @@
         <div class="stat-card__delta">All time</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card__label">Blog Posts</div>
-        <div class="stat-card__value" data-stat="blogPosts">0</div>
-        <div class="stat-card__delta">Phase 2 — coming soon</div>
+        <div class="stat-card__label">Live Blogs</div>
+        <div class="stat-card__value" data-stat="published">—</div>
+        <div class="stat-card__delta">Published on the site</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">Scheduled Blogs</div>
+        <div class="stat-card__value" data-stat="scheduled">—</div>
+        <div class="stat-card__delta">Queued to publish</div>
+      </div>
+    </div>
+
+    <!-- Website traffic (GA4) -->
+    <div class="admin-card">
+      <h2 class="admin-card__title">Website traffic</h2>
+      <div data-ga>
+        <div class="empty-state"><span class="loading"></span></div>
+      </div>
+    </div>
+
+    <!-- Keywords + Categories -->
+    <div class="dash-grid2">
+      <div class="admin-card">
+        <h2 class="admin-card__title">Top keywords</h2>
+        <p class="dash-sub" style="margin-top:-.3rem;">Most-used targeted keywords across live blogs</p>
+        <div data-keywords><div class="empty-state"><span class="loading"></span></div></div>
+      </div>
+      <div class="admin-card">
+        <h2 class="admin-card__title">Categories by live posts</h2>
+        <p class="dash-sub" style="margin-top:-.3rem;">Most blogs to fewest</p>
+        <div data-categories><div class="empty-state"><span class="loading"></span></div></div>
       </div>
     </div>
 
@@ -44,28 +89,60 @@
       <h2 class="admin-card__title">Quick actions</h2>
       <div class="flex" style="gap: 0.5rem; flex-wrap: wrap;">
         <a href="/admin/inquiries" class="btn btn--primary">Review Inquiries</a>
+        <a href="/admin/blog-editor" class="btn btn--ghost">Write a Blog</a>
         <a href="/" class="btn btn--ghost" target="_blank" rel="noopener">View live site →</a>
-        <a href="https://supabase.com/dashboard/project/_/storage/buckets/media" class="btn btn--ghost" target="_blank" rel="noopener">Manage Assets →</a>
       </div>
     </div>
 
 </div>
 
 <script>
-  // Hydrate stats
+  const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const n = (v) => Number(v || 0).toLocaleString();
+
+  function rankList(items, nameKey, countKey, empty) {
+    if (!items || items.length === 0) return `<p class="muted-note">${empty}</p>`;
+    return `<ul class="rank-list">${items.map((it, i) => `
+      <li class="rank-row">
+        <span class="rank-row__rank">${i + 1}</span>
+        <span class="rank-row__name">${esc(it[nameKey])}</span>
+        <span class="rank-row__count">${n(it[countKey])}</span>
+      </li>`).join("")}</ul>`;
+  }
+
+  function renderGa(a) {
+    const box = document.querySelector("[data-ga]");
+    if (!a || !a.connected) {
+      box.innerHTML = `<p class="muted-note">Google Analytics isn't connected yet. Once a GA4 service account is added
+        (<code>GA4_PROPERTY_ID</code>, <code>GA_SA_CLIENT_EMAIL</code>, <code>GA_SA_PRIVATE_KEY</code> in Vercel),
+        yesterday / 7-day / 30-day sessions and your top pages will show here.</p>`;
+      return;
+    }
+    const t = a.traffic || {};
+    const tiles = `<div class="ga-tiles">
+      <div class="ga-tile"><div class="ga-tile__label">Yesterday</div><div class="ga-tile__value">${n(t.yesterday)}</div></div>
+      <div class="ga-tile"><div class="ga-tile__label">Last 7 days</div><div class="ga-tile__value">${n(t.last7)}</div></div>
+      <div class="ga-tile"><div class="ga-tile__label">Last 30 days</div><div class="ga-tile__value">${n(t.last30)}</div></div>
+    </div>`;
+    const pages = a.topPages || [];
+    const table = pages.length ? `
+      <p class="dash-sub">Top pages · views (last 7 days)</p>
+      <table class="data-table">
+        <thead><tr><th>Page</th><th style="text-align:right;">Views</th></tr></thead>
+        <tbody>${pages.map(p => `<tr><td class="page-path">${esc(p.path)}</td><td style="text-align:right;font-weight:600;">${n(p.views)}</td></tr>`).join("")}</tbody>
+      </table>` : `<p class="muted-note">No page data for the last 7 days yet.</p>`;
+    box.innerHTML = `<p class="dash-sub" style="margin-top:-.2rem;">Sessions</p>${tiles}${table}`;
+  }
+
   fetch("/api/admin/stats").then(async r => {
     if (!r.ok) return;
-    const data = await r.json();
-    const map = {
-      new: data.inquiries.new,
-      thisWeek: data.inquiries.thisWeek,
-      total: data.inquiries.total,
-      blogPosts: data.blogPosts,
-    };
-    Object.entries(map).forEach(([k, v]) => {
-      const el = document.querySelector(`[data-stat="${k}"]`);
-      if (el) el.textContent = v.toLocaleString();
-    });
+    const d = await r.json();
+    const set = (k, v) => { const el = document.querySelector(`[data-stat="${k}"]`); if (el) el.textContent = n(v); };
+    set("new", d.inquiries?.new); set("thisWeek", d.inquiries?.thisWeek); set("total", d.inquiries?.total);
+    set("published", d.blog?.published); set("scheduled", d.blog?.scheduled);
+    document.querySelector("[data-keywords]").innerHTML = rankList(d.keywordRanking, "keyword", "count", "No keywords tracked yet — add some in Pages → Targeted Keywords.");
+    document.querySelector("[data-categories]").innerHTML = rankList(d.categoryRanking, "name", "count", "No categories yet.");
+    renderGa(d.analytics);
   });
 </script>
 <script src="/admin/admin-shell.js"></script>
