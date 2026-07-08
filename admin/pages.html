@@ -40,6 +40,16 @@
   .kw-chip__x { border:0; background:rgba(0,0,0,.06); color:var(--gray-600); width:20px; height:20px; border-radius:50%;
                 cursor:pointer; line-height:1; font-size:.9rem; display:grid; place-items:center; }
   .kw-chip__x:hover { background:#B4462F; color:#fff; }
+  /* Blog table pagination */
+  .pager { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--line,#ece7df); }
+  .pager__nav { display:flex; align-items:center; gap:.3rem; flex-wrap:wrap; }
+  .pager__btn, .pager__num { font:inherit; font-size:.82rem; padding:.32rem .62rem; border:1px solid var(--line,#ddd6c9); background:#fff; color:var(--gray-700,#4a4239); border-radius:8px; cursor:pointer; }
+  .pager__btn:hover:not(:disabled), .pager__num:hover { border-color:var(--brass,#a47a2a); }
+  .pager__num.is-active { background:var(--ink,#1a1410); color:#fff; border-color:var(--ink,#1a1410); }
+  .pager__btn:disabled { opacity:.4; cursor:default; }
+  .pager__gap { padding:0 .15rem; color:var(--gray-500); }
+  .pager__size { font-size:.82rem; color:var(--gray-600); display:flex; align-items:center; gap:.45rem; }
+  .pager__size .field__select { width:auto; padding:.3rem 1.7rem .3rem .6rem; margin:0; }
 </style>
 </head>
 <body>
@@ -204,13 +214,19 @@
     catch { confirmOkBtn.textContent = "Failed — retry"; confirmOkBtn.disabled = false; }
   });
 
-  /* ---------------- Blog posts ---------------- */
+  /* ---------------- Blog posts (paginated) ---------------- */
+  let allPosts = [];
+  let postsPage = 1;
+  let postsPageSize = 20;
+
   async function loadPosts() {
     postsTable.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
     const r = await fetch("/api/admin/blog-posts");
     if (!r.ok) { postsTable.innerHTML = `<div class="empty-state"><h3>Couldn't load posts</h3><p>Try refreshing.</p></div>`; return; }
     const { posts } = await r.json();
-    renderPosts(posts || []);
+    allPosts = posts || [];
+    postsPage = 1;
+    renderPosts();
   }
 
   function statusPill(status) {
@@ -219,39 +235,83 @@
     return `<span class="status-pill" style="background:${color}1F;"><span class="status-pill__dot" style="background:${color};"></span>${label}</span>`;
   }
 
-  function renderPosts(posts) {
-    if (posts.length === 0) {
+  function postRowHTML(p) {
+    const cat = p.blog_categories ? esc(p.blog_categories.name) : `<span class="text-meta">Uncategorized</span>`;
+    const date = p.status === "published" ? fmtDate(p.published_at || p.created_at)
+      : p.status === "scheduled" && p.scheduled_at ? `⏳ ${fmtDate(p.scheduled_at)}`
+      : fmtDate(p.created_at);
+    return `
+      <tr>
+        <td><strong>${esc(p.title)}</strong> ${statusPill(p.status)}<div class="blog-path">/a-thousand-words/${p.blog_categories ? esc(p.blog_categories.slug) + "/" : ""}${esc(p.slug || "")}</div></td>
+        <td>${(p.word_count ?? 0).toLocaleString()}</td>
+        <td>${cat}</td>
+        <td class="text-meta">${date}</td>
+        <td><a class="btn btn--ghost btn--sm table-edit-btn" href="/admin/blog-editor?id=${encodeURIComponent(p.id)}">Edit</a></td>
+      </tr>`;
+  }
+
+  // Windowed page numbers (with … gaps) for the pager.
+  function pageNumbers(current, count) {
+    if (count <= 7) return Array.from({ length: count }, (_, i) => i + 1);
+    const nums = [1];
+    if (current > 3) nums.push("…");
+    for (let i = Math.max(2, current - 1); i <= Math.min(count - 1, current + 1); i++) nums.push(i);
+    if (current < count - 2) nums.push("…");
+    nums.push(count);
+    return nums;
+  }
+
+  function pagerHTML(total, count) {
+    const start = (postsPage - 1) * postsPageSize;
+    const from = total === 0 ? 0 : start + 1;
+    const to = Math.min(start + postsPageSize, total);
+    const nums = pageNumbers(postsPage, count).map(n => n === "…"
+      ? `<span class="pager__gap">…</span>`
+      : `<button type="button" class="pager__num${n === postsPage ? " is-active" : ""}" data-page="${n}">${n}</button>`).join("");
+    return `
+      <div class="pager">
+        <span class="text-meta">Showing ${from}–${to} of ${total}</span>
+        <div class="pager__nav">
+          <button type="button" class="pager__btn" data-page="prev" ${postsPage <= 1 ? "disabled" : ""}>‹ Prev</button>
+          ${nums}
+          <button type="button" class="pager__btn" data-page="next" ${postsPage >= count ? "disabled" : ""}>Next ›</button>
+        </div>
+        <label class="pager__size">Show
+          <select class="field__select" data-page-size>
+            ${[20, 50, 100].map(s => `<option value="${s}"${s === postsPageSize ? " selected" : ""}>${s}</option>`).join("")}
+          </select> per page
+        </label>
+      </div>`;
+  }
+
+  function renderPosts() {
+    if (allPosts.length === 0) {
       postsTable.innerHTML = `<div class="empty-state"><h3>No blogs yet.</h3><p>Click “+ Add Blog” to write your first A Thousand Words post.</p></div>`;
       return;
     }
-    const rows = posts.map(p => {
-      const cat = p.blog_categories ? esc(p.blog_categories.name) : `<span class="text-meta">Uncategorized</span>`;
-      const date = p.status === "published" ? fmtDate(p.published_at || p.created_at)
-        : p.status === "scheduled" && p.scheduled_at ? `⏳ ${fmtDate(p.scheduled_at)}`
-        : fmtDate(p.created_at);
-      return `
-        <tr>
-          <td><strong>${esc(p.title)}</strong> ${statusPill(p.status)}<div class="blog-path">/a-thousand-words/${p.blog_categories ? esc(p.blog_categories.slug) + "/" : ""}${esc(p.slug || "")}</div></td>
-          <td>${(p.word_count ?? 0).toLocaleString()}</td>
-          <td>${cat}</td>
-          <td class="text-meta">${date}</td>
-          <td><a class="btn btn--ghost btn--sm table-edit-btn" href="/admin/blog-editor?id=${encodeURIComponent(p.id)}">Edit</a></td>
-        </tr>`;
-    }).join("");
-
+    const total = allPosts.length;
+    const count = Math.max(1, Math.ceil(total / postsPageSize));
+    if (postsPage > count) postsPage = count;
+    const start = (postsPage - 1) * postsPageSize;
+    const rows = allPosts.slice(start, start + postsPageSize).map(postRowHTML).join("");
     postsTable.innerHTML = `
       <table class="data-table">
         <thead>
-          <tr>
-            <th>Title (H1)</th>
-            <th>Words</th>
-            <th>Category</th>
-            <th>Date</th>
-            <th></th>
-          </tr>
+          <tr><th>Title (H1)</th><th>Words</th><th>Category</th><th>Date</th><th></th></tr>
         </thead>
         <tbody>${rows}</tbody>
-      </table>`;
+      </table>
+      ${pagerHTML(total, count)}`;
+
+    postsTable.querySelectorAll("[data-page]").forEach(b => b.addEventListener("click", () => {
+      const v = b.getAttribute("data-page");
+      if (v === "prev") postsPage = Math.max(1, postsPage - 1);
+      else if (v === "next") postsPage = Math.min(count, postsPage + 1);
+      else postsPage = +v;
+      renderPosts();
+    }));
+    const sizeSel = postsTable.querySelector("[data-page-size]");
+    if (sizeSel) sizeSel.addEventListener("change", () => { postsPageSize = +sizeSel.value; postsPage = 1; renderPosts(); });
   }
 
   /* ---------------- Categories ---------------- */
