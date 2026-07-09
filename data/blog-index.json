@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-08T16:30:02.783Z",
+  "generated_at": "2026-07-09T16:30:01.908Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,26 @@
     }
   ],
   "posts": [
+    {
+      "title": "Glam Photo Booth vs Standard Photo Booth: Which Should You Choose?",
+      "slug": "glam-photo-booth-vs-standard-photo-booth",
+      "url": "/a-thousand-words/photo-booth-trends-and-ideas/glam-photo-booth-vs-standard-photo-booth",
+      "category": {
+        "name": "Photo Booth Trends & Ideas",
+        "slug": "photo-booth-trends-and-ideas"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/glam-photo-booth-vs-standard-photo-booth-which-should-you-choose-mr4dis02vx05h.jpg",
+      "imageAlt": "A couple posing in a luxurious open-air glam photo booth with a white backdrop and professional lighting, perfect for a wedding or upscale corporate event.",
+      "date": "2026-07-09T16:30:00.179+00:00",
+      "dateLabel": "July 9, 2026",
+      "excerpt": "Deciding between a glam photo booth and a standard photo booth for your event? Discover the key differences, benefits, and how to choose the perfect one for…"
+    },
     {
       "title": "Corporate Photo Booth Ideas for Los Angeles Events",
       "slug": "corporate-photo-booth-ideas-los-angeles-events",
