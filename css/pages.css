@@ -764,6 +764,9 @@ a.area-pill:hover {
 }
 
 /* ---------- Homepage "Specializing in…" ---------- */
+.section--specializing {
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+}
 .specializing {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -783,6 +786,9 @@ a.area-pill:hover {
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 3vw, 2.3rem);
   line-height: 1.15;
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
   color: var(--linen);
 }
 /* Overlapping photos: color booth in front, B&W strip behind. */
@@ -796,7 +802,7 @@ a.area-pill:hover {
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  border: 6px solid var(--linen);
+  border: 2px solid var(--linen);
 }
 .specializing__photo img {
   width: 100%;
@@ -805,17 +811,17 @@ a.area-pill:hover {
   display: block;
 }
 .specializing__photo--back {
-  width: 34%;
-  top: 2%;
-  right: 4%;
+  width: 30%;
+  top: 6%;
+  right: 6%;
   z-index: 1;
   transform: rotate(4deg);
 }
 .specializing__photo--back img { filter: grayscale(100%); }
 .specializing__photo--front {
-  width: 62%;
-  bottom: 2%;
-  left: 2%;
+  width: 54%;
+  bottom: 6%;
+  left: 4%;
   z-index: 2;
   transform: rotate(-2deg);
 }
