@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-09T16:30:01.908Z",
+  "generated_at": "2026-07-10T15:55:03.041Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "How to Choose a Photo Booth for a Corporate Event in Los Angeles",
+      "slug": "how-to-choose-corporate-event-photo-booth-rental-los-angeles",
+      "url": "/a-thousand-words/corporate-events-and-brand-activations/how-to-choose-corporate-event-photo-booth-rental-los-angeles",
+      "category": {
+        "name": "Corporate Events & Brand Activations",
+        "slug": "corporate-events-and-brand-activations"
+      },
+      "categories": [
+        {
+          "name": "Corporate Events & Brand Activations",
+          "slug": "corporate-events-and-brand-activations"
+        },
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/how-to-choose-a-photo-booth-for-a-corporate-event-in-los-angeles-mra1vkro1b08v.jpg",
+      "imageAlt": "Luxury open-air photo booth setup with a shimmering moon and stars backdrop at a corporate event in Los Angeles",
+      "date": "2026-07-10T15:55:00.241+00:00",
+      "dateLabel": "July 10, 2026",
+      "excerpt": "Elevate your Los Angeles corporate event! Learn how to select the perfect luxury photo booth rental for brand activation, employee engagement, and…"
+    },
     {
       "title": "Glam Photo Booth vs Standard Photo Booth: Which Should You Choose?",
       "slug": "glam-photo-booth-vs-standard-photo-booth",
