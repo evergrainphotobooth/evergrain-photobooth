@@ -1382,16 +1382,17 @@ a.area-pill:hover {
   flex: 0 0 32%;
   max-width: 168px;
   margin: 0;
-  align-self: stretch;
-  min-height: 100%;
+  align-self: flex-start;   /* sit at the top, above the CTA — never stretch */
+  aspect-ratio: 1 / 1;      /* square tile */
   border-radius: var(--radius-sm);
   overflow: hidden;
-  background: var(--linen-warm);
+  background: var(--white);  /* white matte behind the contained image */
+  border: 1px solid rgba(92, 74, 53, 0.10);
 }
 .addon__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;      /* whole image fits — nothing cropped */
   display: block;
   pointer-events: none;   /* decorative — never clickable */
   user-select: none;

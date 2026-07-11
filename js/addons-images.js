@@ -33,10 +33,12 @@
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "");
 
+  // resize=contain → the whole image is preserved (never cropped); it's shown
+  // on a white 1:1 tile via CSS object-fit: contain.
   const thumb = (name) =>
     `${SUPABASE_URL}/storage/v1/render/image/public/${BUCKET}/${encodeURI(FOLDER)}${encodeURIComponent(
       name
-    )}?width=440&height=440&resize=cover&quality=72`;
+    )}?width=560&height=560&resize=contain&quality=80`;
 
   async function listImages() {
     try {
@@ -92,12 +94,34 @@
     const files = await listImages();
     if (!files.length) return;
 
-    const map = files.map((n) => ({ name: n, key: norm(n.replace(/\.[^.]+$/, "")) }));
+    const map = files
+      .map((n) => ({ name: n, key: norm(n.replace(/\.[^.]+$/, "")) }))
+      .filter((m) => m.key);
 
     cards.forEach((card) => {
       const title = card.querySelector(".addon__name")?.textContent || "";
       const keys = [norm(title), norm(card.getAttribute("data-name"))].filter(Boolean);
-      const hit = map.find((m) => m.key && keys.includes(m.key));
+
+      // 1) Exact match on the (normalized) title.
+      let hit = map.find((m) => keys.includes(m.key));
+
+      // 2) Otherwise accept a shortened filename that is an unambiguous prefix
+      //    of the title — e.g. "Custom Rear Display" for the card
+      //    "Custom Rear Display / Branded Visuals". The longest such prefix
+      //    wins, and only if it isn't a prefix of some *other* card too.
+      if (!hit) {
+        const prefixes = map
+          .filter((m) => m.key.length >= 5 && keys.some((k) => k.startsWith(m.key)))
+          .sort((a, b) => b.key.length - a.key.length);
+        for (const cand of prefixes) {
+          const otherCards = [...cards].filter((c) => c !== card).some((c) => {
+            const ck = [norm(c.querySelector(".addon__name")?.textContent), norm(c.getAttribute("data-name"))];
+            return ck.some((k) => k && k.startsWith(cand.key));
+          });
+          if (!otherCards) { hit = cand; break; }
+        }
+      }
+
       if (hit) attach(card, hit.name);
     });
   })();
