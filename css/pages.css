@@ -1387,7 +1387,6 @@ a.area-pill:hover {
   border-radius: var(--radius-sm);
   overflow: hidden;
   background: var(--white);  /* white matte behind the contained image */
-  border: 1px solid rgba(92, 74, 53, 0.10);
 }
 .addon__media img {
   width: 100%;
