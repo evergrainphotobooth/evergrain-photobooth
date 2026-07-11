@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-10T15:55:03.041Z",
+  "generated_at": "2026-07-11T16:20:02.111Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,38 @@
     }
   ],
   "posts": [
+    {
+      "title": "Photo Booth Ideas for Company Holiday Parties in Los Angeles",
+      "slug": "company-holiday-party-photo-booth-ideas-los-angeles",
+      "url": "/a-thousand-words/corporate-events-and-brand-activations/company-holiday-party-photo-booth-ideas-los-angeles",
+      "category": {
+        "name": "Corporate Events & Brand Activations",
+        "slug": "corporate-events-and-brand-activations"
+      },
+      "categories": [
+        {
+          "name": "Corporate Events & Brand Activations",
+          "slug": "corporate-events-and-brand-activations"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        },
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        },
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/photo-booth-ideas-for-company-holiday-parties-in-los-angeles-mra2wachxnby6.jpg",
+      "imageAlt": "Guests having fun at a company holiday party photo booth in Los Angeles with custom props and a festive backdrop.",
+      "date": "2026-07-11T16:20:00.581+00:00",
+      "dateLabel": "July 11, 2026",
+      "excerpt": "Elevate your company holiday party in Los Angeles with unique photo booth ideas! Discover how Evergrain's luxury DSLR photo booth rental creates unforgettable…"
+    },
     {
       "title": "How to Choose a Photo Booth for a Corporate Event in Los Angeles",
       "slug": "how-to-choose-corporate-event-photo-booth-rental-los-angeles",
