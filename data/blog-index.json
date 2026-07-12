@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-11T16:20:02.111Z",
+  "generated_at": "2026-07-12T15:30:02.170Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,26 @@
     }
   ],
   "posts": [
+    {
+      "title": "What To Look For When Booking a Photo Booth",
+      "slug": "what-to-look-for-booking-photo-booth-rental",
+      "url": "/a-thousand-words/photo-booth-planning-guides/what-to-look-for-booking-photo-booth-rental",
+      "category": {
+        "name": "Photo Booth Planning Guides",
+        "slug": "photo-booth-planning-guides"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/what-to-look-for-when-booking-a-photo-booth-mra87xmsglgol.jpg",
+      "imageAlt": "What To Look For When Booking a Photo Booth",
+      "date": "2026-07-12T15:30:00.211+00:00",
+      "dateLabel": "July 12, 2026",
+      "excerpt": "Planning an event in LA or OC? Discover key factors for booking a luxury photo booth rental. Ensure quality, customization, and a seamless guest experience."
+    },
     {
       "title": "Photo Booth Ideas for Company Holiday Parties in Los Angeles",
       "slug": "company-holiday-party-photo-booth-ideas-los-angeles",
