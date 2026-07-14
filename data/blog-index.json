@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-13T14:00:01.941Z",
+  "generated_at": "2026-07-14T14:00:01.992Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,26 @@
     }
   ],
   "posts": [
+    {
+      "title": "Is a Photo Booth Worth It for a Wedding?",
+      "slug": "is-a-photo-booth-worth-it-for-a-wedding",
+      "url": "/a-thousand-words/weddings-and-celebrations/is-a-photo-booth-worth-it-for-a-wedding",
+      "category": {
+        "name": "Weddings & Celebrations",
+        "slug": "weddings-and-celebrations"
+      },
+      "categories": [
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/is-a-photo-booth-worth-it-for-a-wedding-mrawl9ax4wudx.jpg",
+      "imageAlt": "Elegant wedding photo booth setup with a white floral backdrop, professional lighting, and a group of guests laughing and posing with props.",
+      "date": "2026-07-14T14:00:00.186+00:00",
+      "dateLabel": "July 14, 2026",
+      "excerpt": "Considering a wedding photo booth rental? Discover why a luxury open-air DSLR photo booth is the perfect interactive entertainment for your big day. Get expert…"
+    },
     {
       "title": "15 Wedding Photo Booth Trends Couples Are Loving in 2026",
       "slug": "wedding-photo-booth-trends-2026",
