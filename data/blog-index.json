@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-14T14:00:01.992Z",
+  "generated_at": "2026-07-15T15:30:02.148Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,26 @@
     }
   ],
   "posts": [
+    {
+      "title": "How to Match Your Photo Booth to Your Wedding Design?",
+      "slug": "how-to-match-your-photo-booth-to-your-wedding-design",
+      "url": "/a-thousand-words/weddings-and-celebrations/how-to-match-your-photo-booth-to-your-wedding-design",
+      "category": {
+        "name": "Weddings & Celebrations",
+        "slug": "weddings-and-celebrations"
+      },
+      "categories": [
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/how-to-match-your-photo-booth-to-your-wedding-design-mraxcetwndxyi.jpg",
+      "imageAlt": "A luxurious wedding photo booth setup with a white floral backdrop, elegant gold signage, and custom photo strips.",
+      "date": "2026-07-15T15:30:00.215+00:00",
+      "dateLabel": "July 15, 2026",
+      "excerpt": "Discover how to perfectly match your wedding photo booth to your overall design theme. Learn tips for backdrops, props, and custom prints for a seamless luxury…"
+    },
     {
       "title": "Is a Photo Booth Worth It for a Wedding?",
       "slug": "is-a-photo-booth-worth-it-for-a-wedding",
