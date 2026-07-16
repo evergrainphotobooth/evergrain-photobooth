@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-15T15:30:02.148Z",
+  "generated_at": "2026-07-16T14:00:02.331Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,30 @@
     }
   ],
   "posts": [
+    {
+      "title": "10 Wedding Reception Entertainment Ideas Guests Actually Remember",
+      "slug": "wedding-reception-entertainment-ideas-guests-remember",
+      "url": "/a-thousand-words/design-templates-and-guest-experience/wedding-reception-entertainment-ideas-guests-remember",
+      "category": {
+        "name": "Design, Templates & Guest Experience",
+        "slug": "design-templates-and-guest-experience"
+      },
+      "categories": [
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        },
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/wedding-reception-entertainment-ideas-guests-remember-mraz28pmrpodp.jpg",
+      "imageAlt": "Wedding guests laughing and posing in a luxury open-air photo booth with a custom floral backdrop, an unforgettable wedding reception entertainment idea.",
+      "date": "2026-07-16T14:00:00.168+00:00",
+      "dateLabel": "July 16, 2026",
+      "excerpt": "Discover unique wedding reception entertainment ideas to wow your guests! From luxury photo booths to live artists, create an unforgettable experience for your…"
+    },
     {
       "title": "How to Match Your Photo Booth to Your Wedding Design?",
       "slug": "how-to-match-your-photo-booth-to-your-wedding-design",
