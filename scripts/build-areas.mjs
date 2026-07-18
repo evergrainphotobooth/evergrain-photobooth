@@ -217,7 +217,7 @@ ${SERVICES_DATA.packages.map(renderPackageCard).join("\n\n")}
         <ul class="every-package__list">
           <li>Unlimited high-quality prints</li>
           <li>Studio-quality lighting</li>
-          <li>Online gallery of all images</li>
+          <li>All event photos delivered within 48 hours.</li>
           <li>Instant sharing (text, email, QR)</li>
           <li>Curated prop collection</li>
           <li>Custom Felt Letter Board</li>
