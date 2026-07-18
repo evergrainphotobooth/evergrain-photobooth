@@ -1575,10 +1575,10 @@ a.area-pill:hover {
 /* Print-strip row above the grid: 2x6 strips + 4x6 prints, justified so they
    share one height and the row fills the full grid width. Widths flex in
    proportion to each format (2 vs 4), which keeps every item the same height. */
-/* ---------- Gallery: auto-scrolling rows by print size ----------
-   Three seamless marquees (2x6, 4x6, 6x4). Each row pauses while hovered.
-   Item height is fixed per row via --gal-h; the format's aspect-ratio sets
-   the width, and object-fit: contain guarantees the full print shows. */
+/* ---------- Gallery: rows by print size, arrow-scrolled ----------
+   Three rows (2x6, 4x6, 6x4). Each shows its photos once and scrolls with
+   prev/next arrows. Item height is fixed per row via --gal-h; the format's
+   aspect-ratio sets the width, object-fit: contain keeps prints uncropped. */
 .gal-marquees {
   display: flex;
   flex-direction: column;
@@ -1590,24 +1590,24 @@ a.area-pill:hover {
   gap: var(--space-md);
 }
 .gal-row {
-  overflow: hidden;
+  position: relative;
 }
 .gal-row__track {
   display: flex;
   gap: var(--space-md);
-  width: max-content;
-  animation-name: gal-scroll;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  will-change: transform;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-block: 2px;
 }
-.gal-row:hover .gal-row__track {
-  animation-play-state: paused;
-}
+.gal-row__track::-webkit-scrollbar { display: none; }
 .gal-item {
   flex: 0 0 auto;
   margin: 0;
   height: var(--gal-h);
+  scroll-snap-align: start;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--linen-warm);
@@ -1625,13 +1625,40 @@ a.area-pill:hover {
 .gal-row--4x6 .gal-item { aspect-ratio: 4 / 6; }
 .gal-row--6x4 { --gal-h: clamp(150px, 24vw, 210px); }
 .gal-row--6x4 .gal-item { aspect-ratio: 6 / 4; }
-@keyframes gal-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+/* Prev / next arrow controls (shown only when the row overflows). */
+.gal-row__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(244, 237, 224, 0.92);
+  border: 1px solid rgba(26, 20, 16, 0.12);
+  color: var(--evergreen);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out),
+              opacity var(--dur-fast) var(--ease-out);
 }
+.gal-row__arrow:hover { background: var(--evergreen); color: var(--linen); }
+.gal-row__arrow:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+.gal-row__arrow--prev { left: 0.5rem; }
+.gal-row__arrow--next { right: 0.5rem; }
+.gal-row__arrow--prev:hover { transform: translateY(-50%) translateX(-2px); }
+.gal-row__arrow--next:hover { transform: translateY(-50%) translateX(2px); }
+.gal-row__arrow:disabled { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
-  .gal-row { overflow-x: auto; }
-  .gal-row__track { animation: none; }
+  .gal-row__track { scroll-behavior: auto; }
 }
 
 .strips-row {

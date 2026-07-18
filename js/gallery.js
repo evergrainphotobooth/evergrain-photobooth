@@ -68,29 +68,37 @@
       it.name
     )}" loading="lazy" decoding="async" draggable="false" /></figure>`;
 
-  // Build a seamless marquee: repeat the set until it fills the row, then
-  // duplicate the whole thing so a -50% translate loops with no seam.
+  // Render one row: each photo once, in a scroll container with prev/next
+  // arrows. Arrows fade out at the ends and hide entirely if it all fits.
   function renderRow(el, items, w, h) {
     if (!el) return;
     if (!items.length) {
       el.style.display = "none";
       return;
     }
-    el.innerHTML = `<div class="gal-row__track"></div>`;
+    const itemsHTML = items.map((it) => itemHTML(it, w, h)).join("");
+    el.innerHTML =
+      '<button type="button" class="gal-row__arrow gal-row__arrow--prev" aria-label="Scroll left">←</button>' +
+      `<div class="gal-row__track">${itemsHTML}</div>` +
+      '<button type="button" class="gal-row__arrow gal-row__arrow--next" aria-label="Scroll right">→</button>';
+
     const track = el.querySelector(".gal-row__track");
-    const seq = items.map((it) => itemHTML(it, w, h)).join("");
-    track.innerHTML = seq;
+    const prev = el.querySelector(".gal-row__arrow--prev");
+    const next = el.querySelector(".gal-row__arrow--next");
+    const step = () => Math.min(track.clientWidth * 0.8, 600);
+    prev.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
+    next.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
 
-    let guard = 0;
-    while (track.scrollWidth < el.clientWidth + 120 && guard < 40) {
-      track.insertAdjacentHTML("beforeend", seq);
-      guard++;
-    }
-    const singleWidth = track.scrollWidth; // one full, row-filling sequence
-    track.insertAdjacentHTML("beforeend", track.innerHTML); // duplicate for the loop
-
-    // ~55px/sec keeps every row scrolling at the same speed.
-    track.style.animationDuration = Math.max(18, Math.round(singleWidth / 55)) + "s";
+    const update = () => {
+      const overflow = track.scrollWidth - track.clientWidth > 4;
+      prev.disabled = !overflow || track.scrollLeft <= 1;
+      next.disabled = !overflow || track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+    };
+    track.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    // Re-check once images have laid out.
+    update();
+    setTimeout(update, 300);
   }
 
   (async () => {
