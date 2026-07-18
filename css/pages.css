@@ -494,7 +494,7 @@ a.area-pill:hover {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: var(--space-md);
-  margin-block: var(--space-2xl);
+  margin-block: var(--space-md);
 }
 .story-mosaic__item {
   overflow: hidden;
