@@ -1575,6 +1575,65 @@ a.area-pill:hover {
 /* Print-strip row above the grid: 2x6 strips + 4x6 prints, justified so they
    share one height and the row fills the full grid width. Widths flex in
    proportion to each format (2 vs 4), which keeps every item the same height. */
+/* ---------- Gallery: auto-scrolling rows by print size ----------
+   Three seamless marquees (2x6, 4x6, 6x4). Each row pauses while hovered.
+   Item height is fixed per row via --gal-h; the format's aspect-ratio sets
+   the width, and object-fit: contain guarantees the full print shows. */
+.gal-marquees {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+.gal-6x4 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.gal-row {
+  overflow: hidden;
+}
+.gal-row__track {
+  display: flex;
+  gap: var(--space-md);
+  width: max-content;
+  animation-name: gal-scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.gal-row:hover .gal-row__track {
+  animation-play-state: paused;
+}
+.gal-item {
+  flex: 0 0 auto;
+  margin: 0;
+  height: var(--gal-h);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--linen-warm);
+}
+.gal-item img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain; /* whole print — never cropped */
+  display: block;
+}
+/* Per-size heights sized to keep each print fully visible in the section. */
+.gal-row--2x6 { --gal-h: clamp(230px, 34vw, 340px); }
+.gal-row--2x6 .gal-item { aspect-ratio: 2 / 6; }
+.gal-row--4x6 { --gal-h: clamp(220px, 32vw, 300px); }
+.gal-row--4x6 .gal-item { aspect-ratio: 4 / 6; }
+.gal-row--6x4 { --gal-h: clamp(150px, 24vw, 210px); }
+.gal-row--6x4 .gal-item { aspect-ratio: 6 / 4; }
+@keyframes gal-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gal-row { overflow-x: auto; }
+  .gal-row__track { animation: none; }
+}
+
 .strips-row {
   display: flex;
   gap: var(--space-md);

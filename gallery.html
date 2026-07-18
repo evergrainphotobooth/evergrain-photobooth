@@ -76,9 +76,18 @@ gtag('config', 'G-N7ERDKCDX7');
   <section class="section">
     <div class="container">
 
-      <!-- Populated at runtime from the Supabase gallery folder by js/gallery.js -->
-      <div class="strips-row" data-strips-row></div>
-      <div class="gallery" data-gallery-grid aria-busy="true"></div>
+      <!-- Three auto-scrolling rows by print size (2x6, 4x6, 6x4), populated
+           and ordered at runtime from the Supabase gallery folder by
+           js/gallery.js. Newest photo (highest index) shows on the left;
+           hovering a row pauses that row. -->
+      <div class="gal-marquees" data-gallery-marquees aria-busy="true">
+        <div class="gal-row gal-row--2x6" data-gal-row="2x6" aria-label="2×6 photo strips"></div>
+        <div class="gal-row gal-row--4x6" data-gal-row="4x6" aria-label="4×6 prints"></div>
+        <div class="gal-6x4" aria-label="6×4 prints">
+          <div class="gal-row gal-row--6x4" data-gal-row="6x4-a"></div>
+          <div class="gal-row gal-row--6x4" data-gal-row="6x4-b"></div>
+        </div>
+      </div>
 
       <div class="text-center" style="margin-top: var(--space-2xl);">
         <a href="#inquiry" class="btn btn--primary"><span>Request a Quote</span></a>
