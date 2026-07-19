@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-18T14:30:01.807Z",
+  "generated_at": "2026-07-19T13:00:01.744Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "10 Outdoor Event Photo Booth Ideas for Summer Parties",
+      "slug": "outdoor-event-photo-booth-ideas-summer-parties",
+      "url": "/a-thousand-words/los-angeles-event-guides/outdoor-event-photo-booth-ideas-summer-parties",
+      "category": {
+        "name": "Los Angeles Event Guides",
+        "slug": "los-angeles-event-guides"
+      },
+      "categories": [
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        },
+        {
+          "name": "Corporate Events & Brand Activations",
+          "slug": "corporate-events-and-brand-activations"
+        },
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/10-outdoor-event-photo-booth-ideas-for-summer-parties-mrb0lvv2qhkqn.jpg",
+      "imageAlt": "Guests laughing and posing with oversized props in a vibrant outdoor photo booth setup at a summer party, showcasing creative outdoor event photo booth ideas.",
+      "date": "2026-07-19T13:00:00.174+00:00",
+      "dateLabel": "July 19, 2026",
+      "excerpt": "Planning a summer party in Los Angeles or Orange County? Discover 10 creative outdoor event photo booth ideas to make your celebration unforgettable and…"
+    },
     {
       "title": "Black-and-White Photo Booth Ideas for Timeless Event Photos",
       "slug": "black-and-white-photo-booth-ideas-timeless-event-photos",
