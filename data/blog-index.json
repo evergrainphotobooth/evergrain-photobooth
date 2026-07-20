@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-19T13:00:01.744Z",
+  "generated_at": "2026-07-20T13:15:02.009Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "15 Summer Wedding Trends Couples Are Loving in 2026",
+      "slug": "summer-wedding-trends-2026",
+      "url": "/a-thousand-words/weddings-and-celebrations/summer-wedding-trends-2026",
+      "category": {
+        "name": "Weddings & Celebrations",
+        "slug": "weddings-and-celebrations"
+      },
+      "categories": [
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        },
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/15-summer-wedding-trends-couples-are-loving-in-2026-mrb0s94dafnft.jpg",
+      "imageAlt": "Couple laughing and posing in a luxurious open-air photo booth at a summer wedding, capturing a joyful wedding photo booth trend for 2026.",
+      "date": "2026-07-20T13:15:00.263+00:00",
+      "dateLabel": "July 20, 2026",
+      "excerpt": "Discover the hottest summer wedding trends for 2026, from interactive entertainment to personalized details. Find inspiration for your unforgettable Los…"
+    },
     {
       "title": "10 Outdoor Event Photo Booth Ideas for Summer Parties",
       "slug": "outdoor-event-photo-booth-ideas-summer-parties",
