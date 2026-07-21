@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-20T13:15:02.009Z",
+  "generated_at": "2026-07-21T16:55:07.737Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "Behind the Booth: How Evergrain Creates a Polished Photo Booth Experience",
+      "slug": "luxury-photo-booth-rental-evergrain-experience",
+      "url": "/a-thousand-words/real-events-and-behind-the-booth/luxury-photo-booth-rental-evergrain-experience",
+      "category": {
+        "name": "Real Events & Behind the Booth",
+        "slug": "real-events-and-behind-the-booth"
+      },
+      "categories": [
+        {
+          "name": "Real Events & Behind the Booth",
+          "slug": "real-events-and-behind-the-booth"
+        },
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        },
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/how-much-does-a-photo-booth-rental-cost-in-los-angeles-mr4d4mb1ls1vs.jpg",
+      "imageAlt": "A couple smiling and posing in a luxurious open-air photo booth setup with a elegant backdrop, indicating a premium photo booth rental experience.",
+      "date": "2026-07-21T16:55:00.218+00:00",
+      "dateLabel": "July 21, 2026",
+      "excerpt": "Discover Evergrain's premium DSLR photo booth rentals for Los Angeles & Orange County. Explore packages, add-ons, and why we're the best choice for your luxury…"
+    },
     {
       "title": "15 Summer Wedding Trends Couples Are Loving in 2026",
       "slug": "summer-wedding-trends-2026",
