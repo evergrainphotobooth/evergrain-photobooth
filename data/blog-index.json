@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T16:55:07.737Z",
+  "generated_at": "2026-07-22T16:00:01.838Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,38 @@
     }
   ],
   "posts": [
+    {
+      "title": "Custom Photo Booth Templates: What to Include for a Polished Event Look",
+      "slug": "custom-photo-booth-templates-event-design",
+      "url": "/a-thousand-words/design-templates-and-guest-experience/custom-photo-booth-templates-event-design",
+      "category": {
+        "name": "Design, Templates & Guest Experience",
+        "slug": "design-templates-and-guest-experience"
+      },
+      "categories": [
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        },
+        {
+          "name": "Corporate Events & Brand Activations",
+          "slug": "corporate-events-and-brand-activations"
+        },
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        },
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/photo-booth-templates-from-evergrain.png",
+      "imageAlt": "A vibrant custom photo booth template with event branding, featuring a multi-photo strip layout for a luxury event photo booth rental.",
+      "date": "2026-07-22T16:00:00.155+00:00",
+      "dateLabel": "July 22, 2026",
+      "excerpt": "Elevate your event with stunning custom photo booth templates. Discover what elements to include for a cohesive, branded look that guests will love. Perfect…"
+    },
     {
       "title": "Behind the Booth: How Evergrain Creates a Polished Photo Booth Experience",
       "slug": "luxury-photo-booth-rental-evergrain-experience",
