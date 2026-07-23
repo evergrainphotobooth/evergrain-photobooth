@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T16:00:01.838Z",
+  "generated_at": "2026-07-23T16:20:01.975Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,38 @@
     }
   ],
   "posts": [
+    {
+      "title": "Photo Booth Rental Guide for Hollywood Events",
+      "slug": "hollywood-event-photo-booth-rental-guide",
+      "url": "/a-thousand-words/los-angeles-event-guides/hollywood-event-photo-booth-rental-guide",
+      "category": {
+        "name": "Los Angeles Event Guides",
+        "slug": "los-angeles-event-guides"
+      },
+      "categories": [
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        },
+        {
+          "name": "Corporate Events & Brand Activations",
+          "slug": "corporate-events-and-brand-activations"
+        },
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        },
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/photo-booth-rental-guide-for-hollywood-events-mrbm3ifh1a2h7.jpg",
+      "imageAlt": "Guests posing with fun props in a luxury open-air photo booth at a Hollywood event, with a custom backdrop and professional lighting.",
+      "date": "2026-07-23T16:20:00.212+00:00",
+      "dateLabel": "July 23, 2026",
+      "excerpt": "Elevate your next Hollywood event with a luxury photo booth rental. Discover how to choose the perfect experience for galas, premieres, and corporate events in…"
+    },
     {
       "title": "Custom Photo Booth Templates: What to Include for a Polished Event Look",
       "slug": "custom-photo-booth-templates-event-design",
