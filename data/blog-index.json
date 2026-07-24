@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23T16:20:01.975Z",
+  "generated_at": "2026-07-24T16:05:03.452Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,38 @@
     }
   ],
   "posts": [
+    {
+      "title": "What’s Included in a Premium Photo Booth Rental?",
+      "slug": "whats-included-premium-photo-booth-rental",
+      "url": "/a-thousand-words/photo-booth-planning-guides/whats-included-premium-photo-booth-rental",
+      "category": {
+        "name": "Photo Booth Planning Guides",
+        "slug": "photo-booth-planning-guides"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        },
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        },
+        {
+          "name": "Corporate Events & Brand Activations",
+          "slug": "corporate-events-and-brand-activations"
+        },
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/whats-included-in-a-premium-photo-booth-rental-mrbmpeoyml0l3.jpg",
+      "imageAlt": "A premium open-air photo booth rental setup featuring a sleek wooden design, professional studio lighting, and a clean backdrop at a luxury event.",
+      "date": "2026-07-24T16:05:00.897+00:00",
+      "dateLabel": "July 24, 2026",
+      "excerpt": "Discover what features, equipment, and services are included in a premium photo booth rental to elevate your next luxury event or wedding."
+    },
     {
       "title": "Photo Booth Rental Guide for Hollywood Events",
       "slug": "hollywood-event-photo-booth-rental-guide",
