@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24T16:05:03.452Z",
+  "generated_at": "2026-07-25T16:00:02.279Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "A Look Inside Evergrain’s Handcrafted Oak Photo Booth Design",
+      "slug": "evergrain-handcrafted-oak-luxury-photo-booth-rental",
+      "url": "/a-thousand-words/real-events-and-behind-the-booth/evergrain-handcrafted-oak-luxury-photo-booth-rental",
+      "category": {
+        "name": "Real Events & Behind the Booth",
+        "slug": "real-events-and-behind-the-booth"
+      },
+      "categories": [
+        {
+          "name": "Real Events & Behind the Booth",
+          "slug": "real-events-and-behind-the-booth"
+        },
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        },
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/a-look-inside-evergrains-walnut-and-linen-photo-booth-design-mrbmuvkwkp2ai.jpg",
+      "imageAlt": "Evergrain open-air photo booth with handcrafted oak frame and elegant linen backdrop at a wedding reception",
+      "date": "2026-07-25T16:00:00.271+00:00",
+      "dateLabel": "July 25, 2026",
+      "excerpt": "Discover why Evergrain's open-air DSLR photo booth, with its handcrafted oak design, offers the best luxury photo booth rental experience for weddings,…"
+    },
     {
       "title": "What’s Included in a Premium Photo Booth Rental?",
       "slug": "whats-included-premium-photo-booth-rental",
