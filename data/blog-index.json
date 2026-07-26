@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T16:00:02.279Z",
+  "generated_at": "2026-07-26T13:30:03.900Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "The Glam Booth Trend, Explained: Why Black-and-White Editorial Photos Are Everywhere in 2026",
+      "slug": "glam-booth-trend-black-white-editorial-photos",
+      "url": "/a-thousand-words/photo-booth-trends-and-ideas/glam-booth-trend-black-white-editorial-photos",
+      "category": {
+        "name": "Photo Booth Trends & Ideas",
+        "slug": "photo-booth-trends-and-ideas"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        },
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        },
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/the-glam-booth-trend-explained-why-black-and-white-editorial-photos-are-everywhere-in-2026-mrcnrxqv8tlq9.jpg",
+      "imageAlt": "Couple posing elegantly in a black and white Glam Booth, showcasing high-contrast editorial photography",
+      "date": "2026-07-26T13:30:00.213+00:00",
+      "dateLabel": "July 26, 2026",
+      "excerpt": "Discover the Glam Booth Trend: why black-and-white editorial photos are the ultimate luxury photo booth experience for weddings, corporate events, and parties…"
+    },
     {
       "title": "A Look Inside Evergrain’s Handcrafted Oak Photo Booth Design",
       "slug": "evergrain-handcrafted-oak-luxury-photo-booth-rental",
