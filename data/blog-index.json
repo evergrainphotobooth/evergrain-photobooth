@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-26T13:30:03.900Z",
+  "generated_at": "2026-07-27T13:30:01.913Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "Do You Really Need a 360 Booth? An Honest 2026 Take for LA Events",
+      "slug": "do-you-really-need-360-photo-booth-la-events",
+      "url": "/a-thousand-words/photo-booth-planning-guides/do-you-really-need-360-photo-booth-la-events",
+      "category": {
+        "name": "Photo Booth Planning Guides",
+        "slug": "photo-booth-planning-guides"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        },
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/do-you-really-need-a-360-booth-an-honest-2026-take-for-la-events-mrco4fad1pcx5.jpg",
+      "imageAlt": "Guests laughing and posing with props in a vibrant carnival-themed open-air photo booth, capturing candid moments at an event.",
+      "date": "2026-07-27T13:30:00.172+00:00",
+      "dateLabel": "July 27, 2026",
+      "excerpt": "Considering a 360 photo booth for your LA or OC event? Get an honest 2026 take on whether it's the right choice, or if a luxury DSLR booth offers more."
+    },
     {
       "title": "The Glam Booth Trend, Explained: Why Black-and-White Editorial Photos Are Everywhere in 2026",
       "slug": "glam-booth-trend-black-white-editorial-photos",
