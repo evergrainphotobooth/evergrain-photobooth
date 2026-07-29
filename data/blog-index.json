@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-28T12:00:02.040Z",
+  "generated_at": "2026-07-29T13:30:02.158Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "AI Photo Booths in 2026: What's Actually Worth It vs. What's Just a Filter",
+      "slug": "ai-photo-booths-2026-worth-it-vs-filter",
+      "url": "/a-thousand-words/photo-booth-trends-and-ideas/ai-photo-booths-2026-worth-it-vs-filter",
+      "category": {
+        "name": "Photo Booth Trends & Ideas",
+        "slug": "photo-booth-trends-and-ideas"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        },
+        {
+          "name": "Photo Booth Planning Guides",
+          "slug": "photo-booth-planning-guides"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        }
+      ],
+      "image": "",
+      "imageAlt": "AI Photo Booths in 2026: What's Actually Worth It vs. What's Just a Filter",
+      "date": "2026-07-29T13:30:00.173+00:00",
+      "dateLabel": "July 29, 2026",
+      "excerpt": "Demystifying AI photo booths for 2026 events. Discover which AI features truly enhance your luxury photo booth experience and which are just fleeting filters."
+    },
     {
       "title": "GlamCam for Brand Activations: Turning Guests Into Your Best Content in 2026",
       "slug": "glamcam-brand-activation-photo-booth-content",
