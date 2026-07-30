@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-29T13:30:02.158Z",
+  "generated_at": "2026-07-30T12:30:02.569Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "Beyond the Photo Strip: The Photo Booth Keepsakes Couples Are Choosing in 2026",
+      "slug": "wedding-photo-booth-keepsakes-trends-2026",
+      "url": "/a-thousand-words/photo-booth-trends-and-ideas/wedding-photo-booth-keepsakes-trends-2026",
+      "category": {
+        "name": "Photo Booth Trends & Ideas",
+        "slug": "photo-booth-trends-and-ideas"
+      },
+      "categories": [
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        },
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        },
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/beyond-the-photo-strip-the-photo-booth-keepsakes-couples-are-choosing-in-2026-mrcpjia052krz.jpg",
+      "imageAlt": "A smiling couple holds up a black and white photo booth strip, showcasing their joyful expressions.",
+      "date": "2026-07-30T12:30:00.2+00:00",
+      "dateLabel": "July 30, 2026",
+      "excerpt": "Discover the latest wedding photo booth keepsake trends for 2026! Go beyond traditional strips with unique guest book alternatives and personalized memories…"
+    },
     {
       "title": "AI Photo Booths in 2026: What's Actually Worth It vs. What's Just a Filter",
       "slug": "ai-photo-booths-2026-worth-it-vs-filter",
