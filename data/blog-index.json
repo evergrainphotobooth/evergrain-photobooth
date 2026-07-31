@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T12:30:02.569Z",
+  "generated_at": "2026-07-31T13:05:02.325Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "Why 2026 Couples Want a Photo Booth That Blends Into the Décor — Not a Prop in the Corner",
+      "slug": "wedding-photo-booth-trends-2026-decor-integration",
+      "url": "/a-thousand-words/design-templates-and-guest-experience/wedding-photo-booth-trends-2026-decor-integration",
+      "category": {
+        "name": "Design, Templates & Guest Experience",
+        "slug": "design-templates-and-guest-experience"
+      },
+      "categories": [
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        },
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        },
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/why-2026-couples-want-a-photo-booth-that-blends-into-the-dcor-not-a-prop-in-the-corner-mrcqr4cxcqwzk.jpg",
+      "imageAlt": "A luxury open-air photo booth with a sleek wooden minimalist design blending into a modern wedding reception space.",
+      "date": "2026-07-31T13:05:00.233+00:00",
+      "dateLabel": "July 31, 2026",
+      "excerpt": "Discover why 2026 couples are opting for a luxury wedding photo booth that blends seamlessly into venue decor rather than clunky, old-school setups."
+    },
     {
       "title": "Beyond the Photo Strip: The Photo Booth Keepsakes Couples Are Choosing in 2026",
       "slug": "wedding-photo-booth-keepsakes-trends-2026",
