@@ -810,19 +810,29 @@ a.area-pill:hover {
   object-fit: cover;
   display: block;
 }
-.specializing__photo--back {
-  width: 32%;
-  top: 3%;
-  right: 22%;
-  z-index: 1;
-  transform: rotate(3deg);
-}
+/* Three fanned photo strips, all the same size. Front (M&E) on the left,
+   Wine o'clock in the middle, Sev & Lilia at the back-right — set lower so
+   its bottom "Next stop: Wedding 2027" message stays uncovered. */
+.specializing__photo--front,
+.specializing__photo--mid,
+.specializing__photo--back { width: 30%; }
 .specializing__photo--front {
-  width: 32%;
-  bottom: 3%;
-  left: 22%;
+  bottom: 8%;
+  left: 6%;
+  z-index: 3;
+  transform: rotate(-6deg);
+}
+.specializing__photo--mid {
+  bottom: 9%;
+  left: 30%;
   z-index: 2;
-  transform: rotate(-3deg);
+  transform: rotate(1deg);
+}
+.specializing__photo--back {
+  bottom: 0;
+  left: 52%;
+  z-index: 1;
+  transform: rotate(7deg);
 }
 @media (max-width: 760px) {
   .specializing {
