@@ -12,43 +12,117 @@
 .hero {
   position: relative;
   min-height: 100vh;
-  background-color: var(--evergreen-dark); /* loaded-image fallback */
-  background-image:
-    linear-gradient(
-      110deg,
-      rgba(22, 48, 36, 0.90) 0%,
-      rgba(22, 48, 36, 0.78) 50%,
-      rgba(22, 48, 36, 0.55) 100%
-    ),
-    url("https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/homepage/Homepage%20Hero.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: var(--evergreen);
   color: var(--linen);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-block: clamp(7rem, 14vw, 10rem) clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
-  gap: clamp(2rem, 5vh, 4rem);
 }
-/* On narrow screens, even out the overlay so text on either side stays legible
-   regardless of how the image crops. */
-@media (max-width: 720px) {
-  .hero {
-    background-image:
-      linear-gradient(rgba(22, 48, 36, 0.85), rgba(22, 48, 36, 0.85)),
-      url("https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/homepage/Homepage%20Hero.jpg");
-  }
+/* Cream, lightly-speckled disc behind the booth on the right. */
+.hero__disc {
+  position: absolute;
+  top: 50%;
+  right: -12%;
+  transform: translateY(-50%);
+  width: min(82vh, 60%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(rgba(92, 74, 53, 0.06) 1px, transparent 1.5px) 0 0 / 8px 8px,
+    var(--linen-warm);
+  z-index: 0;
 }
-.hero__content {
-  position: relative;
+/* Booth cutout — anchored to the bottom, center-right, in front of "grain." */
+.hero__booth {
+  position: absolute;
+  right: 9%;
+  bottom: 0;
+  height: min(94%, 90vh);
+  width: auto;
+  max-width: 46%;
+  object-fit: contain;
+  object-position: bottom;
   z-index: 2;
-  max-width: 920px;
-  flex: 1;
+  filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.28));
+  pointer-events: none;
+}
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding-block: clamp(6rem, 12vw, 9rem) clamp(2rem, 5vw, 3.5rem);
+}
+/* Big, staggered headline. Sits under the booth (z-index 2) so the booth
+   overlaps "grain."; "grain." is evergreen so it reads on the cream disc. */
+.hero__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 0.84;
+  letter-spacing: -0.03em;
+  margin: 0;
+  font-size: clamp(3.2rem, 12vw, 11rem);
+  position: relative;
+  z-index: 1;
+}
+.hero__title span { display: block; }
+.hero__title-1 { color: var(--linen); }
+.hero__title-2 {
+  color: var(--linen);
+  font-size: 0.62em;
+  margin-left: 14%;
+  margin-top: 0.08em;
+}
+.hero__title-3 {
+  margin-left: 45%;
+  margin-top: 0.04em;
+}
+.hero__title-3 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--evergreen);
+}
+.hero__copy {
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(1.75rem, 4vw, 3rem);
+  max-width: 29rem;
+  border-left: 2px solid rgba(244, 237, 224, 0.35);
+  padding-left: var(--space-md);
+}
+/* Stacked hero below wide screens: text on top, booth centered below.
+   The layered overlap composition only runs on genuinely wide viewports. */
+@media (max-width: 1100px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .hero__disc { display: none; }
+  .hero__inner {
+    order: 1;
+    min-height: 0;
+    justify-content: flex-start;
+    padding-block: clamp(6rem, 22vw, 8rem) clamp(1.5rem, 6vw, 2.5rem);
+  }
+  .hero__title {
+    font-size: clamp(3rem, 17vw, 5rem);
+    line-height: 0.9;
+  }
+  .hero__title-2 { margin-left: 8%; font-size: 0.66em; }
+  .hero__title-3 { margin-left: 16%; }
+  .hero__title-3 em { color: var(--champagne); } /* legible on green (no disc) */
+  .hero__copy { max-width: none; }
+  .hero__booth {
+    position: static;
+    order: 2;
+    height: auto;
+    width: min(80%, 330px);
+    max-height: 56vh;
+    margin: 0 auto;
+    align-self: center;
+    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.28));
+  }
 }
 .hero__eyebrow {
   display: flex;
