@@ -29,13 +29,13 @@
   pointer-events: none;
   z-index: 0;
 }
-/* Cream, lightly-speckled disc behind the booth on the right. */
+/* Cream, lightly-speckled disc — anchored to the bottom-right so only a
+   quarter shows there and it stays clear of the nav at the top. */
 .hero__disc {
   position: absolute;
-  top: 50%;
-  right: -8%;
-  transform: translateY(-50%);
-  width: min(98vh, 68%);
+  right: -9%;
+  bottom: -22%;
+  width: min(108vh, 72%);
   aspect-ratio: 1;
   border-radius: 50%;
   background:
@@ -43,32 +43,32 @@
     var(--linen-warm);
   z-index: 1;
 }
-/* Booth cutout — anchored to the bottom, centered between "the" and "grain."
-   and in front of the headline. */
+/* Booth cutout — smaller, centered-right, BEHIND the headline so "grain."
+   reads in front of it. */
 .hero__booth {
   position: absolute;
   right: 30%;
   bottom: 0;
-  height: min(97%, 94vh);
+  height: min(74%, 70vh);
   width: auto;
-  max-width: 52%;
+  max-width: 42%;
   object-fit: contain;
   object-position: bottom;
-  z-index: 4;
+  z-index: 2;
   filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.28));
   pointer-events: none;
 }
 .hero__inner {
   position: relative;
-  z-index: 2;
+  z-index: 4;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-block: clamp(6rem, 12vw, 9rem) clamp(2rem, 5vw, 3.5rem);
+  padding-block: clamp(5rem, 8vw, 6.5rem) clamp(1.5rem, 4vw, 2.75rem);
 }
-/* Big headline. Sits under the booth (z-index 4) so the booth crosses between
-   "the" and "grain."; "grain." is evergreen so it reads on the cream disc. */
+/* Big headline, in front of the booth (z-index 4 > booth 2) so "grain."
+   overlaps it; "grain." is evergreen so it reads on the cream disc. */
 .hero__title {
   font-family: var(--font-display);
   font-weight: 300;
@@ -77,17 +77,17 @@
   margin: 0;
   font-size: clamp(3.4rem, 12vw, 12rem);
   position: relative;
-  z-index: 2;
+  z-index: 4;
 }
 .hero__title span { display: block; }
 .hero__title-1 { color: var(--linen); }
 .hero__title-2 {
-  color: var(--linen);
+  color: var(--white);
   margin-left: 12%;
   margin-top: 0.02em;
 }
 .hero__title-3 {
-  margin-left: 58%;
+  margin-left: 54%;
   margin-top: 0.28em;
 }
 .hero__title-3 em {
