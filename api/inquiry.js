@@ -178,7 +178,54 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, id: rowId, email });
+  // ---- Auto-reply confirmation to the applicant (completion only) ----
+  // Sent from the verified Resend sender with the display name "Evergrain
+  // Photobooth" and Reply-To set to the Gmail inbox, so replies land there.
+  // Never fires on the partial "lead started" event, and a failure here never
+  // affects the saved inquiry or the team notification.
+  let autoReply = "not_attempted";
+  if (!isPartial && payload.email) {
+    const missA = ["RESEND_API_KEY", "INQUIRY_FROM_EMAIL"].filter(k => !process.env[k]);
+    if (missA.length) {
+      autoReply = `skipped: missing env ${missA.join(", ")}`;
+      console.error("Auto-reply skipped —", autoReply);
+    } else {
+      const fromAddr = (String(INQUIRY_FROM_EMAIL).match(/<([^>]+)>/) || [null, INQUIRY_FROM_EMAIL])[1].trim();
+      try {
+        const r = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
+          body: JSON.stringify({
+            from: `Evergrain Photobooth <${fromAddr}>`,
+            to: [payload.email],
+            reply_to: "evergrainphotobooth@gmail.com",
+            subject: "We got your inquiry! ✨ — Evergrain Photobooth",
+            html: renderAutoReply(payload),
+          }),
+        });
+        autoReply = r.ok ? "sent" : `failed: ${r.status} ${(await r.text()).slice(0, 150)}`;
+        if (!r.ok) console.error("Auto-reply send failed:", autoReply);
+      } catch (err) {
+        autoReply = `failed: ${String(err.message || err)}`;
+        console.error("Auto-reply error:", err);
+      }
+    }
+  }
+
+  // Record that the confirmation went out (stored in raw_payload so no schema
+  // migration is needed) — the admin reads this to show a "Confirmation sent"
+  // badge. Non-fatal: if it fails, only the badge is missing.
+  if (rowId && autoReply === "sent") {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/inquiries?id=eq.${encodeURIComponent(rowId)}`, {
+        method: "PATCH",
+        headers: sbHeaders,
+        body: JSON.stringify({ raw_payload: { ...payload, confirmation_sent: true } }),
+      });
+    } catch (_) { /* badge just won't show */ }
+  }
+
+  return res.status(200).json({ ok: true, id: rowId, email, autoReply });
 }
 
 /* ---------- Date + time formatting ---------- */
@@ -236,6 +283,71 @@ function renderEmail(p, opts = {}) {
     </table>
     ${p.message ? `<hr style="border:0;border-top:1px solid #eee;margin:24px 0;"><h3 style="font-family:Georgia,serif;font-weight:400;color:#1F4332;font-size:18px;margin:0 0 12px;">Message</h3><p style="white-space:pre-wrap;color:#1A1410;line-height:1.6;margin:0;">${escapeHtml(p.message)}</p>` : ""}
   </div>
+</body></html>`;
+}
+
+/* ---------- Applicant auto-reply email ---------- */
+function renderAutoReply(p) {
+  const A = "https://evergrainphotobooth.com/assets";
+  const cell = "padding:7px 12px 7px 0;color:#8A7358;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;vertical-align:top;white-space:nowrap;";
+  const val = "padding:7px 0;color:#1A1410;font-size:14.5px;";
+  const row = (label, value) => value
+    ? `<tr><td style="${cell}">${escapeHtml(label)}</td><td style="${val}">${escapeHtml(value)}</td></tr>`
+    : "";
+  const addons = p.selectedAddons || (Array.isArray(p.interestedAddons) ? p.interestedAddons.join(", ") : "");
+  const totalRow = p.estimatedTotal
+    ? `<tr><td style="${cell}">Estimated Total</td><td style="padding:7px 0;color:#1F4332;font-size:15px;font-weight:700;">${escapeHtml(p.estimatedTotal)}</td></tr>`
+    : "";
+  const recap = [
+    row("Name", p.name),
+    row("Email", p.email),
+    row("Phone", p.phone),
+    row("Event Date", formatDate(p.eventDate)),
+    row("Start Time", formatTime(p.eventStartTime)),
+    row("Event Type", p.eventType),
+    row("Venue Name", p.venueCity),
+    row("Venue Address", p.venueAddress),
+    row("Guest Count", p.guests),
+    row("Package", p.selectedPackage || p.packageInterest),
+    row("Add-ons", addons),
+    totalRow,
+  ].join("");
+
+  return `<!doctype html><html><body style="margin:0;padding:24px;background:#DCD6CB;font-family:Manrope,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#DCD6CB;"><tr><td align="center">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#FFFFFF;border-radius:12px;overflow:hidden;">
+      <tr><td background="${A}/img/email-header-bg.png" style="background:#1F4332 url('${A}/img/email-header-bg.png') center center / cover no-repeat;padding:36px 40px 30px;text-align:center;border-bottom:3px solid #A47A2A;">
+        <img src="${A}/logos/FullLogo_White.png" width="200" alt="Evergrain Photobooth" style="display:inline-block;width:200px;max-width:70%;height:auto;" />
+      </td></tr>
+      <tr><td style="padding:40px 40px 8px;text-align:center;">
+        <div style="font-size:34px;line-height:1.1;margin:0 0 6px;">🎉</div>
+        <h1 style="font-family:Georgia,'Times New Roman',serif;font-weight:400;color:#1F4332;font-size:28px;line-height:1.15;margin:0 0 6px;letter-spacing:-0.01em;">You're on our radar!</h1>
+        <p style="font-family:Inter,sans-serif;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:#A47A2A;margin:0;font-weight:600;">We received your inquiry</p>
+      </td></tr>
+      <tr><td style="padding:22px 44px 6px;">
+        <p style="color:#3D3226;font-size:15px;line-height:1.65;margin:0 0 16px;">Thank you for reaching out to Evergrain Photobooth—we're so excited to learn more about your event! Your inquiry has been received and we'll be in touch with a custom proposal within <strong style="color:#1F4332;">24 hours</strong>.</p>
+        <div style="background:#FBF3E4;border:1px solid #E4CF9E;border-radius:8px;padding:14px 16px;margin:0 0 18px;">
+          <p style="color:#5C4A35;font-size:13.5px;line-height:1.6;margin:0;">In the meantime, please check your <strong>Spam</strong> or <strong>Promotions</strong> folder if you don't hear from us — we'd hate for our response to get lost!</p>
+        </div>
+        <p style="color:#3D3226;font-size:15px;line-height:1.6;margin:0 0 8px;">Can't wait? Reach us directly at:</p>
+        <p style="color:#3D3226;font-size:15px;line-height:1.9;margin:0 0 4px;">📧 <a href="mailto:evergrainphotobooth@gmail.com" style="color:#A47A2A;text-decoration:none;font-weight:600;">evergrainphotobooth@gmail.com</a><br />📞 <a href="tel:+16265608330" style="color:#A47A2A;text-decoration:none;font-weight:600;">(626) 560-8330</a></p>
+      </td></tr>
+      <tr><td style="padding:24px 44px 8px;">
+        <hr style="border:0;border-top:1px solid #ECE2D0;margin:0 0 22px;" />
+        <p style="font-family:Georgia,serif;color:#1F4332;font-size:17px;font-weight:400;margin:0 0 14px;">Here's a copy of what we received:</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#FAF6EE;border-radius:8px;"><tr><td style="padding:16px 18px 4px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">${recap}</table>
+        </td></tr></table>
+      </td></tr>
+      <tr><td style="padding:24px 44px 34px;">
+        <p style="font-family:Georgia,serif;font-style:italic;color:#1F4332;font-size:15px;margin:0 0 22px;text-align:center;">We can't wait to be part of your event.</p>
+        <hr style="border:0;border-top:1px solid #ECE2D0;margin:0 0 20px;" />
+        <p style="font-family:Inter,sans-serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#1F4332;font-weight:700;margin:0 0 10px;">Cindy + Hamilton <span style="color:#8A7358;font-weight:500;">· Owners</span></p>
+        <img src="${A}/logos/FullLogo_Green.png" width="150" alt="Evergrain Photobooth" style="display:block;width:150px;max-width:60%;height:auto;margin:0 0 10px;" />
+        <p style="color:#5C4A35;font-size:13px;line-height:1.75;margin:0;">Tel: <a href="tel:+16265608330" style="color:#5C4A35;text-decoration:none;">(626) 560-8330</a><br /><a href="https://evergrainphotobooth.com" style="color:#A47A2A;text-decoration:none;font-weight:600;">Website</a> &nbsp;·&nbsp; <a href="https://www.instagram.com/evergrainphotobooth/" style="color:#A47A2A;text-decoration:none;font-weight:600;">Instagram</a> &nbsp;·&nbsp; <a href="https://www.yelp.com/biz/evergrain-photobooth-los-angeles" style="color:#A47A2A;text-decoration:none;font-weight:600;">Yelp</a></p>
+      </td></tr>
+    </table>
+  </td></tr></table>
 </body></html>`;
 }
 

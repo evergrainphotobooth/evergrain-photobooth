@@ -187,7 +187,7 @@
 
     const rows = currentList.map(r => `
       <tr data-row-id="${r.id}" class="${r.id === selectedId ? "is-selected" : ""}${r.completed === false ? " is-partial" : ""}">
-        <td><strong>${esc(r.name)}</strong>${r.completed === false ? ` <span class="partial-badge" title="Reached step ${r.last_step || 1} of 4">Partial · ${r.last_step || 1}/4</span>` : ""}<div class="text-meta">${esc(r.email)}</div></td>
+        <td><strong>${esc(r.name)}</strong>${r.completed === false ? ` <span class="partial-badge" title="Reached step ${r.last_step || 1} of 4">Partial · ${r.last_step || 1}/4</span>` : ""}${r.confirmationSent === "true" ? ` <span title="Auto-reply confirmation email was sent to the applicant" style="display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:#E4F0E6;color:#1F4332;font-size:10px;font-weight:600;letter-spacing:0.02em;vertical-align:middle;white-space:nowrap;">✓ Confirmation sent</span>` : ""}<div class="text-meta">${esc(r.email)}</div></td>
         <td>${esc(r.event_type || "—")}<div class="text-meta">${esc(r.venue_city || "")}</div></td>
         <td>${fmtDate(r.event_date)}</td>
         <td>${esc(r.selected_package || "—")}<div class="text-meta">${esc(r.estimated_total || "")}</div></td>
