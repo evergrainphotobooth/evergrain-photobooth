@@ -16,66 +16,79 @@
   color: var(--linen);
   overflow: hidden;
 }
+/* Brand "topographic" squiggle lines across the green field. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/img/topographic-bg.svg");
+  background-size: 130% auto;
+  background-position: left center;
+  background-repeat: no-repeat;
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 0;
+}
 /* Cream, lightly-speckled disc behind the booth on the right. */
 .hero__disc {
   position: absolute;
   top: 50%;
-  right: -12%;
+  right: -8%;
   transform: translateY(-50%);
-  width: min(82vh, 60%);
+  width: min(98vh, 68%);
   aspect-ratio: 1;
   border-radius: 50%;
   background:
     radial-gradient(rgba(92, 74, 53, 0.06) 1px, transparent 1.5px) 0 0 / 8px 8px,
     var(--linen-warm);
-  z-index: 0;
+  z-index: 1;
 }
-/* Booth cutout — anchored to the bottom, center-right, in front of "grain." */
+/* Booth cutout — anchored to the bottom, centered between "the" and "grain."
+   and in front of the headline. */
 .hero__booth {
   position: absolute;
-  right: 9%;
+  right: 30%;
   bottom: 0;
-  height: min(94%, 90vh);
+  height: min(97%, 94vh);
   width: auto;
-  max-width: 46%;
+  max-width: 52%;
   object-fit: contain;
   object-position: bottom;
-  z-index: 2;
+  z-index: 4;
   filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.28));
   pointer-events: none;
 }
 .hero__inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-block: clamp(6rem, 12vw, 9rem) clamp(2rem, 5vw, 3.5rem);
 }
-/* Big, staggered headline. Sits under the booth (z-index 2) so the booth
-   overlaps "grain."; "grain." is evergreen so it reads on the cream disc. */
+/* Big headline. Sits under the booth (z-index 4) so the booth crosses between
+   "the" and "grain."; "grain." is evergreen so it reads on the cream disc. */
 .hero__title {
   font-family: var(--font-display);
   font-weight: 300;
-  line-height: 0.84;
+  line-height: 0.8;
   letter-spacing: -0.03em;
   margin: 0;
-  font-size: clamp(3.2rem, 12vw, 11rem);
+  font-size: clamp(3.4rem, 12vw, 12rem);
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 .hero__title span { display: block; }
 .hero__title-1 { color: var(--linen); }
 .hero__title-2 {
   color: var(--linen);
-  font-size: 0.62em;
-  margin-left: 14%;
-  margin-top: 0.08em;
+  margin-left: 12%;
+  margin-top: 0.02em;
 }
 .hero__title-3 {
-  margin-left: 45%;
-  margin-top: 0.04em;
+  margin-left: 58%;
+  margin-top: 0.28em;
 }
 .hero__title-3 em {
   font-style: italic;
@@ -87,8 +100,6 @@
   z-index: 3;
   margin-top: clamp(1.75rem, 4vw, 3rem);
   max-width: 29rem;
-  border-left: 2px solid rgba(244, 237, 224, 0.35);
-  padding-left: var(--space-md);
 }
 /* Stacked hero below wide screens: text on top, booth centered below.
    The layered overlap composition only runs on genuinely wide viewports. */
@@ -143,21 +154,6 @@
   text-transform: uppercase;
   color: var(--champagne);
   font-weight: 500;
-}
-.hero__title {
-  font-family: var(--font-display);
-  font-size: var(--fs-hero);
-  font-weight: 300;
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  color: var(--linen);
-  margin: 0 0 var(--space-lg);
-  text-wrap: balance;
-}
-.hero__title em {
-  font-style: italic;
-  font-weight: 300;
-  color: var(--champagne);
 }
 .hero__lede {
   font-size: clamp(1.1rem, 1.6vw, 1.35rem);
