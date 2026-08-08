@@ -329,8 +329,8 @@ function renderAutoReply(p) {
         <div style="background:#FBF3E4;border:1px solid #E4CF9E;border-radius:8px;padding:14px 16px;margin:0 0 18px;">
           <p style="color:#5C4A35;font-size:13.5px;line-height:1.6;margin:0;">In the meantime, please check your <strong>Spam</strong> or <strong>Promotions</strong> folder if you don't hear from us — we'd hate for our response to get lost!</p>
         </div>
-        <p style="color:#3D3226;font-size:15px;line-height:1.6;margin:0 0 8px;">Can't wait? Reach us directly at:</p>
-        <p style="color:#3D3226;font-size:15px;line-height:1.9;margin:0 0 4px;">📧 <a href="mailto:evergrainphotobooth@gmail.com" style="color:#A47A2A;text-decoration:none;font-weight:600;">evergrainphotobooth@gmail.com</a><br />📞 <a href="tel:+16265608330" style="color:#A47A2A;text-decoration:none;font-weight:600;">(626) 560-8330</a></p>
+        <p style="color:#3D3226;font-size:15px;line-height:1.6;margin:0 0 8px;text-align:center;">Can't wait? Reach us directly at:</p>
+        <p style="color:#3D3226;font-size:15px;line-height:1.9;margin:0 0 4px;text-align:center;">📧 <a href="mailto:evergrainphotobooth@gmail.com" style="color:#A47A2A;text-decoration:none;font-weight:600;">evergrainphotobooth@gmail.com</a><br />📞 <a href="tel:+16265608330" style="color:#A47A2A;text-decoration:none;font-weight:600;">(626) 560-8330</a></p>
       </td></tr>
       <tr><td style="padding:24px 44px 8px;">
         <hr style="border:0;border-top:1px solid #ECE2D0;margin:0 0 22px;" />
@@ -342,9 +342,9 @@ function renderAutoReply(p) {
       <tr><td style="padding:24px 44px 34px;">
         <p style="font-family:Georgia,serif;font-style:italic;color:#1F4332;font-size:15px;margin:0 0 22px;text-align:center;">We can't wait to be part of your event.</p>
         <hr style="border:0;border-top:1px solid #ECE2D0;margin:0 0 20px;" />
-        <p style="font-family:Inter,sans-serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#1F4332;font-weight:700;margin:0 0 10px;">Cindy + Hamilton <span style="color:#8A7358;font-weight:500;">· Owners</span></p>
-        <img src="${A}/logos/FullLogo_Green.png" width="150" alt="Evergrain Photobooth" style="display:block;width:150px;max-width:60%;height:auto;margin:0 0 10px;" />
-        <p style="color:#5C4A35;font-size:13px;line-height:1.75;margin:0;">Tel: <a href="tel:+16265608330" style="color:#5C4A35;text-decoration:none;">(626) 560-8330</a><br /><a href="https://evergrainphotobooth.com" style="color:#A47A2A;text-decoration:none;font-weight:600;">Website</a> &nbsp;·&nbsp; <a href="https://www.instagram.com/evergrainphotobooth/" style="color:#A47A2A;text-decoration:none;font-weight:600;">Instagram</a> &nbsp;·&nbsp; <a href="https://www.yelp.com/biz/evergrain-photobooth-los-angeles" style="color:#A47A2A;text-decoration:none;font-weight:600;">Yelp</a></p>
+        <p style="font-family:Inter,sans-serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#1F4332;font-weight:700;margin:0 0 10px;text-align:center;">Cindy + Hamilton <span style="color:#8A7358;font-weight:500;">· Owners</span></p>
+        <img src="${A}/logos/FullLogo_Green.png" width="150" alt="Evergrain Photobooth" style="display:block;width:150px;max-width:60%;height:auto;margin:0 auto 10px;" />
+        <p style="color:#5C4A35;font-size:13px;line-height:1.75;margin:0;text-align:center;">Tel: <a href="tel:+16265608330" style="color:#5C4A35;text-decoration:none;">(626) 560-8330</a><br /><a href="https://evergrainphotobooth.com" style="color:#A47A2A;text-decoration:none;font-weight:600;">Website</a> &nbsp;·&nbsp; <a href="https://www.instagram.com/evergrainphotobooth/" style="color:#A47A2A;text-decoration:none;font-weight:600;">Instagram</a> &nbsp;·&nbsp; <a href="https://www.yelp.com/biz/evergrain-photobooth-los-angeles" style="color:#A47A2A;text-decoration:none;font-weight:600;">Yelp</a></p>
       </td></tr>
     </table>
   </td></tr></table>
