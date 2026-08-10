@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T13:45:02.576Z",
+  "generated_at": "2026-08-10T12:10:02.839Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "10 Ways a Photo Booth Makes Corporate Events More Engaging",
+      "slug": "10-ways-photo-booth-makes-corporate-events-engaging",
+      "url": "/a-thousand-words/corporate-events-and-brand-activations/10-ways-photo-booth-makes-corporate-events-engaging",
+      "category": {
+        "name": "Corporate Events & Brand Activations",
+        "slug": "corporate-events-and-brand-activations"
+      },
+      "categories": [
+        {
+          "name": "Corporate Events & Brand Activations",
+          "slug": "corporate-events-and-brand-activations"
+        },
+        {
+          "name": "Los Angeles Event Guides",
+          "slug": "los-angeles-event-guides"
+        },
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/corporate-event-photo-booth-engagement-ideas-msdubvrrao33m.jpg",
+      "imageAlt": "Two women laughing and posing with props in a luxury open air corporate event photo booth, branded with a custom overlay.",
+      "date": "2026-08-10T12:10:00.208+00:00",
+      "dateLabel": "August 10, 2026",
+      "excerpt": "Discover 10 creative ways a luxury photo booth transforms corporate events into memorable, engaging experiences. Boost brand visibility and employee morale…"
+    },
     {
       "title": "7 Questions to Ask Before Hiring a Photo Booth Company",
       "slug": "how-to-choose-a-photo-booth-company",
