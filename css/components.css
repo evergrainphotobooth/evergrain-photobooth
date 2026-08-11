@@ -1041,7 +1041,7 @@ body.nav-open::before { opacity: 1; pointer-events: auto; }
 
 /* ---------- Areas Marquee (above footer on every page) ---------- */
 .areas-marquee {
-  background: var(--char);
+  background: var(--evergreen);
   color: rgba(217, 201, 168, 0.5);
   overflow: hidden;
   border-top: 1px solid rgba(92, 74, 53, 0.35);
@@ -1053,7 +1053,7 @@ body.nav-open::before { opacity: 1; pointer-events: auto; }
   display: block;
   text-align: center;
   font-family: var(--font-eyebrow);
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: rgba(164, 122, 42, 0.7);
