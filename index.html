@@ -400,6 +400,25 @@ gtag('config', 'G-N7ERDKCDX7');
   </section>
 
   <div data-inquiry-placeholder></div>
+
+  <!-- ===== INSTAGRAM ===== populated + ordered at runtime from the Supabase
+       images/instagram/ folder by js/instagram.js. Hidden until there are posts. -->
+  <section class="section ig-section" data-ig-section hidden>
+    <div class="container">
+      <div class="reveal ig-section__head">
+        <span class="eyebrow">Follow along</span>
+        <h2 class="display">Find us on Instagram</h2>
+      </div>
+      <div class="ig-carousel reveal" data-ig-carousel>
+        <button type="button" class="ig-carousel__arrow ig-carousel__arrow--prev" data-ig-prev aria-label="Previous posts">&larr;</button>
+        <div class="ig-carousel__track" data-ig-track aria-label="Recent Instagram posts"></div>
+        <button type="button" class="ig-carousel__arrow ig-carousel__arrow--next" data-ig-next aria-label="More posts">&rarr;</button>
+      </div>
+      <div class="ig-section__cta reveal">
+        <a href="https://www.instagram.com/evergrainphotobooth/" target="_blank" rel="noopener noreferrer" class="btn btn--brass">Follow us on Instagram</a>
+      </div>
+    </div>
+  </section>
 </main>
 
 <!-- ===== FOOTER ===== -->
@@ -485,6 +504,7 @@ gtag('config', 'G-N7ERDKCDX7');
 
 <script src="js/inquiry-section.js"></script>
 <script src="js/areas-marquee.js"></script>
+<script src="js/instagram.js" defer></script>
 <script src="js/cart.js"></script>
 <script src="js/script.js"></script>
 <script src="js/animations.js"></script>
