@@ -62,6 +62,14 @@ export default async function handler(req, res) {
   const missing = required.filter(k => !payload[k]);
   if (missing.length) return res.status(400).json({ error: `Missing: ${missing.join(", ")}` });
 
+  // Normalize conditional fields before column mapping
+  if (payload.eventType === "Other" && payload.eventTypeOther) {
+    payload.eventType = `Other: ${payload.eventTypeOther}`;
+  }
+  if (payload.referral === "Referral" && payload.referralName) {
+    payload.referral = `Referral: ${payload.referralName}`;
+  }
+
   // Build the column set from whatever fields are present. Undefined keys are
   // omitted so a partial PATCH never clobbers a previously-saved field with null.
   const cols = {};
@@ -267,11 +275,12 @@ function renderEmail(p, opts = {}) {
       ${row("Phone", p.phone)}
       ${row("Event Date", formatDate(p.eventDate))}
       ${row("Event Start", formatTime(p.eventStartTime))}
+      ${row("Event End", formatTime(p.eventEndTime))}
       ${row("Event Type", p.eventType)}
       ${row("Venue Name", p.venueCity)}
       ${row("Venue Address", p.venueAddress)}
       ${row("Guests", p.guests)}
-      ${row("Aesthetic", p.aesthetic)}
+      ${row("Indoor / Outdoor", p.aesthetic)}
       ${row("Heard About Us", p.referral)}
     </table>
     <hr style="border:0;border-top:1px solid #eee;margin:24px 0;">
@@ -304,6 +313,7 @@ function renderAutoReply(p) {
     row("Phone", p.phone),
     row("Event Date", formatDate(p.eventDate)),
     row("Start Time", formatTime(p.eventStartTime)),
+    row("End Time", formatTime(p.eventEndTime)),
     row("Event Type", p.eventType),
     row("Venue Name", p.venueCity),
     row("Venue Address", p.venueAddress),

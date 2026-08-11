@@ -82,7 +82,7 @@
       <fieldset class="form-step is-active" data-step="1">
         <div class="form__row form__row--2">
           <div class="form__field">
-            <label class="form__label" for="name">Name <span class="form__label-note">(Personal or business)</span> *</label>
+            <label class="form__label" for="name">Name <span class="form__label-note">(first and last)</span> *</label>
             <input class="form__input" type="text" id="name" name="name" required autocomplete="name" />
           </div>
           <div class="form__field">
@@ -107,6 +107,7 @@
               <option>Brand Activation</option>
               <option>Other</option>
             </select>
+            <input class="form__input" type="text" id="eventTypeOther" name="eventTypeOther" placeholder="e.g. Graduation, Reunion…" style="margin-top:0.5rem;display:none;" />
           </div>
         </div>
       </fieldset>
@@ -119,12 +120,6 @@
             <input class="form__input" type="date" id="eventDate" name="eventDate" />
           </div>
           <div class="form__field">
-            <label class="form__label" for="eventStartTime">Event Start Time <span class="form__label-note">(PST · Los Angeles)</span></label>
-            <input class="form__input" type="time" id="eventStartTime" name="eventStartTime" />
-          </div>
-        </div>
-        <div class="form__row form__row--2">
-          <div class="form__field">
             <label class="form__label" for="guests">Estimated Guest Count</label>
             <select class="form__select" id="guests" name="guests">
               <option value="">Select one…</option>
@@ -134,12 +129,22 @@
               <option value="300 & above">300 &amp; above</option>
             </select>
           </div>
+        </div>
+        <div class="form__row form__row--2">
           <div class="form__field">
-            <label class="form__label" for="venueCity">Venue Name</label>
-            <!-- name="venueCity" kept so it maps to the existing inquiries.venue_city
-                 column (no DB migration); the field now captures the venue name. -->
-            <input class="form__input" type="text" id="venueCity" name="venueCity" autocomplete="off" />
+            <label class="form__label" for="eventStartTime">Event Start Time <span class="form__label-note">(PST · Los Angeles)</span></label>
+            <input class="form__input" type="time" id="eventStartTime" name="eventStartTime" step="300" />
           </div>
+          <div class="form__field">
+            <label class="form__label" for="eventEndTime">Event End Time <span class="form__label-note">(PST · Los Angeles)</span></label>
+            <input class="form__input" type="time" id="eventEndTime" name="eventEndTime" step="300" />
+          </div>
+        </div>
+        <div class="form__field">
+          <label class="form__label" for="venueCity">Venue Name</label>
+          <!-- name="venueCity" kept so it maps to the existing inquiries.venue_city
+               column (no DB migration); the field now captures the venue name. -->
+          <input class="form__input" type="text" id="venueCity" name="venueCity" autocomplete="off" />
         </div>
         <div class="form__field">
           <label class="form__label" for="venueAddress">Venue Full Address <span class="form__label-note">(street address, city, state, zip code)</span></label>
@@ -151,16 +156,11 @@
       <fieldset class="form-step" data-step="3" hidden>
         <div class="form__row form__row--2">
           <div class="form__field">
-            <label class="form__label" for="aesthetic">Event Aesthetic / Vibe</label>
-            <select class="form__select" id="aesthetic" name="aesthetic">
+            <label class="form__label" for="eventSetting">Event Indoor / Outdoor</label>
+            <select class="form__select" id="eventSetting" name="aesthetic">
               <option value="">Select one…</option>
-              <option>Modern</option>
-              <option>Boho</option>
-              <option>Classic</option>
-              <option>Moody</option>
-              <option>Editorial</option>
-              <option>Playful</option>
-              <option>Other</option>
+              <option>Indoor</option>
+              <option>Outdoor</option>
             </select>
           </div>
           <div class="form__field">
@@ -184,7 +184,17 @@
       <fieldset class="form-step" data-step="4" hidden>
         <div class="form__field">
           <label class="form__label" for="referral">How Did You Hear About Us?</label>
-          <input class="form__input" type="text" id="referral" name="referral" placeholder="Instagram, friend, venue, Google…" />
+          <select class="form__select" id="referral" name="referral">
+            <option value="">Select one…</option>
+            <option>Google</option>
+            <option>Yelp</option>
+            <option>Instagram</option>
+            <option>TikTok</option>
+            <option>Facebook</option>
+            <option>Referral</option>
+            <option>Other</option>
+          </select>
+          <input class="form__input" type="text" id="referralName" name="referralName" placeholder="Who referred you?" style="margin-top:0.5rem;display:none;" />
         </div>
         <div class="form__field">
           <label class="form__label" for="message">Tell Us About Your Event <span class="form__label-note">(optional)</span></label>
@@ -212,4 +222,24 @@
     </form>
   </div>
 </section>`;
+
+  // Conditional: show text input when "Other" event type is selected
+  const etSelect = document.getElementById("eventType");
+  const etOther = document.getElementById("eventTypeOther");
+  if (etSelect && etOther) {
+    etSelect.addEventListener("change", () => {
+      etOther.style.display = etSelect.value === "Other" ? "" : "none";
+      if (etSelect.value !== "Other") etOther.value = "";
+    });
+  }
+
+  // Conditional: show "who referred you" input when "Referral" is selected
+  const refSelect = document.getElementById("referral");
+  const refName = document.getElementById("referralName");
+  if (refSelect && refName) {
+    refSelect.addEventListener("change", () => {
+      refName.style.display = refSelect.value === "Referral" ? "" : "none";
+      if (refSelect.value !== "Referral") refName.value = "";
+    });
+  }
 })();
