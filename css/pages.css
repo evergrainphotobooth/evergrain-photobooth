@@ -2319,3 +2319,5 @@ a.area-pill:hover {
 @media (prefers-reduced-motion: reduce) {
   .ig-carousel__track { scroll-behavior: auto; }
 }
+.ig-follow { display: inline-flex; align-items: center; gap: 0.55em; }
+.ig-follow__icon { width: 1.2em; height: 1.2em; flex: 0 0 auto; }

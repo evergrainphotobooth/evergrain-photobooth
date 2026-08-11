@@ -34,10 +34,12 @@
     `${SUPABASE_URL}/storage/v1/render/image/public/${BUCKET}/${PREFIX}${encodeURIComponent(
       name
     )}?width=560&height=700&resize=cover&quality=76`;
-  // Filename (minus extension) is the Instagram shortcode. "/p/" works for
-  // both feed posts and reels, so we don't need to distinguish them.
-  const postUrl = (name) =>
-    `https://www.instagram.com/p/${encodeURIComponent(name.replace(/\.[^.]+$/, "").trim())}/`;
+  // Files are named "<order>. <shortcode>.<ext>" (e.g. "4. DbrlVuqvuU8.mp4");
+  // the order number sorts them, the shortcode links to the post. "/p/" works
+  // for both feed posts and reels. Bare "<shortcode>.<ext>" is also supported.
+  const orderOf = (name) => { const m = name.match(/^\s*(\d+)\s*[.\-_)]/); return m ? Number(m[1]) : -1; };
+  const shortcode = (name) => name.replace(/^\s*\d+\s*[.\-_)]\s*/, "").replace(/\.[^.]+$/, "").trim();
+  const postUrl = (name) => `https://www.instagram.com/p/${encodeURIComponent(shortcode(name))}/`;
 
   const BADGE =
     '<svg class="ig-card__badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>';
@@ -75,6 +77,11 @@
       return; // stays hidden
     }
     if (!files.length) return;
+
+    // Latest first (highest leading number on the left → oldest on the right).
+    // Files without a number fall back to newest-upload order (already applied
+    // by the list sort), and sit after the numbered ones.
+    files.sort((a, b) => orderOf(b) - orderOf(a));
 
     track.innerHTML = files.map(card).join("");
     section.hidden = false;
