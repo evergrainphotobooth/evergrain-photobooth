@@ -286,17 +286,19 @@
       <div class="status-selector">${statusSelector}</div>
 
       <div class="detail-section-title">Contact</div>
+      ${row("Name", i.name)}
       ${row("Email", i.email, `mailto:${i.email}?subject=${encodeURIComponent("Re: Your Evergrain inquiry")}`)}
       ${row("Phone", i.phone, `tel:${i.phone}`)}
 
       <div class="detail-section-title">Event</div>
       ${row("Date", fmtDate(i.event_date))}
       ${row("Start time", fmtTime(i.event_start_time))}
+      ${row("End time", fmtTime(i.raw_payload && i.raw_payload.eventEndTime))}
       ${row("Type", i.event_type)}
       ${row("Venue Name", i.venue_city)}
       ${row("Venue address", i.venue_address)}
       ${row("Guests", i.guests)}
-      ${row("Aesthetic", i.aesthetic)}
+      ${row("Indoor / Outdoor", i.aesthetic)}
 
       <div class="detail-section-title">Package list</div>
       ${row("Package", i.selected_package || i.package_interest)}
