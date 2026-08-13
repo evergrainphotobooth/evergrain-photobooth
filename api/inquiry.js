@@ -68,6 +68,8 @@ export default async function handler(req, res) {
   }
   if (payload.referral === "Referral" && payload.referralName) {
     payload.referral = `Referral: ${payload.referralName}`;
+  } else if (payload.referral === "Other" && payload.referralName) {
+    payload.referral = `Other: ${payload.referralName}`;
   }
 
   // Build the column set from whatever fields are present. Undefined keys are

@@ -54,6 +54,19 @@
     `<label><input type="checkbox" name="interestedAddons" value="${esc(a.name)}" data-addon-id="${a.id}" data-addon-price="${a.price}" data-addon-desc="${esc(a.desc)}" /> ${esc(a.name)}</label>`
   ).join("\n          ");
 
+  const timeOptions = (() => {
+    const opts = ['<option value="">Select time…</option>'];
+    for (let h = 0; h < 24; h++) {
+      for (let m = 0; m < 60; m += 5) {
+        const val = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+        const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+        const ap = h >= 12 ? "PM" : "AM";
+        opts.push('<option value="' + val + '">' + h12 + ":" + String(m).padStart(2, "0") + " " + ap + "</option>");
+      }
+    }
+    return opts.join("\n              ");
+  })();
+
   placeholder.outerHTML = `
 <section class="section inquiry" id="inquiry">
   <div class="container container--narrow">
@@ -133,11 +146,11 @@
         <div class="form__row form__row--2">
           <div class="form__field">
             <label class="form__label" for="eventStartTime">Event Start Time <span class="form__label-note">(PST · Los Angeles)</span></label>
-            <input class="form__input" type="time" id="eventStartTime" name="eventStartTime" step="300" />
+            <select class="form__select" id="eventStartTime" name="eventStartTime">${timeOptions}</select>
           </div>
           <div class="form__field">
             <label class="form__label" for="eventEndTime">Event End Time <span class="form__label-note">(PST · Los Angeles)</span></label>
-            <input class="form__input" type="time" id="eventEndTime" name="eventEndTime" step="300" />
+            <select class="form__select" id="eventEndTime" name="eventEndTime">${timeOptions}</select>
           </div>
         </div>
         <div class="form__field">
@@ -233,13 +246,21 @@
     });
   }
 
-  // Conditional: show "who referred you" input when "Referral" is selected
+  // Conditional: show text input when "Referral" or "Other" is selected
   const refSelect = document.getElementById("referral");
   const refName = document.getElementById("referralName");
   if (refSelect && refName) {
     refSelect.addEventListener("change", () => {
-      refName.style.display = refSelect.value === "Referral" ? "" : "none";
-      if (refSelect.value !== "Referral") refName.value = "";
+      if (refSelect.value === "Referral") {
+        refName.placeholder = "Who referred you?";
+        refName.style.display = "";
+      } else if (refSelect.value === "Other") {
+        refName.placeholder = "Please specify…";
+        refName.style.display = "";
+      } else {
+        refName.style.display = "none";
+        refName.value = "";
+      }
     });
   }
 })();
