@@ -2270,18 +2270,22 @@ a.area-pill:hover {
 .neighborhood-card {
   position: relative;
   display: block;
-  aspect-ratio: 3 / 4;
   border-radius: var(--radius-md);
   overflow: hidden;
   text-decoration: none;
   color: var(--linen);
-  background: var(--char);
+  background: var(--evergreen);
   isolation: isolate;
+  transition: background-color var(--dur-fast), transform var(--dur-fast);
+}
+.neighborhood-card:hover {
+  background: var(--char);
+  transform: translateY(-2px);
 }
 .neighborhood-card__image {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
 }
 .neighborhood-card__image img {
   width: 100%;
@@ -2290,25 +2294,15 @@ a.area-pill:hover {
   filter: saturate(0.85) brightness(0.85);
   transition: transform 600ms var(--ease-out), filter var(--dur-med);
 }
-.neighborhood-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(180deg, transparent 30%, rgba(26, 20, 16, 0.85) 100%);
-  transition: opacity var(--dur-med);
-}
 .neighborhood-card:hover .neighborhood-card__image img {
   transform: scale(1.05);
   filter: saturate(1) brightness(0.95);
 }
+.neighborhood-card::after {
+  display: none;
+}
 .neighborhood-card__overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   padding: var(--space-md);
-  z-index: 2;
   color: var(--linen);
 }
 .neighborhood-card__title {
@@ -2323,10 +2317,6 @@ a.area-pill:hover {
   font-size: 0.85rem;
   color: var(--champagne);
   margin: 0;
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: opacity var(--dur-med), max-height var(--dur-med);
 }
 .neighborhood-card:hover .neighborhood-card__blurb {
   opacity: 1;
