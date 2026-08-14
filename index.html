@@ -33,6 +33,7 @@ gtag('config', 'G-N7ERDKCDX7');
 <meta name="twitter:description" content="Luxury open-air DSLR photo booth rental serving Los Angeles &amp; Orange County — weddings, corporate events, birthdays &amp; brand activations. Get a free quote." />
 <meta name="twitter:image" content="https://evergrainphotobooth.com/assets/img/evergrain_favicon.png" />
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://evergrainphotobooth.com/#business","name":"Evergrain Photobooth","description":"Luxury open-air DSLR photo booth rental for weddings, corporate events, and celebrations across Los Angeles and Orange County.","url":"https://evergrainphotobooth.com","telephone":"+16265608330","email":"evergrainphotobooth@gmail.com","image":"https://evergrainphotobooth.com/assets/img/evergrain_favicon.png","logo":"https://evergrainphotobooth.com/assets/logos/FullLogo_White.svg","priceRange":"$$","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA","addressCountry":"US"},"areaServed":[{"@type":"City","name":"Los Angeles"},{"@type":"AdministrativeArea","name":"Orange County"},{"@type":"AdministrativeArea","name":"Los Angeles County"}],"sameAs":["https://www.instagram.com/evergrainphotobooth/","https://www.yelp.com/biz/evergrain-photobooth-los-angeles","https://www.facebook.com/evergrainphotobooth/","https://www.tiktok.com/@evergrainphotobooth","https://www.pinterest.com/evergrainphotobooth/"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is there a travel fee?","acceptedAnswer":{"@type":"Answer","text":"Travel within 30 miles of Hollywood is included. Beyond that, we quote a transparent travel fee before you book."}},{"@type":"Question","name":"How far in advance should I book?","acceptedAnswer":{"@type":"Answer","text":"We book one event per day, so popular dates fill up fast. We recommend reserving as soon as you have a date."}},{"@type":"Question","name":"What's included in a package?","acceptedAnswer":{"@type":"Answer","text":"Every package includes the open-air DSLR booth, a custom template and backdrop design, on-site hosting, and prints. See the Packages page for full details by tier."}}]}</script>
 </head>
 <body>
 
@@ -71,12 +72,17 @@ gtag('config', 'G-N7ERDKCDX7');
   <!-- ===== HERO ===== source of truth: partials/home-hero.html — edit there, then run `npm run build:home` -->
   <!-- BUILD:home-hero -->
   <section class="hero">
+    <video class="hero__video" autoplay muted playsinline loop poster="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/homepage/Homepage%20Hero.jpg">
+      <source src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/homepage/photobooth.mp4" type="video/mp4">
+    </video>
+    <div class="hero__overlay" aria-hidden="true"></div>
     <div class="container hero__content">
+      <p class="hero__eyebrow"><span>Etched in the grain</span></p>
       <h1 class="hero__title">
-        Etched in the <em>grain</em>.
+        A photo booth that earns its place at every event.
       </h1>
       <p class="hero__lede">
-        Open-air photo booth for every kind of gathering – beautifully designed, attentively hosted. Serving Los Angeles, Orange County and surrounding areas.
+        Premium photo booth rental featuring studio-quality photos, custom designs, instant sharing, and professional attendants for events across <a href="/areas-we-serve" class="hero__lede-link">Los Angeles &amp; Orange County</a>.
       </p>
       <div class="hero__ctas">
         <a href="/packages" class="btn btn--brass">Explore Packages</a>
@@ -96,28 +102,12 @@ gtag('config', 'G-N7ERDKCDX7');
   </section>
   <!-- /BUILD:home-hero -->
 
-  <!-- ===== INTRO ===== -->
-  <section class="section">
-    <div class="container container--narrow">
-      <div class="split">
-        <div class="reveal">
-          <span class="eyebrow">What we make</span>
-          <h2 class="display">A photobooth that earns its place at every event.</h2>
-        </div>
-        <div class="reveal">
-          <p class="lede">We started Evergrain because most photobooths felt like an afterthought — fluorescent lights, grainy prints, forgettable backdrops. Ours is built around a real DSLR, intentional lighting and a setup that looks like part of the design plan, not against it.</p>
-          <a href="/our-story" class="link-arrow">Read our story</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ===== SPECIALIZING IN ===== -->
-  <section class="section section--specializing section--evergreen topo-bg topo-bg--inverted">
+  <section class="section section--specializing">
     <div class="container">
       <div class="specializing">
         <div class="specializing__intro reveal">
-          <span class="eyebrow eyebrow--light">Where we shine</span>
+          <span class="eyebrow">Where we shine</span>
           <h2 class="display">Specializing in&hellip;</h2>
           <ul class="specializing__list">
             <li>Weddings</li>
@@ -129,11 +119,11 @@ gtag('config', 'G-N7ERDKCDX7');
         <div class="specializing__media reveal" aria-hidden="true">
           <!-- Back strip: Sev & Lilia — sits lowest so its "Next stop: Wedding 2027" message stays visible -->
           <figure class="specializing__photo specializing__photo--back">
-            <img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/homepage/Sev%26Lilia_wedding.jpg?width=560&height=1680&resize=cover&quality=78" alt="" loading="lazy" />
+            <img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/homepage/Sev%26Lilia_wedding.jpg?width=560&height=1680&resize=cover&quality=78" alt="Open-air DSLR photo booth at an outdoor wedding reception in Los Angeles" loading="lazy" />
           </figure>
           <!-- Middle strip: Wine o'clock -->
           <figure class="specializing__photo specializing__photo--mid">
-            <img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/homepage/wine_o_clock.jpg?width=560&height=1680&resize=cover&quality=78" alt="" loading="lazy" />
+            <img src="https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/render/image/public/media/images/homepage/wine_o_clock.jpg?width=560&height=1680&resize=cover&quality=78" alt="Guests posing at the Evergrain photo booth during a wine-themed event" loading="lazy" />
           </figure>
           <!-- Front strip: Mary Ann & Emmanuel -->
           <figure class="specializing__photo specializing__photo--front">
@@ -144,170 +134,197 @@ gtag('config', 'G-N7ERDKCDX7');
     </div>
   </section>
 
-  <!-- ===== CTA GRID ===== -->
-  <section class="section section--linen-warm">
-    <div class="container">
-      <div class="reveal" style="margin-bottom: var(--space-2xl);">
-        <span class="eyebrow">How it works</span>
-        <h2 class="display">How an event with Evergrain comes together.</h2>
+  <!-- ===== INTRO ===== -->
+  <section class="section section--evergreen topo-bg topo-bg--inverted">
+    <div class="container container--narrow">
+      <div class="split">
+        <div class="reveal">
+          <span class="eyebrow eyebrow--light">What we make</span>
+          <h2 class="display">A photo booth worth showing off.</h2>
+        </div>
+        <div class="reveal">
+          <p class="lede">We started Evergrain because most photobooths felt like an afterthought — fluorescent lights, grainy prints, forgettable backdrops. Ours is built around a real DSLR, intentional lighting and a setup that looks like part of the design plan, not against it.</p>
+          <a href="/our-story" class="link-arrow link-arrow--light">Read our story</a>
+        </div>
+      </div>
+
+      <div class="why-us reveal">
+        <span class="eyebrow eyebrow--light">The Evergrain Difference</span>
+        <div class="why-us__grid">
+          <div class="why-us__item">
+            <div class="why-us__icon-wrap">
+              <svg class="why-us__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="4" y="9" width="24" height="16" rx="2"/>
+                <path d="M11 9l1.8-3h6.4l1.8 3"/>
+                <circle cx="16" cy="17" r="5.5"/>
+                <circle cx="16" cy="17" r="2.2"/>
+              </svg>
+            </div>
+            <p class="why-us__label"><strong>Studio-quality photos</strong></p>
+          </div>
+          <div class="why-us__item">
+            <div class="why-us__icon-wrap">
+              <svg class="why-us__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 27c6.1 0 11-4.5 11-10 0-5.5-4.9-10-11-10S5 11.5 5 17c0 2 .8 3 2.5 3H12c1.1 0 2 .9 2 2v2.5c0 1.4 1 2.5 2 2.5z"/>
+                <circle cx="11" cy="14" r="1.3" fill="currentColor" stroke="none"/>
+                <circle cx="16.5" cy="11" r="1.3" fill="currentColor" stroke="none"/>
+                <circle cx="22" cy="14" r="1.3" fill="currentColor" stroke="none"/>
+              </svg>
+            </div>
+            <p class="why-us__label"><strong>Beautifully designed</strong></p>
+          </div>
+          <div class="why-us__item">
+            <div class="why-us__icon-wrap">
+              <svg class="why-us__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="16" cy="10" r="4.5"/>
+                <path d="M6 27c0-5.5 4.5-9 10-9s10 3.5 10 9"/>
+              </svg>
+            </div>
+            <p class="why-us__label"><strong>Fully hosted</strong></p>
+          </div>
+          <div class="why-us__item">
+            <div class="why-us__icon-wrap">
+              <svg class="why-us__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="5" y="7" width="22" height="20" rx="2"/>
+                <path d="M11 4v6M21 4v6M5 13h22"/>
+                <path d="M16 17.5l1.4 2.9 3.2.5-2.3 2.2.5 3.2-2.8-1.5-2.8 1.5.5-3.2-2.3-2.2 3.2-.5z"/>
+              </svg>
+            </div>
+            <p class="why-us__label"><strong>Made for your event</strong></p>
+          </div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- Edge-to-edge infinite carousel — 5 unique cards, duplicated for the loop.
-         Each card bobs on its own phase delay → a traveling wave. -->
-    <div class="how-carousel" role="list">
-      <div class="how-carousel__track">
+  <!-- ===== PRICING SNAPSHOT ===== -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="reveal text-center" style="max-width:640px;margin: 0 auto var(--space-2xl);">
+        <span class="eyebrow">Choose your experience</span>
+        <h2 class="display">Every moment has a grain worth keeping.</h2>
+      </div>
 
-        <!-- ===== SET 1 ===== -->
-        <div class="how-card" style="--bob-delay: 0s" role="listitem">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="4" y="8" width="24" height="18" rx="2"/>
-                <path d="M4 12l12 8 12-8"/>
-              </svg>
+      <div class="pricing-snap">
+        <article class="pricing-snap__card reveal">
+          <h3 class="pricing-snap__name">The Candid</h3>
+          <p class="pricing-snap__starting">Starting at</p>
+          <p class="pricing-snap__price"><sup>$</sup>600</p>
+          <p class="pricing-snap__meta">3-hour minimum</p>
+          <p class="pricing-snap__desc">Built for smaller celebrations — birthdays, showers, grad parties, and private gatherings.</p>
+        </article>
+
+        <article class="pricing-snap__card pricing-snap__card--featured reveal">
+          <span class="pricing-snap__tag">Most Popular</span>
+          <h3 class="pricing-snap__name">The Moment</h3>
+          <p class="pricing-snap__starting">Starting at</p>
+          <p class="pricing-snap__price"><sup>$</sup>750</p>
+          <p class="pricing-snap__meta">3-hour minimum</p>
+          <p class="pricing-snap__desc">Great for weddings, company events, holiday parties, and celebrations for up to 150 guests.</p>
+        </article>
+
+        <article class="pricing-snap__card reveal">
+          <h3 class="pricing-snap__name">The Glam</h3>
+          <p class="pricing-snap__starting">Starting at</p>
+          <p class="pricing-snap__price"><sup>$</sup>1,050</p>
+          <p class="pricing-snap__meta">4-hour minimum</p>
+          <p class="pricing-snap__desc">Perfect for weddings, brand activations, company parties, and events that deserve the full experience.</p>
+        </article>
+      </div>
+
+      <div class="pricing-snap__footer reveal">
+        <a href="/packages" class="btn btn--brass">See Full Packages</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA GRID ===== -->
+  <section class="section section--evergreen topo-bg topo-bg--inverted">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: var(--space-2xl);">
+        <span class="eyebrow eyebrow--light">How it works</span>
+        <h2 class="display">How an event with Evergrain comes together.</h2>
+      </div>
+
+      <!-- Static row — all 5 steps visible at once, no auto-scroll or bob. -->
+      <div class="how-carousel" role="list">
+        <div class="how-carousel__track">
+
+          <div class="how-card" role="listitem">
+            <div class="how-card__bob">
+              <div class="how-card__icon-wrap">
+                <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="4" y="8" width="24" height="18" rx="2"/>
+                  <path d="M4 12l12 8 12-8"/>
+                </svg>
+              </div>
+              <span class="how-card__step">Step 01</span>
+              <h3 class="how-card__title">Inquire</h3>
+              <p class="how-card__copy">Tell us about the event you're throwing.</p>
             </div>
-            <span class="how-card__step">Step 01</span>
-            <h3 class="how-card__title">Inquire</h3>
-            <p class="how-card__copy">Tell us about the event you're throwing.</p>
           </div>
-        </div>
 
-        <div class="how-card" style="--bob-delay: -0.7s" role="listitem">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="5" y="7" width="22" height="20" rx="2"/>
-                <path d="M11 4v6M21 4v6M5 13h22"/>
-                <path d="M12 19l3 3 5-6"/>
-              </svg>
+          <div class="how-card" role="listitem">
+            <div class="how-card__bob">
+              <div class="how-card__icon-wrap">
+                <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="5" y="7" width="22" height="20" rx="2"/>
+                  <path d="M11 4v6M21 4v6M5 13h22"/>
+                  <path d="M12 19l3 3 5-6"/>
+                </svg>
+              </div>
+              <span class="how-card__step">Step 02</span>
+              <h3 class="how-card__title">Reserve</h3>
+              <p class="how-card__copy">Sign your contract, send your deposit, lock the date.</p>
             </div>
-            <span class="how-card__step">Step 02</span>
-            <h3 class="how-card__title">Reserve</h3>
-            <p class="how-card__copy">Sign your contract, send your deposit, lock the date.</p>
           </div>
-        </div>
 
-        <div class="how-card" style="--bob-delay: -1.4s" role="listitem">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M22 4l6 6-16 16-4-4L20 6l2-2z"/>
-                <path d="M16 10l6 6"/>
-                <path d="M12 22l-3 3M22 4l-2-2M28 10l2-2"/>
-              </svg>
+          <div class="how-card" role="listitem">
+            <div class="how-card__bob">
+              <div class="how-card__icon-wrap">
+                <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 4l6 6-16 16-4-4L20 6l2-2z"/>
+                  <path d="M16 10l6 6"/>
+                  <path d="M12 22l-3 3M22 4l-2-2M28 10l2-2"/>
+                </svg>
+              </div>
+              <span class="how-card__step">Step 03</span>
+              <h3 class="how-card__title">Customize</h3>
+              <p class="how-card__copy">We design your template, screens, and backdrop together.</p>
             </div>
-            <span class="how-card__step">Step 03</span>
-            <h3 class="how-card__title">Customize</h3>
-            <p class="how-card__copy">We design your template, screens, and backdrop together.</p>
           </div>
-        </div>
 
-        <div class="how-card" style="--bob-delay: -2.1s" role="listitem">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M16 3l2.2 8 7.8 1.8-7.8 1.8L16 23l-2.2-8.4L6 12.8l7.8-1.8L16 3z"/>
-                <path d="M25 21l.9 3 3 .9-3 .9-.9 3-.9-3-3-.9 3-.9.9-3z" stroke-width="1.3"/>
-                <path d="M7 22l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6.6-2z" stroke-width="1.3"/>
-              </svg>
+          <div class="how-card" role="listitem">
+            <div class="how-card__bob">
+              <div class="how-card__icon-wrap">
+                <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M16 3l2.2 8 7.8 1.8-7.8 1.8L16 23l-2.2-8.4L6 12.8l7.8-1.8L16 3z"/>
+                  <path d="M25 21l.9 3 3 .9-3 .9-.9 3-.9-3-3-.9 3-.9.9-3z" stroke-width="1.3"/>
+                  <path d="M7 22l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6.6-2z" stroke-width="1.3"/>
+                </svg>
+              </div>
+              <span class="how-card__step">Step 04</span>
+              <h3 class="how-card__title">Celebrate</h3>
+              <p class="how-card__copy">We arrive early, set up clean, host the booth all night.</p>
             </div>
-            <span class="how-card__step">Step 04</span>
-            <h3 class="how-card__title">Celebrate</h3>
-            <p class="how-card__copy">We arrive early, set up clean, host the booth all night.</p>
           </div>
-        </div>
 
-        <div class="how-card" style="--bob-delay: -2.8s" role="listitem">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="4" y="13" width="24" height="15" rx="1.5"/>
-                <path d="M4 19h24M16 13v15"/>
-                <path d="M16 13c-2.2 0-4-1.7-4-3.8C12 7.4 13.6 6 16 9c2.4-3 4-1.6 4 .2 0 2.1-1.8 3.8-4 3.8z"/>
-              </svg>
+          <div class="how-card" role="listitem">
+            <div class="how-card__bob">
+              <div class="how-card__icon-wrap">
+                <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="4" y="13" width="24" height="15" rx="1.5"/>
+                  <path d="M4 19h24M16 13v15"/>
+                  <path d="M16 13c-2.2 0-4-1.7-4-3.8C12 7.4 13.6 6 16 9c2.4-3 4-1.6 4 .2 0 2.1-1.8 3.8-4 3.8z"/>
+                </svg>
+              </div>
+              <span class="how-card__step">Step 05</span>
+              <h3 class="how-card__title">Keep</h3>
+              <p class="how-card__copy">Your gallery in your inbox within 48 hours.</p>
             </div>
-            <span class="how-card__step">Step 05</span>
-            <h3 class="how-card__title">Keep</h3>
-            <p class="how-card__copy">Your gallery in your inbox within 48 hours.</p>
           </div>
-        </div>
 
-        <!-- ===== SET 2 (duplicate for seamless loop — hidden from screen readers) ===== -->
-        <div class="how-card" style="--bob-delay: 0s" aria-hidden="true">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="4" y="8" width="24" height="18" rx="2"/>
-                <path d="M4 12l12 8 12-8"/>
-              </svg>
-            </div>
-            <span class="how-card__step">Step 01</span>
-            <h3 class="how-card__title">Inquire</h3>
-            <p class="how-card__copy">Tell us about the event you're throwing.</p>
-          </div>
         </div>
-
-        <div class="how-card" style="--bob-delay: -0.7s" aria-hidden="true">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="5" y="7" width="22" height="20" rx="2"/>
-                <path d="M11 4v6M21 4v6M5 13h22"/>
-                <path d="M12 19l3 3 5-6"/>
-              </svg>
-            </div>
-            <span class="how-card__step">Step 02</span>
-            <h3 class="how-card__title">Reserve</h3>
-            <p class="how-card__copy">Sign your contract, send your deposit, lock the date.</p>
-          </div>
-        </div>
-
-        <div class="how-card" style="--bob-delay: -1.4s" aria-hidden="true">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 4l6 6-16 16-4-4L20 6l2-2z"/>
-                <path d="M16 10l6 6"/>
-                <path d="M12 22l-3 3M22 4l-2-2M28 10l2-2"/>
-              </svg>
-            </div>
-            <span class="how-card__step">Step 03</span>
-            <h3 class="how-card__title">Customize</h3>
-            <p class="how-card__copy">We design your template, screens, and backdrop together.</p>
-          </div>
-        </div>
-
-        <div class="how-card" style="--bob-delay: -2.1s" aria-hidden="true">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 3l2.2 8 7.8 1.8-7.8 1.8L16 23l-2.2-8.4L6 12.8l7.8-1.8L16 3z"/>
-                <path d="M25 21l.9 3 3 .9-3 .9-.9 3-.9-3-3-.9 3-.9.9-3z" stroke-width="1.3"/>
-                <path d="M7 22l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6.6-2z" stroke-width="1.3"/>
-              </svg>
-            </div>
-            <span class="how-card__step">Step 04</span>
-            <h3 class="how-card__title">Celebrate</h3>
-            <p class="how-card__copy">We arrive early, set up clean, host the booth all night.</p>
-          </div>
-        </div>
-
-        <div class="how-card" style="--bob-delay: -2.8s" aria-hidden="true">
-          <div class="how-card__bob">
-            <div class="how-card__icon-wrap">
-              <svg class="how-card__icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="4" y="13" width="24" height="15" rx="1.5"/>
-                <path d="M4 19h24M16 13v15"/>
-                <path d="M16 13c-2.2 0-4-1.7-4-3.8C12 7.4 13.6 6 16 9c2.4-3 4-1.6 4 .2 0 2.1-1.8 3.8-4 3.8z"/>
-              </svg>
-            </div>
-            <span class="how-card__step">Step 05</span>
-            <h3 class="how-card__title">Keep</h3>
-            <p class="how-card__copy">Your gallery in your inbox within 48 hours.</p>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
@@ -325,75 +342,122 @@ gtag('config', 'G-N7ERDKCDX7');
   </section> -->
 
   <!-- ===== TESTIMONIAL ===== -->
-  <section class="section section--evergreen topo-bg topo-bg--inverted">
+  <section class="section">
     <div class="container">
       <div class="testimonial-carousel reveal" data-testimonial-carousel aria-roledescription="carousel" aria-label="Client testimonials">
-        <span class="eyebrow eyebrow--light testimonial-carousel__eyebrow">Heard from clients</span>
+        <span class="eyebrow testimonial-carousel__eyebrow">Heard from clients</span>
         <div class="testimonial-carousel__viewport">
           <button type="button" class="testimonial-carousel__arrow testimonial-carousel__arrow--prev" data-testimonial-prev aria-label="Previous testimonial">&larr;</button>
           <div class="testimonial-carousel__slides" data-testimonial-slides>
             <div class="testimonial testimonial-carousel__slide is-active" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
+              <p class="testimonial__quote" style="color:var(--bark);">
                 "I booked Evergrain for my nephew's 2nd birthday. They did an amazing job communicating all the different available options and even helped customize a template that matched the theme of the party. During the event they were super attentive and engaging with all our guests and had several prop options. 10/10 would recommend and book again!"
               </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Bryan T.</p>
+              <p class="testimonial__author" style="color:var(--brass);">Bryan T.</p>
             </div>
             <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
+              <p class="testimonial__quote" style="color:var(--bark);">
                 "Cindy and Hamilton were so accommodating and thoughtful. We had them come for a family party and the photobooth was set up in no time! I was surprised how little space it took. We were able to get a custom background for our print-outs and the print quality was amazing! You can also have the file sent directly to you for posting. Highly recommend Evergrain!"
               </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Kristine P.</p>
+              <p class="testimonial__author" style="color:var(--brass);">Kristine P.</p>
             </div>
             <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
-                "I booked Evergrain Photobooth and they did an amazing job! They were professional, punctual, and incredibly easy to work with. What really stood out was how they customized the entire photo booth experience, including the backdrop and printed photos to perfectly match our party theme. Our guests loved it, and the photos turned out fantastic. I can't wait to book Evergrain Photobooth again for future events!"
-              </p>
-              <p class="testimonial__author" style="color:var(--champagne);">May N.</p>
-            </div>
-            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
-                "We booked Evergrain Photobooth for our son's 1st birthday party and they delivered above and beyond. Hamilton and Cindy were awesome to work with and they provided top tier customer service. They are very responsive and flexible, which made the whole planning experience smooth and stress-free. They also created such a cute photobooth template for us. Our guests really enjoyed and loved all the photos. I HIGHLY recommend Evergrain Photobooth for your next event. We will definitely be using their service for our future events!"
-              </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Christine S.</p>
-            </div>
-            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
-                "My friends and all live in different cities throughout California so for our next girls night we wanted to do something special to remember the get together. Hamilton and Cindy were professional, clean and helpful with creating specific borders and backgrounds for our event. They were patient when our poses did not come out quite right and let us redo them. I appreciated the cordless set up for their equipment since we were setting up indoors and there was not a free and accessible plug in the room. The photos came out quickly and smudge free. Would definitely recommend and book Evergrain for future events!"
-              </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Tammy C.</p>
-            </div>
-            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
-                "Accommodating, on time, and extremely friendly! Wonderful customer service from Cindy and Hamilton. They even used my invitation as a template for the photo prints. All the small details made my baby shower much more wonderful. They provide a digital album as well as print outs. Our guest were very impressed by their set up and loved their Photo Booth. I highly recommend them for any type of festivity and celebration to capture precious moments."
-              </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Angeli P.</p>
-            </div>
-            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
+              <p class="testimonial__quote" style="color:var(--bark);">
                 "Highly recommend!! They were super professional, on time, and made the whole experience so much fun. The photo quality was amazing, the setup looked great, and everyone loved it. If you're looking for a reliable photo booth for your event, this is the one to book!"
               </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Frank Z.</p>
+              <p class="testimonial__author" style="color:var(--brass);">Frank Z.</p>
             </div>
             <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
-                "We love booking with evergrain photo booth! They're super responsive and easy to work with. We recently referred them to a friend's kid's birthday party and everyone absolutely loved it! I'm a sucker for aesthetics so I have to mention how gorgeous their wooden photo booth is. Their photo quality is even amazing and they can also customize the photo templates to match your event. It's the little details they put into everything that really make the experience feel special. Highly recommend if you're looking for a photo booth for your event. We already can't wait to book them for our son's first birthday!"
-              </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Kumiko I.</p>
-            </div>
-            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
+              <p class="testimonial__quote" style="color:var(--bark);">
                 "High quality all around - from the beautiful booth, prints, designs, and especially the service! You can tell they care deeply about the quality of their services. They were so helpful during the event and made everything go so smoothly! The booth has many options from strip photos, larger photos, and GIFs. Can't wait to have them at our next event!"
               </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Alex L.</p>
+              <p class="testimonial__author" style="color:var(--brass);">Alex L.</p>
             </div>
             <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
-              <p class="testimonial__quote" style="color:var(--linen);">
+              <p class="testimonial__quote" style="color:var(--bark);">
                 "Such a lovely way to end the weekend with great friends, lots of fun, and palpable memories to take home! Thank you Evergrain Photobooth for hosting our girl's evening and for being so attentive, professional, and fun!"
               </p>
-              <p class="testimonial__author" style="color:var(--champagne);">Ariel M.</p>
+              <p class="testimonial__author" style="color:var(--brass);">Ariel M.</p>
             </div>
+            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--bark);">
+                "Evergrain was such an awesome experience to have at my buddy's wedding! Not only did they capture everything so perfectly, but the owners were also super friendly, professional, and made sure everyone felt comfortable and taken care of. Such an amazing team and such a great experience overall. Definitely a must-have for your next event!"
+              </p>
+              <p class="testimonial__author" style="color:var(--brass);">Scott V.</p>
+            </div>
+            <!-- ===== ARCHIVED — not currently shown in the carousel (kept for reuse; see Task 6) ===== -->
+            <!--
+            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--bark);">
+                "I booked Evergrain Photobooth and they did an amazing job! They were professional, punctual, and incredibly easy to work with. What really stood out was how they customized the entire photo booth experience, including the backdrop and printed photos to perfectly match our party theme. Our guests loved it, and the photos turned out fantastic. I can't wait to book Evergrain Photobooth again for future events!"
+              </p>
+              <p class="testimonial__author" style="color:var(--brass);">May N.</p>
+            </div>
+            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--bark);">
+                "We booked Evergrain Photobooth for our son's 1st birthday party and they delivered above and beyond. Hamilton and Cindy were awesome to work with and they provided top tier customer service. They are very responsive and flexible, which made the whole planning experience smooth and stress-free. They also created such a cute photobooth template for us. Our guests really enjoyed and loved all the photos. I HIGHLY recommend Evergrain Photobooth for your next event. We will definitely be using their service for our future events!"
+              </p>
+              <p class="testimonial__author" style="color:var(--brass);">Christine S.</p>
+            </div>
+            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--bark);">
+                "My friends and all live in different cities throughout California so for our next girls night we wanted to do something special to remember the get together. Hamilton and Cindy were professional, clean and helpful with creating specific borders and backgrounds for our event. They were patient when our poses did not come out quite right and let us redo them. I appreciated the cordless set up for their equipment since we were setting up indoors and there was not a free and accessible plug in the room. The photos came out quickly and smudge free. Would definitely recommend and book Evergrain for future events!"
+              </p>
+              <p class="testimonial__author" style="color:var(--brass);">Tammy C.</p>
+            </div>
+            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--bark);">
+                "Accommodating, on time, and extremely friendly! Wonderful customer service from Cindy and Hamilton. They even used my invitation as a template for the photo prints. All the small details made my baby shower much more wonderful. They provide a digital album as well as print outs. Our guest were very impressed by their set up and loved their Photo Booth. I highly recommend them for any type of festivity and celebration to capture precious moments."
+              </p>
+              <p class="testimonial__author" style="color:var(--brass);">Angeli P.</p>
+            </div>
+            <div class="testimonial testimonial-carousel__slide" data-testimonial-slide>
+              <p class="testimonial__quote" style="color:var(--bark);">
+                "We love booking with evergrain photo booth! They're super responsive and easy to work with. We recently referred them to a friend's kid's birthday party and everyone absolutely loved it! I'm a sucker for aesthetics so I have to mention how gorgeous their wooden photo booth is. Their photo quality is even amazing and they can also customize the photo templates to match your event. It's the little details they put into everything that really make the experience feel special. Highly recommend if you're looking for a photo booth for your event. We already can't wait to book them for our son's first birthday!"
+              </p>
+              <p class="testimonial__author" style="color:var(--brass);">Kumiko I.</p>
+            </div>
+            -->
           </div>
           <button type="button" class="testimonial-carousel__arrow testimonial-carousel__arrow--next" data-testimonial-next aria-label="Next testimonial">&rarr;</button>
+        </div>
+        <p class="testimonial-carousel__more">Read more reviews on <a href="https://www.yelp.com/biz/evergrain-photobooth-los-angeles" target="_blank" rel="noopener noreferrer">Yelp</a> and <a href="https://share.google/mMQ7xtC7L5BrQowNS" target="_blank" rel="noopener noreferrer">Google</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MINI FAQ ===== -->
+  <section class="section section--tight section--evergreen topo-bg topo-bg--inverted">
+    <div class="container">
+      <div class="mini-faq reveal">
+        <span class="eyebrow eyebrow--light">Frequently Asked Questions</span>
+        <div class="faq">
+
+          <details class="faq-item">
+            <summary class="faq-item__summary">Is there a travel fee?</summary>
+            <div class="faq-item__body">
+              <p>Travel within 30 miles of Hollywood is included. Beyond that, we quote a transparent travel fee before you book.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-item__summary">How far in advance should I book?</summary>
+            <div class="faq-item__body">
+              <p>We book one event per day, so popular dates fill up fast. We recommend reserving as soon as you have a date.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-item__summary">What's included in a package?</summary>
+            <div class="faq-item__body">
+              <p>Every package includes the open-air DSLR booth, a custom template and backdrop design, on-site hosting, and prints. See the <a href="/packages">Packages</a> page for full details by tier.</p>
+            </div>
+          </details>
+
+        </div>
+        <p class="mini-faq__blog">Planning an event? Check out our <a href="/a-thousand-words">planning guides</a> for tips.</p>
+        <div class="mini-faq__cta">
+          <a href="/faq" class="link-arrow link-arrow--light">See all FAQs</a>
         </div>
       </div>
     </div>
@@ -435,6 +499,7 @@ gtag('config', 'G-N7ERDKCDX7');
         <p class="footer__tagline" data-cms-tagline>A photobooth experience built around the camera — never around the gimmick.</p>
         <ul class="footer__social" aria-label="Social media">
           <li><a href="https://www.instagram.com/evergrainphotobooth/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-cms-social="instagram"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M10.202,2.098c-1.49,.07-2.507,.308-3.396,.657-.92,.359-1.7,.84-2.477,1.619-.776,.779-1.254,1.56-1.61,2.481-.345,.891-.578,1.909-.644,3.4-.066,1.49-.08,1.97-.073,5.771s.024,4.278,.096,5.772c.071,1.489,.308,2.506,.657,3.396,.359,.92,.84,1.7,1.619,2.477,.779,.776,1.559,1.253,2.483,1.61,.89,.344,1.909,.579,3.399,.644,1.49,.065,1.97,.08,5.771,.073,3.801-.007,4.279-.024,5.773-.095s2.505-.309,3.395-.657c.92-.36,1.701-.84,2.477-1.62s1.254-1.561,1.609-2.483c.345-.89,.579-1.909,.644-3.398,.065-1.494,.081-1.971,.073-5.773s-.024-4.278-.095-5.771-.308-2.507-.657-3.397c-.36-.92-.84-1.7-1.619-2.477s-1.561-1.254-2.483-1.609c-.891-.345-1.909-.58-3.399-.644s-1.97-.081-5.772-.074-4.278,.024-5.771,.096m.164,25.309c-1.365-.059-2.106-.286-2.6-.476-.654-.252-1.12-.557-1.612-1.044s-.795-.955-1.05-1.608c-.192-.494-.423-1.234-.487-2.599-.069-1.475-.084-1.918-.092-5.656s.006-4.18,.071-5.656c.058-1.364,.286-2.106,.476-2.6,.252-.655,.556-1.12,1.044-1.612s.955-.795,1.608-1.05c.493-.193,1.234-.422,2.598-.487,1.476-.07,1.919-.084,5.656-.092,3.737-.008,4.181,.006,5.658,.071,1.364,.059,2.106,.285,2.599,.476,.654,.252,1.12,.555,1.612,1.044s.795,.954,1.051,1.609c.193,.492,.422,1.232,.486,2.597,.07,1.476,.086,1.919,.093,5.656,.007,3.737-.006,4.181-.071,5.656-.06,1.365-.286,2.106-.476,2.601-.252,.654-.556,1.12-1.045,1.612s-.955,.795-1.608,1.05c-.493,.192-1.234,.422-2.597,.487-1.476,.069-1.919,.084-5.657,.092s-4.18-.007-5.656-.071M21.779,8.517c.002,.928,.755,1.679,1.683,1.677s1.679-.755,1.677-1.683c-.002-.928-.755-1.679-1.683-1.677,0,0,0,0,0,0-.928,.002-1.678,.755-1.677,1.683m-12.967,7.496c.008,3.97,3.232,7.182,7.202,7.174s7.183-3.232,7.176-7.202c-.008-3.97-3.233-7.183-7.203-7.175s-7.182,3.233-7.174,7.203m2.522-.005c-.005-2.577,2.08-4.671,4.658-4.676,2.577-.005,4.671,2.08,4.676,4.658,.005,2.577-2.08,4.671-4.658,4.676-2.577,.005-4.671-2.079-4.676-4.656h0"></path></svg></a></li>
+          <li><a href="https://share.google/mMQ7xtC7L5BrQowNS" target="_blank" rel="noopener noreferrer" aria-label="Google Business Profile" data-cms-social="google"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"></path><path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08 .72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"></path><path d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57 .38-2.29V6.62H1.29A11.96 11.96 0 000 12c0 1.94 .46 3.77 1.29 5.38l3.98-3.09z"></path><path d="M12 4.75c1.77 0 3.35 .61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"></path></svg></a></li>
           <li><a href="https://www.yelp.com/biz/evergrain-photobooth-los-angeles" target="_blank" rel="noopener noreferrer" aria-label="Yelp" data-cms-social="yelp"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M11.876,19.928l1.381-.319c.029-.007,.077-.018,.136-.037,.381-.102,.708-.349,.911-.688,.203-.339,.267-.743,.179-1.128-.002-.008-.004-.016-.006-.025-.045-.184-.125-.359-.234-.514-.155-.196-.346-.361-.564-.484-.256-.146-.524-.27-.801-.371l-1.515-.553c-.85-.316-1.7-.624-2.558-.925-.556-.198-1.028-.372-1.437-.498-.077-.024-.163-.048-.232-.072-.495-.152-.843-.215-1.138-.217-.197-.007-.393,.029-.574,.105-.189,.082-.359,.202-.499,.354-.069,.079-.135,.161-.195,.247-.057,.087-.109,.178-.157,.271-.052,.1-.097,.203-.134,.309-.281,.831-.421,1.703-.414,2.58,.005,.793,.026,1.811,.462,2.501,.105,.177,.246,.33,.414,.449,.31,.214,.624,.243,.951,.266,.488,.035,.96-.085,1.432-.194l4.589-1.06h.004Z"></path><path d="M27.288,12.594c-.377-.792-.884-1.514-1.5-2.138-.08-.079-.165-.152-.255-.219-.083-.063-.17-.121-.26-.174-.092-.05-.187-.096-.284-.136-.192-.075-.397-.109-.602-.1-.197,.011-.388,.065-.562,.158-.263,.131-.548,.341-.928,.694-.052,.052-.118,.111-.177,.166-.313,.294-.661,.657-1.075,1.079-.64,.647-1.27,1.297-1.896,1.954l-1.12,1.162c-.205,.212-.392,.442-.558,.685-.142,.206-.242,.438-.295,.682-.031,.187-.026,.379,.013,.565,.002,.008,.004,.016,.006,.025,.088,.385,.323,.72,.653,.935,.331,.215,.732,.294,1.12,.219,.061-.009,.109-.019,.138-.027l5.973-1.38c.471-.109,.948-.208,1.371-.454,.284-.164,.553-.328,.738-.656,.099-.181,.159-.38,.176-.585,.092-.814-.333-1.738-.675-2.454Z"></path><path d="M16.598,15.106c.433-.544,.432-1.354,.47-2.017,.13-2.214,.267-4.428,.376-6.643,.042-.839,.132-1.667,.082-2.512-.041-.697-.046-1.498-.486-2.07-.777-1.009-2.435-.926-3.565-.77-.346,.048-.693,.113-1.038,.195s-.685,.173-1.018,.28c-1.085,.355-2.61,1.008-2.869,2.258-.146,.707,.199,1.43,.467,2.075,.324,.782,.768,1.486,1.172,2.222,1.068,1.943,2.156,3.874,3.24,5.807,.324,.577,.677,1.308,1.304,1.607,.041,.018,.084,.034,.127,.048,.281,.106,.587,.127,.88,.059,.018-.004,.035-.008,.052-.012,.27-.074,.515-.221,.707-.425,.035-.033,.068-.067,.099-.103Z"></path><path d="M16.079,21.033c-.169-.238-.409-.416-.685-.509-.276-.093-.575-.096-.853-.009-.065,.022-.129,.048-.191,.079-.095,.048-.186,.105-.271,.169-.249,.184-.459,.424-.649,.664-.048,.061-.093,.143-.15,.195l-.961,1.321c-.545,.74-1.082,1.483-1.614,2.237-.347,.487-.648,.898-.885,1.261-.045,.069-.092,.145-.135,.206-.285,.44-.446,.761-.528,1.048-.062,.19-.082,.392-.058,.59,.026,.207,.096,.406,.204,.584,.058,.089,.12,.176,.186,.259,.069,.08,.142,.156,.219,.228,.082,.079,.17,.151,.264,.216,.663,.461,1.389,.793,2.153,1.049,.635,.211,1.296,.337,1.964,.375,.114,.006,.228,.003,.341-.007,.105-.009,.21-.024,.313-.044,.104-.024,.206-.054,.306-.089,.195-.073,.373-.186,.522-.332,.141-.141,.249-.311,.318-.498,.111-.277,.184-.628,.232-1.15,.004-.074,.015-.163,.022-.245,.038-.433,.055-.942,.083-1.539,.047-.92,.084-1.835,.113-2.753,0,0,.062-1.632,.062-1.632,.014-.376,.003-.793-.102-1.167-.046-.179-.12-.35-.219-.507h0Z"></path><path d="M26.924,23.587c-.2-.22-.485-.439-.933-.71-.065-.036-.14-.084-.21-.126-.373-.224-.823-.46-1.348-.746-.807-.443-1.614-.875-2.428-1.303l-1.44-.763c-.075-.022-.15-.076-.221-.11-.277-.132-.57-.256-.874-.312-.105-.02-.211-.031-.318-.033-.069,0-.138,.003-.206,.012-.288,.045-.554,.179-.761,.384-.207,.205-.344,.47-.392,.758-.022,.183-.015,.368,.02,.549,.07,.383,.241,.762,.418,1.094l.769,1.441c.428,.813,.861,1.62,1.304,2.426,.286,.525,.525,.975,.748,1.347,.042,.07,.09,.146,.126,.21,.272,.448,.49,.73,.711,.932,.143,.138,.315,.244,.503,.309,.198,.066,.407,.089,.615,.068,.105-.012,.21-.031,.314-.054,.102-.027,.203-.06,.301-.098,.106-.04,.21-.088,.31-.143,.584-.328,1.123-.731,1.602-1.199,.575-.565,1.082-1.182,1.477-1.888,.055-.1,.102-.204,.142-.31,.037-.099,.069-.199,.096-.301,.023-.104,.041-.209,.054-.314,.02-.207-.004-.416-.071-.614-.065-.189-.171-.362-.31-.505h0Z"></path></svg></a></li>
           <li><a href="https://www.facebook.com/evergrainphotobooth/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" data-cms-social="facebook"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16,2c-7.732,0-14,6.268-14,14,0,6.566,4.52,12.075,10.618,13.588v-9.31h-2.887v-4.278h2.887v-1.843c0-4.765,2.156-6.974,6.835-6.974,.887,0,2.417,.174,3.043,.348v3.878c-.33-.035-.904-.052-1.617-.052-2.296,0-3.183,.87-3.183,3.13v1.513h4.573l-.786,4.278h-3.787v9.619c6.932-.837,12.304-6.74,12.304-13.897,0-7.732-6.268-14-14-14Z"></path></svg></a></li>
           <li><a href="https://www.tiktok.com/@evergrainphotobooth" target="_blank" rel="noopener noreferrer" aria-label="TikTok" data-cms-social="tiktok"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M24.562,7.613c-1.508-.983-2.597-2.557-2.936-4.391-.073-.396-.114-.804-.114-1.221h-4.814l-.008,19.292c-.081,2.16-1.859,3.894-4.039,3.894-.677,0-1.315-.169-1.877-.465-1.288-.678-2.169-2.028-2.169-3.582,0-2.231,1.815-4.047,4.046-4.047,.417,0,.816,.069,1.194,.187v-4.914c-.391-.053-.788-.087-1.194-.087-4.886,0-8.86,3.975-8.86,8.86,0,2.998,1.498,5.65,3.783,7.254,1.439,1.01,3.19,1.606,5.078,1.606,4.886,0,8.86-3.975,8.86-8.86V11.357c1.888,1.355,4.201,2.154,6.697,2.154v-4.814c-1.345,0-2.597-.4-3.647-1.085Z"></path></svg></a></li>

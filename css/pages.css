@@ -12,18 +12,7 @@
 .hero {
   position: relative;
   min-height: 100vh;
-  background-color: var(--evergreen-dark); /* loaded-image fallback */
-  background-image:
-    linear-gradient(
-      110deg,
-      rgba(22, 48, 36, 0.90) 0%,
-      rgba(22, 48, 36, 0.78) 50%,
-      rgba(22, 48, 36, 0.55) 100%
-    ),
-    url("https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/homepage/Homepage%20Hero.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-color: var(--evergreen-dark);
   color: var(--linen);
   display: flex;
   flex-direction: column;
@@ -32,13 +21,28 @@
   overflow: hidden;
   gap: clamp(2rem, 5vh, 4rem);
 }
-/* On narrow screens, even out the overlay so text on either side stays legible
-   regardless of how the image crops. */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    110deg,
+    rgba(22, 48, 36, 0.90) 0%,
+    rgba(22, 48, 36, 0.78) 50%,
+    rgba(22, 48, 36, 0.55) 100%
+  );
+}
 @media (max-width: 720px) {
-  .hero {
-    background-image:
-      linear-gradient(rgba(22, 48, 36, 0.85), rgba(22, 48, 36, 0.85)),
-      url("https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/homepage/Homepage%20Hero.jpg");
+  .hero__overlay {
+    background: rgba(22, 48, 36, 0.85);
   }
 }
 .hero__content {
@@ -60,14 +64,14 @@
   content: "";
   width: 48px;
   height: 1px;
-  background: var(--champagne);
+  background: #C28A30;
 }
 .hero__eyebrow span {
   font-family: var(--font-eyebrow);
   font-size: 0.78rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--champagne);
+  color: #C28A30;
   font-weight: 500;
 }
 .hero__title {
@@ -91,6 +95,16 @@
   color: var(--champagne);
   max-width: 56ch;
   margin-bottom: var(--space-lg);
+}
+.hero__lede-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(217, 201, 168, 0.45);
+  transition: text-decoration-color var(--dur-fast);
+}
+.hero__lede-link:hover {
+  text-decoration-color: var(--brass);
 }
 .hero__ctas {
   display: flex;
@@ -151,6 +165,152 @@
   }
 }
 
+/* ---------- Homepage "Why Evergrain" differentiators ---------- */
+.why-us {
+  margin-top: clamp(2rem, 4vw, 2.5rem);
+}
+.why-us .eyebrow { margin-bottom: var(--space-sm); }
+.why-us__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+}
+@media (min-width: 640px) {
+  .why-us__grid { grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
+}
+.why-us__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.why-us__icon-wrap {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: rgba(164, 122, 42, 0.12);
+  color: var(--brass);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.why-us__icon { width: 18px; height: 18px; }
+.why-us__label {
+  margin: 0;
+  font-family: var(--font-eyebrow);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--evergreen);
+}
+.why-us__label strong {
+  font: inherit;
+  color: inherit;
+}
+.section--evergreen .why-us__label {
+  color: var(--champagne);
+}
+.section--evergreen .why-us__icon-wrap {
+  background: rgba(164, 122, 42, 0.22);
+  color: var(--brass-light);
+}
+
+/* ---------- Homepage "Pricing Snapshot" ---------- */
+.pricing-snap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-md);
+}
+.pricing-snap__card {
+  position: relative;
+  width: clamp(280px, 26vw, 340px);
+  min-height: 290px;
+  background: var(--white);
+  border: 1.5px solid rgba(92, 74, 53, 0.12);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.pricing-snap__card--featured {
+  background: var(--evergreen);
+  border-color: var(--evergreen);
+  color: var(--linen);
+}
+.pricing-snap__card--featured .pricing-snap__name {
+  color: var(--linen);
+}
+.pricing-snap__card--featured .pricing-snap__starting,
+.pricing-snap__card--featured .pricing-snap__meta,
+.pricing-snap__card--featured .pricing-snap__desc {
+  color: var(--champagne);
+}
+.pricing-snap__tag {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--brass);
+  color: var(--white);
+  font-family: var(--font-eyebrow);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pricing-snap__name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-xs);
+}
+.pricing-snap__starting {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--bark);
+  margin: 0;
+}
+.pricing-snap__price {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0.15rem 0 0;
+}
+.pricing-snap__price sup {
+  font-size: 1rem;
+  vertical-align: super;
+  margin-right: 0.15rem;
+  font-weight: 400;
+}
+.pricing-snap__meta {
+  font-family: var(--font-eyebrow);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bark);
+  margin: 0.3rem 0 var(--space-sm);
+}
+.pricing-snap__desc {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--bark);
+  margin: 0;
+}
+.pricing-snap__footer {
+  text-align: center;
+  margin-top: var(--space-xl);
+}
+
 /* ---------- Homepage "What we do" CTA cards ---------- */
 .cta-grid {
   display: grid;
@@ -159,75 +319,35 @@
   margin-top: var(--space-xl);
 }
 
-/* ---------- Homepage "How it works" edge-to-edge wave carousel ----------
-   - Track is 2x duplicated so the loop is seamless
-   - Carousel translates X 0 → -50% (one full set width) infinitely
-   - Each card bobs on translateY with its own --bob-delay so the
-     5 boxes form a traveling sine wave (one wavelength = 5 cards)
-   - No hover pause, no interaction — pure ambient motion
+/* ---------- Homepage "How it works" static row ----------
+   All 5 steps sit in one row, sized to fit; wraps to fewer columns
+   only when the viewport is too narrow to fit a 200px-minimum card.
+   No auto-scroll, no bob — static on purpose.
 */
 .how-carousel {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  overflow: hidden;
-  /* Top + bottom padding gives the bob animation room without clipping */
-  padding-block: 2.5rem;
-  /* Soft edge fades to suggest "infinite" */
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
-          mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  width: 100%;
 }
 .how-carousel__track {
-  display: flex;
-  gap: clamp(1.5rem, 2.5vw, 2.5rem);
-  width: max-content;
-  animation: how-carousel-scroll 45s linear infinite;
-  will-change: transform;
-}
-@keyframes how-carousel-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
-.how-card {
-  flex: 0 0 auto;
-  width: clamp(280px, 26vw, 340px);
-}
-/* Inner element handles the vertical bob so it doesn't fight the
-   parent track's translateX. Stacking transforms on different
-   elements composes cleanly at the rendering layer. */
 .how-card__bob {
-  background: var(--evergreen);
-  color: var(--linen);
+  background: var(--linen-warm);
+  color: var(--char);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
   min-height: 290px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid rgba(217, 201, 168, 0.10);
+  border: 1.5px solid rgba(92, 74, 53, 0.12);
   box-shadow: 0 18px 40px -20px rgba(26, 20, 16, 0.35);
-  animation: how-card-bob 3.5s ease-in-out infinite;
-  animation-delay: var(--bob-delay, 0s);
-  will-change: transform;
-}
-/* Subtle topographic texture on each card */
-.how-card__bob::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("../assets/img/topographic-bg.svg");
-  background-size: 220%;
-  background-position: center;
-  opacity: 0.05;
-  pointer-events: none;
-  z-index: -1;
 }
 
 .how-card__icon-wrap {
@@ -235,7 +355,7 @@
   height: 60px;
   border-radius: 999px;
   background: rgba(164, 122, 42, 0.16);
-  color: var(--brass-light);
+  color: var(--brass);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -251,7 +371,7 @@
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--champagne);
+  color: var(--bark);
   opacity: 0.7;
 }
 .how-card__title {
@@ -259,30 +379,19 @@
   font-size: 1.85rem;
   font-weight: 400;
   letter-spacing: -0.015em;
-  color: var(--linen);
+  color: var(--char);
   margin: 0;
   line-height: 1.05;
+}
+.section--evergreen .how-card__title {
+  color: var(--char);
 }
 .how-card__copy {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: var(--champagne);
-  opacity: 0.85;
+  color: var(--bark);
   margin: 0;
   max-width: none;
-}
-
-@keyframes how-card-bob {
-  0%, 100% { transform: translateY(-22px); }
-  50%      { transform: translateY(32px); }
-}
-
-/* Honor user preference — kill the motion if requested */
-@media (prefers-reduced-motion: reduce) {
-  .how-carousel__track,
-  .how-card__bob {
-    animation: none;
-  }
 }
 
 /* ---------- Stats strip ---------- */
@@ -360,6 +469,20 @@
   text-align: center;
   margin-bottom: var(--space-md);
 }
+.testimonial-carousel__more {
+  margin-top: var(--space-lg);
+  font-size: 0.9rem;
+  color: var(--bark);
+  text-align: center;
+}
+.testimonial-carousel__more a {
+  color: var(--evergreen);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.testimonial-carousel__more a:hover {
+  color: var(--brass);
+}
 /* Slightly smaller quote than the standalone testimonial default. */
 .testimonial-carousel .testimonial__quote {
   font-size: clamp(1.25rem, 2.2vw, 1.85rem);
@@ -393,9 +516,9 @@
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  background: rgba(244, 237, 224, 0.14);
-  border: 1px solid rgba(244, 237, 224, 0.45);
-  color: var(--linen);
+  background: rgba(31, 67, 50, 0.08);
+  border: 1px solid rgba(31, 67, 50, 0.25);
+  color: var(--evergreen);
   font-size: 1.2rem;
   line-height: 1;
   cursor: pointer;
@@ -789,7 +912,7 @@ a.area-pill:hover {
   font-weight: 300;
   letter-spacing: -0.025em;
   font-variation-settings: "SOFT" 50, "opsz" 144;
-  color: var(--linen);
+  color: var(--evergreen);
 }
 /* Overlapping photos: color booth in front, B&W strip behind. */
 .specializing__media {
@@ -1753,6 +1876,65 @@ a.area-pill:hover {
 .gallery__item:hover .gallery__caption {
   opacity: 1;
   transform: none;
+}
+
+/* ---------- Mini FAQ (homepage) ---------- */
+.mini-faq {
+  max-width: 660px;
+  margin: 0 auto;
+  text-align: center;
+}
+.mini-faq .faq {
+  margin-top: var(--space-md);
+  text-align: left;
+}
+.mini-faq .faq-item {
+  border-color: rgba(245, 241, 235, 0.22);
+}
+.mini-faq .faq-item__summary {
+  color: var(--linen);
+  padding: var(--space-sm) 0;
+  font-size: 1.1rem;
+}
+.mini-faq .faq-item__summary:hover {
+  color: var(--brass-light);
+}
+.mini-faq .faq-item__summary::after {
+  color: var(--linen);
+  font-size: 1.4rem;
+}
+.mini-faq .faq-item__body {
+  color: var(--champagne);
+  padding-bottom: var(--space-sm);
+}
+.mini-faq .faq-item__body a {
+  color: var(--champagne);
+  text-underline-offset: 2px;
+}
+.mini-faq__blog {
+  margin-top: var(--space-md);
+  font-size: 0.95rem;
+  color: var(--champagne);
+}
+.mini-faq__blog a {
+  color: var(--champagne);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(217, 201, 168, 0.45);
+  transition: text-decoration-color var(--dur-fast);
+}
+.mini-faq__blog a:hover {
+  text-decoration-color: var(--brass);
+}
+.mini-faq__cta {
+  margin-top: var(--space-sm);
+}
+.mini-faq__cta .link-arrow {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+  text-transform: none;
 }
 
 /* ---------- FAQ page ---------- */

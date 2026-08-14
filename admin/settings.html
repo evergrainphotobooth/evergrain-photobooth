@@ -57,6 +57,10 @@
           <input type="url" id="gi-instagram" name="social.instagram" placeholder="https://www.instagram.com/…/" />
         </div>
         <div class="admin-form-field">
+          <label for="gi-google">Google Business Profile URL</label>
+          <input type="url" id="gi-google" name="social.google" placeholder="https://share.google/…" />
+        </div>
+        <div class="admin-form-field">
           <label for="gi-yelp">Yelp URL</label>
           <input type="url" id="gi-yelp" name="social.yelp" placeholder="https://www.yelp.com/biz/…" />
         </div>
@@ -124,6 +128,7 @@
     document.getElementById("gi-phone-e164").value = s.contact?.phoneE164   ?? "";
     document.getElementById("gi-location").value   = s.contact?.location    ?? "";
     document.getElementById("gi-instagram").value  = s.social?.instagram    ?? "";
+    document.getElementById("gi-google").value     = s.social?.google       ?? "";
     document.getElementById("gi-yelp").value       = s.social?.yelp         ?? "";
     document.getElementById("gi-facebook").value   = s.social?.facebook     ?? "";
     document.getElementById("gi-tiktok").value     = s.social?.tiktok       ?? "";
@@ -141,6 +146,7 @@
       },
       social: {
         instagram: document.getElementById("gi-instagram").value.trim(),
+        google:    document.getElementById("gi-google").value.trim(),
         yelp:      document.getElementById("gi-yelp").value.trim(),
         facebook:  document.getElementById("gi-facebook").value.trim(),
         tiktok:    document.getElementById("gi-tiktok").value.trim(),
