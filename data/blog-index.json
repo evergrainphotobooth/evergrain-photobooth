@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T12:10:02.839Z",
+  "generated_at": "2026-08-15T12:20:02.124Z",
   "categories": [
     {
       "name": "Corporate Events & Brand Activations",
@@ -38,6 +38,34 @@
     }
   ],
   "posts": [
+    {
+      "title": "How to Create a Wedding Guest Book Using Photo Booth Prints",
+      "slug": "wedding-guest-book-photo-booth-prints",
+      "url": "/a-thousand-words/weddings-and-celebrations/wedding-guest-book-photo-booth-prints",
+      "category": {
+        "name": "Weddings & Celebrations",
+        "slug": "weddings-and-celebrations"
+      },
+      "categories": [
+        {
+          "name": "Weddings & Celebrations",
+          "slug": "weddings-and-celebrations"
+        },
+        {
+          "name": "Photo Booth Trends & Ideas",
+          "slug": "photo-booth-trends-and-ideas"
+        },
+        {
+          "name": "Design, Templates & Guest Experience",
+          "slug": "design-templates-and-guest-experience"
+        }
+      ],
+      "image": "https://zjwobaopuhanqsyyilzb.supabase.co/storage/v1/object/public/media/images/blogs/how-to-create-a-wedding-guest-book-using-photo-booth-prints-msduito3c9otq.jpg",
+      "imageAlt": "Guests signing a wedding guest book with photo booth prints and a personalized message.",
+      "date": "2026-08-15T12:20:00.19+00:00",
+      "dateLabel": "August 15, 2026",
+      "excerpt": "Discover how to craft a unique wedding guest book using fun photo booth prints! Learn tips for making it an interactive, cherished keepsake from your special…"
+    },
     {
       "title": "10 Ways a Photo Booth Makes Corporate Events More Engaging",
       "slug": "10-ways-photo-booth-makes-corporate-events-engaging",
