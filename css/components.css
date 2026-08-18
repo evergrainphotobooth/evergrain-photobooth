@@ -661,6 +661,73 @@ body.nav-open::before { opacity: 1; pointer-events: auto; }
   color: var(--bark);
 }
 
+/* ---------- Time Picker ---------- */
+.time-picker {
+  position: relative;
+}
+.time-picker__trigger {
+  text-align: left;
+  cursor: pointer;
+  color: var(--bark);
+}
+.time-picker__trigger.has-value {
+  color: var(--char);
+}
+.time-picker__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--white);
+  border: 1.5px solid rgba(92, 74, 53, 0.2);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+.time-picker__tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(92, 74, 53, 0.12);
+}
+.time-picker__tab {
+  flex: 1;
+  padding: 0.6rem;
+  border: 0;
+  background: var(--linen);
+  font-family: var(--font-eyebrow);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bark);
+  cursor: pointer;
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+.time-picker__tab.is-active {
+  background: var(--evergreen);
+  color: var(--linen);
+}
+.time-picker__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.time-picker__option {
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+.time-picker__option:hover {
+  background: var(--linen-warm);
+}
+.time-picker__option.is-selected {
+  background: var(--evergreen);
+  color: var(--linen);
+}
+
 .form__help {
   font-size: 0.85rem;
   color: var(--bark);

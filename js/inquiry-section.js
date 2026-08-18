@@ -54,18 +54,19 @@
     `<label><input type="checkbox" name="interestedAddons" value="${esc(a.name)}" data-addon-id="${a.id}" data-addon-price="${a.price}" data-addon-desc="${esc(a.desc)}" /> ${esc(a.name)}</label>`
   ).join("\n          ");
 
-  const timeOptions = (() => {
-    const opts = ['<option value="">Select time…</option>'];
-    for (let h = 0; h < 24; h++) {
-      for (let m = 0; m < 60; m += 5) {
-        const val = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
-        const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-        const ap = h >= 12 ? "PM" : "AM";
-        opts.push('<option value="' + val + '">' + h12 + ":" + String(m).padStart(2, "0") + " " + ap + "</option>");
-      }
-    }
-    return opts.join("\n              ");
-  })();
+  function buildTimePicker(id, name) {
+    return `<div class="time-picker" data-time-picker>
+      <input type="hidden" id="${id}" name="${name}" required />
+      <button type="button" class="form__select time-picker__trigger" data-time-trigger>Select time…</button>
+      <div class="time-picker__dropdown" data-time-dropdown hidden>
+        <div class="time-picker__tabs">
+          <button type="button" class="time-picker__tab is-active" data-time-period="AM">AM</button>
+          <button type="button" class="time-picker__tab" data-time-period="PM">PM</button>
+        </div>
+        <ul class="time-picker__list" data-time-list></ul>
+      </div>
+    </div>`;
+  }
 
   placeholder.outerHTML = `
 <section class="section inquiry" id="inquiry">
@@ -129,8 +130,8 @@
       <fieldset class="form-step" data-step="2" hidden>
         <div class="form__row form__row--2">
           <div class="form__field">
-            <label class="form__label" for="eventDate">Event Date <span class="form__label-note">(MM/DD/YYYY)</span></label>
-            <input class="form__input" type="date" id="eventDate" name="eventDate" />
+            <label class="form__label" for="eventDate">Event Date * <span class="form__label-note">(MM/DD/YYYY)</span></label>
+            <input class="form__input" type="date" id="eventDate" name="eventDate" required />
           </div>
           <div class="form__field">
             <label class="form__label" for="guests">Estimated Guest Count</label>
@@ -145,12 +146,12 @@
         </div>
         <div class="form__row form__row--2">
           <div class="form__field">
-            <label class="form__label" for="eventStartTime">Event Start Time <span class="form__label-note">(PST · Los Angeles)</span></label>
-            <select class="form__select" id="eventStartTime" name="eventStartTime">${timeOptions}</select>
+            <label class="form__label" for="eventStartTime">Event Start Time * <span class="form__label-note">(PST · Los Angeles)</span></label>
+            ${buildTimePicker("eventStartTime", "eventStartTime")}
           </div>
           <div class="form__field">
-            <label class="form__label" for="eventEndTime">Event End Time <span class="form__label-note">(PST · Los Angeles)</span></label>
-            <select class="form__select" id="eventEndTime" name="eventEndTime">${timeOptions}</select>
+            <label class="form__label" for="eventEndTime">Event End Time * <span class="form__label-note">(PST · Los Angeles)</span></label>
+            ${buildTimePicker("eventEndTime", "eventEndTime")}
           </div>
         </div>
         <div class="form__field">
@@ -160,8 +161,8 @@
           <input class="form__input" type="text" id="venueCity" name="venueCity" autocomplete="off" />
         </div>
         <div class="form__field">
-          <label class="form__label" for="venueAddress">Venue Full Address <span class="form__label-note">(street address, city, state, zip code)</span></label>
-          <input class="form__input" type="text" id="venueAddress" name="venueAddress" autocomplete="street-address" />
+          <label class="form__label" for="venueAddress">Venue Full Address * <span class="form__label-note">(street address, city, state, zip code)</span></label>
+          <input class="form__input" type="text" id="venueAddress" name="venueAddress" autocomplete="street-address" required />
         </div>
       </fieldset>
 
@@ -169,8 +170,8 @@
       <fieldset class="form-step" data-step="3" hidden>
         <div class="form__row form__row--2">
           <div class="form__field">
-            <label class="form__label" for="eventSetting">Event Indoor / Outdoor</label>
-            <select class="form__select" id="eventSetting" name="aesthetic">
+            <label class="form__label" for="eventSetting">Event Indoor / Outdoor *</label>
+            <select class="form__select" id="eventSetting" name="aesthetic" required>
               <option value="">Select one…</option>
               <option>Indoor</option>
               <option>Outdoor</option>
@@ -263,4 +264,64 @@
       }
     });
   }
+
+  // Time picker logic
+  function generateTimes(period) {
+    const start = period === "AM" ? 0 : 12;
+    const end = start + 11;
+    const times = [];
+    for (let h = start; h <= end; h++) {
+      for (let m = 0; m < 60; m += 15) {
+        const val = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+        const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+        const label = h12 + ":" + String(m).padStart(2, "0") + " " + period;
+        times.push({ val, label });
+      }
+    }
+    return times;
+  }
+
+  document.querySelectorAll("[data-time-picker]").forEach(picker => {
+    const trigger = picker.querySelector("[data-time-trigger]");
+    const dropdown = picker.querySelector("[data-time-dropdown]");
+    const list = picker.querySelector("[data-time-list]");
+    const hidden = picker.querySelector('input[type="hidden"]');
+    const tabs = picker.querySelectorAll("[data-time-period]");
+    let currentPeriod = "AM";
+
+    function renderTimes(period) {
+      currentPeriod = period;
+      tabs.forEach(t => t.classList.toggle("is-active", t.dataset.timePeriod === period));
+      const times = generateTimes(period);
+      list.innerHTML = times.map(t =>
+        '<li class="time-picker__option' + (hidden.value === t.val ? ' is-selected' : '') + '" data-value="' + t.val + '">' + t.label + '</li>'
+      ).join("");
+    }
+
+    function open() {
+      dropdown.hidden = false;
+      renderTimes(currentPeriod);
+      const selected = list.querySelector(".is-selected");
+      if (selected) selected.scrollIntoView({ block: "center" });
+    }
+
+    function close() { dropdown.hidden = true; }
+
+    trigger.addEventListener("click", () => dropdown.hidden ? open() : close());
+
+    tabs.forEach(tab => tab.addEventListener("click", () => renderTimes(tab.dataset.timePeriod)));
+
+    list.addEventListener("click", e => {
+      const li = e.target.closest("[data-value]");
+      if (!li) return;
+      hidden.value = li.dataset.value;
+      trigger.textContent = li.textContent;
+      trigger.classList.add("has-value");
+      close();
+    });
+
+    document.addEventListener("click", e => {
+      if (!picker.contains(e.target)) close();
+    });
+  });
 })();
