@@ -86,13 +86,30 @@
     track.innerHTML = files.map(card).join("");
     section.hidden = false;
 
-    // Autoplay videos on hover; pause + reset on leave.
-    track.querySelectorAll(".ig-card").forEach((a) => {
-      const v = a.querySelector("video");
-      if (!v || reduceMotion) return;
-      a.addEventListener("mouseenter", () => { v.play().catch(() => {}); });
-      a.addEventListener("mouseleave", () => { v.pause(); try { v.currentTime = 0; } catch (_) {} });
-    });
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    if (isTouch && !reduceMotion) {
+      // Mobile: autoplay visible videos via IntersectionObserver.
+      // Mobile Safari allows muted+playsinline videos to autoplay.
+      track.querySelectorAll("video").forEach((v) => v.setAttribute("autoplay", ""));
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(({ target, isIntersecting }) => {
+          const v = target.querySelector("video");
+          if (!v) return;
+          if (isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        });
+      }, { threshold: 0.2 });
+      track.querySelectorAll(".ig-card").forEach((c) => io.observe(c));
+    } else if (!reduceMotion) {
+      // Desktop: play on hover, pause + reset on leave.
+      track.querySelectorAll(".ig-card").forEach((a) => {
+        const v = a.querySelector("video");
+        if (!v) return;
+        a.addEventListener("mouseenter", () => { v.play().catch(() => {}); });
+        a.addEventListener("mouseleave", () => { v.pause(); try { v.currentTime = 0; } catch (_) {} });
+      });
+    }
 
     // Prev / next arrows — hidden at each end and when it all fits.
     const prev = section.querySelector("[data-ig-prev]");
