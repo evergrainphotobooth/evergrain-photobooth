@@ -82,6 +82,18 @@
   border-color: var(--linen);
 }
 
+.btn--evergreen {
+  background: var(--evergreen);
+  color: var(--linen);
+  border-color: var(--evergreen);
+}
+.btn--evergreen:hover {
+  background: var(--brass);
+  border-color: var(--brass);
+  color: var(--white);
+  box-shadow: var(--shadow-md);
+}
+
 .btn--sm { padding: 0.65rem 1.25rem; font-size: 0.7rem; }
 .btn--block { width: 100%; }
 .btn[disabled],
