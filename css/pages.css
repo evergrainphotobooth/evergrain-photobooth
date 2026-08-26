@@ -169,7 +169,7 @@
 .intro__photo {
   width: 80%;
   max-width: 300px;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 5 / 4;
   object-fit: cover;
   object-position: center 30%;
   border-radius: var(--radius-lg);
