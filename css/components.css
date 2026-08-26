@@ -43,9 +43,9 @@
   border-color: var(--evergreen);
 }
 .btn--primary:hover {
-  background: var(--evergreen-dark);
-  border-color: var(--evergreen-dark);
-  color: var(--linen);
+  background: var(--brass);
+  border-color: var(--brass);
+  color: var(--white);
   box-shadow: var(--shadow-md);
 }
 
@@ -55,9 +55,9 @@
   border-color: var(--brass);
 }
 .btn--brass:hover {
-  background: var(--brass-light);
-  border-color: var(--brass-light);
-  color: var(--char);
+  background: var(--evergreen);
+  border-color: var(--evergreen);
+  color: var(--white);
   box-shadow: var(--shadow-md);
 }
 
@@ -68,7 +68,8 @@
 }
 .btn--outline:hover {
   background: var(--evergreen);
-  color: var(--linen);
+  color: var(--white);
+  border-color: var(--evergreen);
 }
 
 .btn--ghost-light {
@@ -122,13 +123,11 @@
 .btn--primary:hover,
 .btn--primary:active {
   background: var(--evergreen);
-  color: var(--char); /* dark text on brass ink-wipe — passes WCAG AA */
+  color: var(--white);
   border-color: var(--brass);
 }
-/* Keep the label dark/visible once the brass wipe covers the button.
-   Targets the wrapping span directly so it never inherits the light color. */
 .btn--primary:hover > *,
-.btn--primary:active > * { color: var(--char); }
+.btn--primary:active > * { color: var(--white); }
 
 /* Inline text link with arrow */
 .link-arrow {
