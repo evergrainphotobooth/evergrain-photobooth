@@ -167,8 +167,8 @@
 
 /* ---------- Homepage intro photo ---------- */
 .intro__photo {
-  width: 80%;
-  max-width: 300px;
+  width: 90%;
+  max-width: 380px;
   aspect-ratio: 5 / 4;
   object-fit: cover;
   object-position: center 30%;
