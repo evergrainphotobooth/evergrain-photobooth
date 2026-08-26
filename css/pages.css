@@ -168,9 +168,10 @@
 /* ---------- Homepage intro photo ---------- */
 .intro__photo {
   width: 75%;
-  max-width: 320px;
+  max-width: 280px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  object-position: center 35%;
   border-radius: var(--radius-lg);
   margin-top: var(--space-md);
 }
