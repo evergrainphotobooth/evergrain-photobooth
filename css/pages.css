@@ -925,6 +925,7 @@ a.area-pill:hover {
   font-variation-settings: "SOFT" 50, "opsz" 144;
   color: var(--evergreen);
 }
+.specializing__intro .btn { margin-top: var(--space-lg); }
 /* Overlapping photos: color booth in front, B&W strip behind. */
 .specializing__media {
   position: relative;
@@ -1662,9 +1663,9 @@ a.area-pill:hover {
   color: var(--evergreen);
 }
 .addon__toggle {
-  background: transparent;
+  background: var(--evergreen);
   border: 1.5px solid var(--evergreen);
-  color: var(--evergreen);
+  color: var(--white);
   font-family: var(--font-eyebrow);
   font-size: 0.7rem;
   letter-spacing: 0.18em;
@@ -1673,11 +1674,12 @@ a.area-pill:hover {
   padding: 0.7rem 1rem;
   border-radius: 999px;
   cursor: pointer;
-  transition: background-color var(--dur-fast), color var(--dur-fast);
+  transition: background-color var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast);
 }
 .addon__toggle:hover {
-  background: var(--evergreen);
-  color: var(--linen);
+  background: var(--brass);
+  border-color: var(--brass);
+  color: var(--white);
 }
 .addon.is-selected .addon__toggle {
   background: var(--evergreen);
