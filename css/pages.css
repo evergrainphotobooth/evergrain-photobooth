@@ -167,11 +167,11 @@
 
 /* ---------- Homepage intro photo ---------- */
 .intro__photo {
-  width: 75%;
-  max-width: 280px;
-  aspect-ratio: 1 / 1;
+  width: 80%;
+  max-width: 300px;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  object-position: center 35%;
+  object-position: center 30%;
   border-radius: var(--radius-lg);
   margin-top: var(--space-md);
 }
