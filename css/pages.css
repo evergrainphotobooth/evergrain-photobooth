@@ -2516,11 +2516,8 @@ a.area-pill:hover {
 .region-events__carousel {
   display: flex;
   gap: var(--space-lg);
-  overflow-x: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   padding-block: 4px;
 }
 .region-events__carousel::-webkit-scrollbar { display: none; }
