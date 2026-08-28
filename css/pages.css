@@ -2233,18 +2233,18 @@ a.area-pill:hover {
 }
 .region-card {
   display: block;
-  background: var(--white);
+  background: var(--evergreen);
   border-radius: var(--radius-md);
   overflow: hidden;
   text-decoration: none;
-  color: var(--char);
-  border: 1px solid rgba(92, 74, 53, 0.08);
+  color: var(--linen);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: transform var(--dur-med) var(--ease-out), box-shadow var(--dur-med);
 }
 .region-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
-  color: var(--char);
+  color: var(--linen);
 }
 .region-card__image {
   aspect-ratio: 3 / 2;
@@ -2264,13 +2264,20 @@ a.area-pill:hover {
   font-weight: 300;
   margin: 0 0 var(--space-xs);
   letter-spacing: -0.01em;
+  color: var(--linen);
+}
+.region-card .eyebrow {
+  color: var(--champagne);
 }
 .region-card__tagline {
-  color: var(--bark);
+  color: var(--champagne);
   margin-bottom: var(--space-md);
   font-style: italic;
   font-family: var(--font-display);
   font-weight: 300;
+}
+.region-card .link-arrow {
+  color: var(--linen);
 }
 
 /* ---------- Neighborhood grid (parent region page) ---------- */
@@ -2391,6 +2398,43 @@ a.area-pill:hover {
 }
 
 /* ---------- Region page expanded sections ---------- */
+
+/* About section: heading on top, video left + text right */
+.region-narrative__split {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  margin-top: var(--space-lg);
+}
+@media (min-width: 900px) {
+  .region-narrative__split { grid-template-columns: 280px 1fr; }
+}
+.region-narrative__video {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  max-height: 440px;
+}
+.region-narrative__video video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  max-height: 440px;
+}
+@media (max-width: 899px) {
+  .region-narrative__video {
+    max-width: 280px;
+    max-height: 380px;
+  }
+  .region-narrative__video video {
+    max-height: 380px;
+  }
+}
+.region-narrative__body {
+  padding-top: 0.25rem;
+}
+
 .region-narrative p,
 .region-differentiator p {
   font-size: 1.05rem;
@@ -2402,13 +2446,127 @@ a.area-pill:hover {
 .region-narrative p:last-child,
 .region-differentiator p:last-child { margin-bottom: 0; }
 
-/* Events grid: responsive, brand-aligned cards */
+/* Why Evergrain section: heading on top, then image left + body right */
+.region-differentiator__split {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3rem);
+  align-items: start;
+  margin-top: var(--space-lg);
+}
+@media (min-width: 900px) {
+  .region-differentiator__split { grid-template-columns: 340px 1fr; }
+}
+.region-differentiator__image {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.region-differentiator__image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 5 / 4;
+}
+@media (max-width: 899px) {
+  .region-differentiator__image {
+    max-width: 340px;
+  }
+}
+.region-differentiator__body {
+  padding-top: 0.25rem;
+}
+.region-differentiator .eyebrow {
+  color: var(--champagne);
+}
+.region-differentiator .display {
+  color: var(--linen);
+}
+.region-differentiator p {
+  color: var(--champagne);
+}
+
+/* "Where we shine" specializing section on area pages */
+.region-specializing .specializing__list li {
+  color: var(--linen);
+}
+.region-specializing .eyebrow {
+  color: var(--champagne);
+}
+
+/* Events grid: responsive, 3 per row on desktop */
 .region-events__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-lg);
   margin-top: var(--space-lg);
 }
+@media (max-width: 900px) {
+  .region-events__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .region-events__grid { grid-template-columns: 1fr; }
+}
+
+/* Events carousel for overflow (4+ cards) */
+.region-events__carousel-wrap {
+  position: relative;
+  margin-top: var(--space-lg);
+}
+.region-events__carousel {
+  display: flex;
+  gap: var(--space-lg);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-block: 4px;
+}
+.region-events__carousel::-webkit-scrollbar { display: none; }
+.region-events__carousel .region-events__item {
+  flex: 0 0 calc(33.333% - var(--space-lg) * 2 / 3);
+  min-width: 280px;
+  scroll-snap-align: start;
+}
+@media (max-width: 900px) {
+  .region-events__carousel .region-events__item {
+    flex: 0 0 calc(50% - var(--space-lg) / 2);
+  }
+}
+@media (max-width: 600px) {
+  .region-events__carousel .region-events__item {
+    flex: 0 0 85%;
+  }
+}
+.region-events__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(92, 74, 53, 0.25);
+  background: var(--white);
+  color: var(--char);
+  font-size: 1.2rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.region-events__arrow:hover { background: var(--evergreen); color: var(--linen); }
+.region-events__arrow--prev { left: -14px; }
+.region-events__arrow--next { right: -14px; }
+.region-events__arrow:disabled { opacity: 0; pointer-events: none; }
+@media (min-width: 601px) {
+  .region-events__arrow { display: inline-flex; }
+}
+
 .region-events__item {
   background: var(--white);
   border: 1px solid rgba(92, 74, 53, 0.12);
@@ -2438,6 +2596,86 @@ a.area-pill:hover {
   color: var(--bark);
   max-width: none;
   margin: 0;
+}
+
+/* ---------- Region Gallery Carousel ---------- */
+.region-gallery {
+  position: relative;
+}
+.region-gallery__track {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-block: 4px;
+  align-items: flex-start;
+}
+.region-gallery__track::-webkit-scrollbar { display: none; }
+.region-gallery__item {
+  flex: 0 0 auto;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  scroll-snap-align: start;
+  background: rgba(255,255,255,0.1);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-med) var(--ease-out), box-shadow var(--dur-med) var(--ease-out);
+}
+.region-gallery__item:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+.region-gallery__item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.region-gallery__item--2x6 { width: 140px; height: 420px; }
+.region-gallery__item--4x6 { width: 220px; height: 330px; }
+.region-gallery__item--6x4 { width: 300px; height: 200px; }
+.region-gallery__stack {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scroll-snap-align: start;
+}
+@media (max-width: 600px) {
+  .region-gallery__item--2x6 { width: 110px; height: 330px; }
+  .region-gallery__item--4x6 { width: 180px; height: 270px; }
+  .region-gallery__item--6x4 { width: 240px; height: 160px; }
+}
+.region-gallery__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(31,67,50,0.85);
+  color: var(--linen);
+  font-size: 1.2rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.region-gallery__arrow:hover { background: var(--brass); }
+.region-gallery__arrow--prev { left: 12px; }
+.region-gallery__arrow--next { right: 12px; }
+.region-gallery__arrow:disabled { opacity: 0; pointer-events: none; }
+@media (min-width: 601px) {
+  .region-gallery__arrow { display: inline-flex; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .region-gallery__track { scroll-behavior: auto; }
 }
 
 /* ---------- "Find us on Instagram" carousel ---------- */
