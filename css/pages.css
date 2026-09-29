@@ -90,7 +90,7 @@
   color: var(--champagne);
 }
 .hero__lede {
-  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
   line-height: 1.55;
   color: var(--champagne);
   max-width: 56ch;
