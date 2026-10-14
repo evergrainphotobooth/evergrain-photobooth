@@ -926,57 +926,48 @@ a.area-pill:hover {
   color: var(--evergreen);
 }
 .specializing__intro .btn { margin-top: var(--space-lg); }
-/* Overlapping photos: color booth in front, B&W strip behind. */
+/* Print collage: real print shapes tiled with matched edges.
+   Left: two 2x6 wedding strips spanning full height.
+   Right: 6x4 brand print on top; 4x6 + 2x6 underneath.
+   Column/row fractions are solved so each cell keeps its print's aspect
+   ratio (2:6, 6:4, 4:6), which makes the whole block ~4:3 — shorter than
+   the old square, so the section doesn't grow. */
 .specializing__media {
-  position: relative;
-  aspect-ratio: 1 / 1;
+  display: grid;
+  grid-template-columns: 24.75fr 24.75fr 27.7fr 13.8fr;
+  grid-template-rows: 29.7fr 41.5fr;
+  gap: clamp(8px, 1.4vw, 14px);
+  aspect-ratio: 100 / 74.2;
 }
 .specializing__photo {
-  position: absolute;
   margin: 0;
+  min-width: 0;
+  min-height: 0;
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   border: 2px solid var(--linen);
+  transition: transform var(--dur-med) var(--ease-out);
 }
+.specializing__photo:hover { transform: translateY(-4px); }
 .specializing__photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
-/* Three fanned photo strips, all the same size. Front (M&E) on the left,
-   Wine o'clock in the middle, Sev & Lilia at the back-right — set lower so
-   its bottom "Next stop: Wedding 2027" message stays uncovered. */
-.specializing__photo--front,
-.specializing__photo--mid,
-.specializing__photo--back { width: 30%; }
-.specializing__photo--front {
-  bottom: 8%;
-  left: 6%;
-  z-index: 3;
-  transform: rotate(-6deg);
-}
-.specializing__photo--mid {
-  bottom: 8%;
-  left: 29%;
-  z-index: 2;
-  transform: rotate(0deg);
-}
-.specializing__photo--back {
-  bottom: 8%;
-  left: 52%;
-  z-index: 1;
-  transform: rotate(6deg);
-}
+.specializing__photo--wedding-a { grid-column: 1; grid-row: 1 / 3; }
+.specializing__photo--wedding-b { grid-column: 2; grid-row: 1 / 3; }
+.specializing__photo--brand     { grid-column: 3 / 5; grid-row: 1; }
+.specializing__photo--occasion  { grid-column: 3; grid-row: 2; }
+.specializing__photo--corporate { grid-column: 4; grid-row: 2; }
 @media (max-width: 760px) {
   .specializing {
     grid-template-columns: 1fr;
     gap: clamp(2.5rem, 10vw, 4rem);
   }
   .specializing__media {
-    aspect-ratio: 1 / 1;
-    max-width: 460px;
+    max-width: 520px;
     margin-inline: auto;
     width: 100%;
   }
