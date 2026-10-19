@@ -90,6 +90,10 @@
   color: var(--champagne);
 }
 .hero__lede {
+  font-family: var(--font-body);
+  font-weight: 400;
+  letter-spacing: normal;
+  font-variation-settings: normal;
   font-size: clamp(1.25rem, 2vw, 1.55rem);
   line-height: 1.55;
   color: var(--champagne);
