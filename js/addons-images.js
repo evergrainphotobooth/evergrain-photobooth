@@ -8,6 +8,8 @@
    it attaches to that card. Case, spaces, and punctuation are
    ignored. Drop a new image into the folder (or replace one)
    and it shows up on the next page load — no code change.
+   If a filename can't match the title, set data-image="<file>"
+   on the card instead.
 
    The images are decorative only: not links, not draggable,
    not clickable.
@@ -102,8 +104,13 @@
       const title = card.querySelector(".addon__name")?.textContent || "";
       const keys = [norm(title), norm(card.getAttribute("data-name"))].filter(Boolean);
 
+      // 0) An explicit data-image="<filename>" on the card wins, for images
+      //    whose filename doesn't follow the card title.
+      const explicit = norm((card.getAttribute("data-image") || "").replace(/\.[^.]+$/, ""));
+      let hit = explicit ? map.find((m) => m.key === explicit) : null;
+
       // 1) Exact match on the (normalized) title.
-      let hit = map.find((m) => keys.includes(m.key));
+      if (!hit) hit = map.find((m) => keys.includes(m.key));
 
       // 2) Otherwise accept a shortened filename that is an unambiguous prefix
       //    of the title — e.g. "Custom Rear Display" for the card

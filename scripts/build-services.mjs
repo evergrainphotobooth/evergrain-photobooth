@@ -87,7 +87,7 @@ ${rows}
 function buildAddonCard(a) {
   const displayName = a.displayName || a.name;
   const dataDescAttr = escAttr(a.description);
-  return `          <article class="addon reveal" data-addon-card="${escAttr(a.id)}" data-name="${escAttr(a.name)}" data-price="${a.price}" data-desc="${dataDescAttr}">
+  return `          <article class="addon reveal" data-addon-card="${escAttr(a.id)}" data-name="${escAttr(a.name)}"${a.image ? ` data-image="${escAttr(a.image)}"` : ""} data-price="${a.price}" data-desc="${dataDescAttr}">
             <div class="addon__header">
               <h3 class="addon__name">${esc(displayName)}</h3>
               <div><span class="addon__price">$${fmtPrice(a.price)}</span><span class="addon__price-meta">${esc(a.priceMeta)}</span></div>

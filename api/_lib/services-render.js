@@ -75,7 +75,7 @@ ${rows}
 
 function renderAddonCard(a) {
   const displayName = a.displayName || a.name;
-  return `          <article class="addon reveal" data-addon-card="${esc(a.id)}" data-name="${esc(a.name)}" data-price="${a.price}" data-desc="${esc(a.description)}">
+  return `          <article class="addon reveal" data-addon-card="${esc(a.id)}" data-name="${esc(a.name)}"${a.image ? ` data-image="${esc(a.image)}"` : ""} data-price="${a.price}" data-desc="${esc(a.description)}">
             <div class="addon__header">
               <h3 class="addon__name">${esc(displayName)}</h3>
               <div><span class="addon__price">$${fmtPrice(a.price)}</span><span class="addon__price-meta">${esc(a.priceMeta)}</span></div>
