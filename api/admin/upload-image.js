@@ -11,6 +11,7 @@
 
 import { requireAuth } from "../_lib/auth.js";
 import { recommendStock } from "../_lib/stock-image.js";
+import { handleAssets } from "../_lib/assets.js";
 
 const BUCKET = "media";
 const PREFIX = "images/blogs";
@@ -48,6 +49,9 @@ async function handler(req, res) {
   // Stock-image recommendation (no Supabase needed) — AI-assisted search of a
   // royalty-free library. The chosen result is then uploaded via the URL path.
   if (b.action === "stock") return recommendStock(req, res, b);
+
+  // R2-backed Assets manager (CMS /admin/assets) — list/head/presign/meta/rename/delete.
+  if (typeof b.action === "string" && b.action.startsWith("assets-")) return handleAssets(req, res, b);
 
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return res.status(500).json({ error: "Server misconfigured" });

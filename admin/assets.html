@@ -10,6 +10,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/admin/admin.css" />
 <link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
+<style>
+  .card-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; flex-wrap:wrap; }
+  .asset-toolbar { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+  .asset-toolbar select, .asset-toolbar input { font:inherit; }
+  .asset-search { min-width:200px; }
+  .dropzone { border:2px dashed var(--line,#ddd6c9); border-radius:14px; padding:1.1rem; text-align:center; color:var(--gray-500); font-size:.88rem; margin-bottom:1rem; transition:.15s; cursor:pointer; }
+  .dropzone.is-over { border-color:var(--brass,#a47a2a); background:var(--wash,#faf7f1); color:var(--gray-700); }
+  .asset-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:1rem; }
+  .asset { border:1px solid var(--line,#ece7df); border-radius:12px; overflow:hidden; background:#fff; display:flex; flex-direction:column; }
+  .asset__thumb { height:130px; background:var(--wash,#f3efe8); display:grid; place-items:center; overflow:hidden; position:relative; }
+  .asset__thumb img, .asset__thumb video { width:100%; height:100%; object-fit:cover; display:block; }
+  .asset__icon { font-size:2rem; color:var(--gray-400,#b5ad9f); }
+  .asset__type { position:absolute; top:6px; left:6px; font-size:.6rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; background:rgba(0,0,0,.55); color:#fff; border-radius:5px; padding:.1rem .4rem; }
+  .asset__body { padding:.6rem .7rem; display:flex; flex-direction:column; gap:.3rem; flex:1; }
+  .asset__name { font-size:.82rem; font-weight:600; word-break:break-word; line-height:1.3; }
+  .asset__meta { font-size:.7rem; color:var(--gray-500); }
+  .asset__actions { display:flex; gap:.3rem; margin-top:.4rem; flex-wrap:wrap; }
+  .icon-btn { font:inherit; font-size:.72rem; border:1px solid var(--line,#ddd6c9); background:#fff; color:var(--gray-600); border-radius:7px; padding:.22rem .5rem; cursor:pointer; }
+  .icon-btn:hover { border-color:var(--brass,#a47a2a); color:var(--brass,#a47a2a); }
+  .icon-btn--danger:hover { border-color:#B4462F; color:#B4462F; }
+  .up-row { font-size:.8rem; color:var(--gray-600); margin-top:.4rem; }
+  /* edit drawer */
+  .meta-row { display:flex; gap:.5rem; margin-bottom:.5rem; }
+  .meta-row input { flex:1; }
+  .meta-row .icon-btn { flex-shrink:0; }
+  .setup-note code { background:var(--wash,#f3efe8); padding:.1rem .35rem; border-radius:4px; font-size:.82rem; }
+</style>
 </head>
 <body>
 
@@ -17,30 +44,248 @@
 
 <div data-admin-page-content hidden>
 
-    <div class="admin-card">
-      <h2 class="admin-card__title">Supabase storage</h2>
-      <p style="margin: 0 0 1rem; font-size: 0.95rem; color: var(--gray-700);">
-        Your assets live in your Supabase Storage <code>media</code> bucket. Supabase doesn't allow embedding their dashboard inside an iframe (X-Frame-Options denies it), so for now use the link below — it opens in a new tab and gives you the full upload/edit/delete UI.
-      </p>
-      <p style="margin: 0 0 1.5rem; font-size: 0.9rem; color: var(--gray-500);">
-        Phase 2 will give you a brand-matched gallery here with drag-and-drop upload, rename, and copy-URL — no tab-switching.
-      </p>
-      <a href="https://supabase.com/dashboard/project/_/storage/buckets/media" target="_blank" rel="noopener" class="btn btn--primary">Open Supabase Storage →</a>
+  <div class="admin-card">
+    <div class="card-head">
+      <div>
+        <h2 class="admin-card__title" style="margin:0;">Media library</h2>
+        <p style="margin:.15rem 0 0; font-size:.85rem; color:var(--gray-500);">Files in your Cloudflare R2 bucket <span data-bucket-label></span></p>
+      </div>
+      <div class="asset-toolbar">
+        <select class="field__select" data-folder-filter style="padding:.4rem .6rem;"><option value="">All folders</option></select>
+        <input class="field__input asset-search" type="search" placeholder="Search files…" data-search />
+        <button type="button" class="btn btn--ghost btn--sm" data-refresh>Refresh</button>
+      </div>
     </div>
 
-    <div class="admin-card" style="margin-top: 1rem;">
-      <h2 class="admin-card__title">Folder structure</h2>
-      <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; line-height: 1.8;">
-        <li><code>media/images/homepage/</code> — hero, intro</li>
-        <li><code>media/images/the booth/</code> — booth product shots</li>
-        <li><code>media/images/our story/</code> — Cindy &amp; Hamilton story imagery</li>
-        <li><code>media/images/gallery/</code> — gallery page (Phase 2 — add here as you upload)</li>
-        <li><code>media/images/cities/</code> — city-specific photography for /areas-we-serve/</li>
-      </ul>
+    <label class="dropzone" data-dropzone>
+      <input type="file" multiple hidden data-file-input />
+      <strong>Drop files here</strong> or click to upload — straight to R2. Set a destination folder below.
+      <div style="margin-top:.5rem;">
+        <input class="field__input" data-upload-folder type="text" placeholder="destination folder, e.g. images/gallery" style="max-width:320px; display:inline-block;" />
+      </div>
+      <div data-upload-status></div>
+    </label>
+
+    <div data-assets>
+      <div class="empty-state"><span class="loading"></span></div>
     </div>
+  </div>
 
 </div>
 
+<!-- Edit drawer: rename/move + metadata -->
+<div class="drawer-overlay" data-drawer-overlay></div>
+<aside class="drawer" data-drawer aria-hidden="true">
+  <div class="drawer__header">
+    <h2 class="drawer__title" data-drawer-title>Edit asset</h2>
+    <button type="button" class="drawer__close" data-drawer-close aria-label="Close">×</button>
+  </div>
+  <div class="drawer__body" data-drawer-body></div>
+</aside>
+
+<!-- Confirm delete -->
+<div class="modal-overlay" data-confirm-overlay hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <h3 class="modal__title">Delete this file?</h3>
+    <p class="modal__body" data-confirm-body></p>
+    <div class="modal__actions">
+      <button type="button" class="btn btn--ghost btn--sm" data-confirm-cancel>Cancel</button>
+      <button type="button" class="btn btn--danger btn--sm" data-confirm-ok>Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = "/api/admin/upload-image";
+  const esc = (s) => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const $ = (s) => document.querySelector(s);
+  const call = async (body) => {
+    const r = await fetch(API, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(body) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || `Request failed (${r.status})`);
+    return d;
+  };
+  const fmtSize = (n) => n >= 1048576 ? (n/1048576).toFixed(1)+" MB" : n >= 1024 ? Math.round(n/1024)+" KB" : n+" B";
+
+  const els = {
+    assets: $("[data-assets]"), folderFilter: $("[data-folder-filter]"), search: $("[data-search]"),
+    bucket: $("[data-bucket-label]"), dropzone: $("[data-dropzone]"), fileInput: $("[data-file-input]"),
+    uploadFolder: $("[data-upload-folder]"), uploadStatus: $("[data-upload-status]"),
+  };
+  let ITEMS = [];
+
+  /* ---------- load + render ---------- */
+  async function load() {
+    els.assets.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
+    try {
+      const d = await call({ action:"assets-list" });
+      ITEMS = d.items || [];
+      els.bucket.textContent = d.publicBase ? `· ${new URL(d.publicBase).host}` : "";
+      buildFolderFilter();
+      render();
+    } catch (e) {
+      if (/not configured/i.test(e.message)) {
+        els.assets.innerHTML = `<div class="setup-note" style="padding:1rem; line-height:1.6;">
+          <h3 style="margin:0 0 .5rem;">R2 isn't connected yet</h3>
+          <p style="font-size:.9rem; color:var(--gray-600);">Add these environment variables in Vercel → Settings → Environment Variables (Production), then redeploy:</p>
+          <ul style="font-size:.88rem; line-height:1.9;">
+            <li><code>R2_ACCESS_KEY_ID</code></li><li><code>R2_SECRET_ACCESS_KEY</code></li>
+            <li><code>R2_ENDPOINT</code> (https://&lt;accountid&gt;.r2.cloudflarestorage.com)</li>
+            <li><code>R2_BUCKET</code> (evergrain-media)</li>
+            <li><code>R2_PUBLIC_BASE</code> (your pub-….r2.dev URL)</li>
+          </ul></div>`;
+      } else {
+        els.assets.innerHTML = `<div class="empty-state"><h3>Couldn't load assets</h3><p>${esc(e.message)}</p></div>`;
+      }
+    }
+  }
+
+  function buildFolderFilter() {
+    const folders = [...new Set(ITEMS.map(i => i.folder).filter(Boolean))].sort();
+    const cur = els.folderFilter.value;
+    els.folderFilter.innerHTML = `<option value="">All folders</option>` + folders.map(f => `<option value="${esc(f)}">${esc(f)}</option>`).join("");
+    els.folderFilter.value = cur;
+  }
+
+  function filtered() {
+    const f = els.folderFilter.value, q = els.search.value.trim().toLowerCase();
+    return ITEMS.filter(i => (!f || i.folder === f) && (!q || i.key.toLowerCase().includes(q)));
+  }
+
+  function thumb(i) {
+    if (i.type === "image") return `<img src="${esc(i.url)}" alt="" loading="lazy" />`;
+    if (i.type === "video") return `<video src="${esc(i.url)}" muted preload="metadata"></video><span class="asset__type">video</span>`;
+    return `<span class="asset__icon">📄</span><span class="asset__type">${esc((i.name.split(".").pop()||"file"))}</span>`;
+  }
+
+  function render() {
+    const list = filtered();
+    if (!list.length) { els.assets.innerHTML = `<div class="empty-state"><h3>No files${ITEMS.length?" match":""}.</h3><p>Upload some above${ITEMS.length?", or clear the filter":""}.</p></div>`; return; }
+    els.assets.innerHTML = `<div class="asset-grid">` + list.map(i => `
+      <div class="asset" data-key="${esc(i.key)}">
+        <div class="asset__thumb">${thumb(i)}</div>
+        <div class="asset__body">
+          <div class="asset__name" title="${esc(i.key)}">${esc(i.name)}</div>
+          <div class="asset__meta">${esc(i.folder || "root")} · ${fmtSize(i.size)}</div>
+          <div class="asset__actions">
+            <button type="button" class="icon-btn" data-copy="${esc(i.url)}">Copy URL</button>
+            <button type="button" class="icon-btn" data-edit="${esc(i.key)}">Edit</button>
+            <button type="button" class="icon-btn icon-btn--danger" data-del="${esc(i.key)}">Delete</button>
+          </div>
+        </div>
+      </div>`).join("") + `</div>`;
+    els.assets.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(b.getAttribute("data-copy")); b.textContent = "Copied ✓"; setTimeout(()=>b.textContent="Copy URL",1200); } catch {}
+    }));
+    els.assets.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => openEdit(b.getAttribute("data-edit"))));
+    els.assets.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => confirmDelete(b.getAttribute("data-del"))));
+  }
+
+  els.folderFilter.addEventListener("change", render);
+  els.search.addEventListener("input", render);
+  $("[data-refresh]").addEventListener("click", load);
+
+  /* ---------- upload (presigned PUT straight to R2) ---------- */
+  function wireDrop() {
+    const dz = els.dropzone;
+    els.fileInput.addEventListener("change", () => uploadFiles([...els.fileInput.files]));
+    ["dragover","dragenter"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add("is-over"); }));
+    ["dragleave","drop"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove("is-over"); }));
+    dz.addEventListener("drop", e => { if (e.dataTransfer?.files?.length) uploadFiles([...e.dataTransfer.files]); });
+  }
+  async function uploadFiles(files) {
+    if (!files.length) return;
+    const folder = els.uploadFolder.value.trim().replace(/^\/+|\/+$/g, "");
+    let done = 0;
+    for (const file of files) {
+      const key = (folder ? folder + "/" : "") + file.name;
+      els.uploadStatus.innerHTML = `<div class="up-row"><span class="loading"></span> Uploading ${esc(file.name)} (${done+1}/${files.length})…</div>`;
+      try {
+        const { uploadUrl } = await call({ action:"assets-presign", key, contentType: file.type || "application/octet-stream" });
+        const put = await fetch(uploadUrl, { method:"PUT", headers:{ "Content-Type": file.type || "application/octet-stream" }, body: file });
+        if (!put.ok) throw new Error(`upload failed (${put.status})`);
+        done++;
+      } catch (e) {
+        els.uploadStatus.innerHTML = `<div class="up-row" style="color:#B4462F;">${esc(file.name)}: ${esc(e.message)}</div>`;
+        return;
+      }
+    }
+    els.uploadStatus.innerHTML = `<div class="up-row" style="color:#2F7A4F;">✓ Uploaded ${done} file${done===1?"":"s"}.</div>`;
+    els.fileInput.value = "";
+    await load();
+  }
+
+  /* ---------- edit drawer (rename/move + metadata) ---------- */
+  const drawer = $("[data-drawer]"), overlay = $("[data-drawer-overlay]"), drawerBody = $("[data-drawer-body]");
+  function closeDrawer(){ drawer.classList.remove("is-open"); overlay.classList.remove("is-open"); drawer.setAttribute("aria-hidden","true"); }
+  $("[data-drawer-close]").addEventListener("click", closeDrawer);
+  overlay.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", e => { if (e.key==="Escape") closeDrawer(); });
+
+  async function openEdit(key) {
+    drawer.classList.add("is-open"); overlay.classList.add("is-open"); drawer.setAttribute("aria-hidden","false");
+    drawerBody.innerHTML = `<div class="empty-state"><span class="loading"></span></div>`;
+    let meta = {}, contentType = "";
+    try { const h = await call({ action:"assets-head", key }); meta = h.metadata || {}; contentType = h.contentType || ""; } catch {}
+    const metaRows = Object.entries(meta).map(([k,v]) => metaRow(k,v)).join("");
+    drawerBody.innerHTML = `
+      <div class="field"><label class="field__label">File key (rename / move)</label>
+        <input class="field__input" data-e-key value="${esc(key)}" />
+        <div class="field__hint" style="font-size:.75rem;color:var(--gray-500);">Change the path to rename or move. Content type: ${esc(contentType||"—")}</div></div>
+      <div class="detail-section-title" style="margin-top:1.1rem;">Metadata</div>
+      <div data-meta-rows>${metaRows || `<p class="text-meta">No metadata yet.</p>`}</div>
+      <button type="button" class="icon-btn" data-meta-add style="margin:.2rem 0 1rem;">+ Add field</button>
+      <div style="display:flex; gap:.5rem;">
+        <button type="button" class="btn btn--primary btn--sm" data-e-save>Save changes</button>
+        <a class="btn btn--ghost btn--sm" href="${esc(ITEMS.find(i=>i.key===key)?.url||"#")}" target="_blank" rel="noopener">Open file ↗</a>
+      </div>
+      <div class="up-row" data-e-status></div>`;
+    const rowsWrap = drawerBody.querySelector("[data-meta-rows]");
+    drawerBody.querySelector("[data-meta-add]").addEventListener("click", () => {
+      if (rowsWrap.querySelector(".text-meta")) rowsWrap.innerHTML = "";
+      rowsWrap.insertAdjacentHTML("beforeend", metaRow("",""));
+      wireMetaRemove();
+    });
+    wireMetaRemove();
+    drawerBody.querySelector("[data-e-save]").addEventListener("click", () => saveEdit(key));
+  }
+  function metaRow(k,v){ return `<div class="meta-row"><input class="field__input" data-mk placeholder="key" value="${esc(k)}" /><input class="field__input" data-mv placeholder="value" value="${esc(v)}" /><button type="button" class="icon-btn icon-btn--danger" data-mrm>×</button></div>`; }
+  function wireMetaRemove(){ drawerBody.querySelectorAll("[data-mrm]").forEach(b => b.onclick = () => b.closest(".meta-row").remove()); }
+
+  async function saveEdit(origKey) {
+    const status = drawerBody.querySelector("[data-e-status]");
+    const newKey = drawerBody.querySelector("[data-e-key]").value.trim();
+    const metadata = {};
+    drawerBody.querySelectorAll(".meta-row").forEach(r => {
+      const k = r.querySelector("[data-mk]").value.trim(); const v = r.querySelector("[data-mv]").value;
+      if (k) metadata[k] = v;
+    });
+    status.textContent = "Saving…";
+    try {
+      let key = origKey;
+      if (newKey && newKey !== origKey) { const d = await call({ action:"assets-rename", key: origKey, newKey }); key = d.key; }
+      await call({ action:"assets-meta", key, metadata });
+      status.style.color = "#2F7A4F"; status.textContent = "Saved ✓";
+      await load(); setTimeout(closeDrawer, 500);
+    } catch (e) { status.style.color = "#B4462F"; status.textContent = e.message; }
+  }
+
+  /* ---------- delete ---------- */
+  const confirmOverlay = $("[data-confirm-overlay]"), confirmBody = $("[data-confirm-body]"), confirmOk = $("[data-confirm-ok]");
+  let pendingDel = null;
+  function confirmDelete(key){ pendingDel = key; confirmBody.innerHTML = `Permanently delete <strong>${esc(key)}</strong> from R2? This can't be undone.`; confirmOk.disabled=false; confirmOk.textContent="Delete"; confirmOverlay.hidden=false; requestAnimationFrame(()=>confirmOverlay.classList.add("is-open")); }
+  function closeConfirm(){ confirmOverlay.classList.remove("is-open"); pendingDel=null; setTimeout(()=>confirmOverlay.hidden=true,180); }
+  $("[data-confirm-cancel]").addEventListener("click", closeConfirm);
+  confirmOverlay.addEventListener("click", e => { if (e.target===confirmOverlay) closeConfirm(); });
+  confirmOk.addEventListener("click", async () => {
+    if (!pendingDel) return; confirmOk.disabled=true; confirmOk.textContent="Deleting…";
+    try { await call({ action:"assets-delete", key: pendingDel }); closeConfirm(); await load(); }
+    catch (e) { confirmOk.textContent="Failed — retry"; confirmOk.disabled=false; }
+  });
+
+  wireDrop();
+  load();
+</script>
 <script src="/admin/admin-shell.js"></script>
 
 </body>
