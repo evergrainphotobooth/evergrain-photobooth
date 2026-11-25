@@ -20,6 +20,11 @@ const HUB_DIR = "a-thousand-words";
 const INDEX_PATH = "data/blog-index.json";
 const UNCATEGORIZED = { name: "A Thousand Words", slug: "uncategorized" };
 
+// Sitewide LocalBusiness schema. Kept byte-identical to the block scripts/seo-insert.mjs
+// injects into every other page, so a re-published post matches the committed version
+// (if you change it in seo-insert.mjs, update it here too — or they'll drift).
+const LOCALBUSINESS_LD = `{"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://evergrainphotobooth.com/#business","name":"Evergrain Photobooth","description":"Luxury open-air DSLR photo booth rental for weddings, corporate events, and celebrations across Los Angeles and Orange County.","url":"https://evergrainphotobooth.com","telephone":"+16265608330","email":"evergrainphotobooth@gmail.com","image":"https://evergrainphotobooth.com/assets/img/evergrain_favicon.png","logo":"https://evergrainphotobooth.com/assets/logos/FullLogo_White.svg","priceRange":"$$","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA","addressCountry":"US"},"areaServed":[{"@type":"City","name":"Los Angeles"},{"@type":"AdministrativeArea","name":"Orange County"},{"@type":"AdministrativeArea","name":"Los Angeles County"}],"sameAs":["https://www.instagram.com/evergrainphotobooth/","https://share.google/mMQ7xtC7L5BrQowNS","https://www.yelp.com/biz/evergrain-photobooth-los-angeles","https://www.facebook.com/evergrainphotobooth/","https://www.tiktok.com/@evergrainphotobooth","https://www.pinterest.com/evergrainphotobooth/"]}`;
+
 /* ---------- helpers ---------- */
 const esc = (s) => String(s ?? "")
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -344,6 +349,7 @@ ${HEAD_FONTS}
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(breadcrumbLd)}</script>
 ${GTAG}
+<script type="application/ld+json">${LOCALBUSINESS_LD}</script>
 </head>
 <body>
 ${HEADER}
