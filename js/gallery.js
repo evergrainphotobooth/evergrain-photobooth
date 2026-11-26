@@ -21,17 +21,12 @@
   const mount = document.querySelector("[data-gallery-marquees]");
   if (!mount) return;
 
-  const SUPABASE_URL = "https://zjwobaopuhanqsyyilzb.supabase.co";
-  const ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpqd29iYW9wdWhhbnFzeXlpbHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NDk5NzUsImV4cCI6MjA5NTMyNTk3NX0.lsrtSS8XI4w2MSEnTY3k03Wi9V8xPFc3MIu40mBLyC0";
-  const BUCKET = "media";
-  const PREFIX = "images/gallery/";
+  const R2 = "https://pub-09ff8dfde6ef4e79bf4d6b9a00d6737d.r2.dev";
 
-  // Render a whole (uncropped) thumbnail that fits within w×h.
-  const thumb = (name, w, h) =>
-    `${SUPABASE_URL}/storage/v1/render/image/public/${BUCKET}/${PREFIX}${encodeURIComponent(
-      name
-    )}?width=${w}&height=${h}&resize=contain&quality=76`;
+  // Pre-generated thumbnails live in R2 under thumbs/gallery/<file>
+  // (pixel-identical to the former Supabase on-the-fly render).
+  const thumb = (name) =>
+    `${R2}/thumbs/gallery/${encodeURIComponent(name)}`;
 
   // "6x4_Dominic's_1st_birthday_6.jpg" -> "Dominic's 1st birthday"
   const label = (name) =>
@@ -48,19 +43,10 @@
   };
 
   async function listFiles() {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
-      method: "POST",
-      headers: {
-        apikey: ANON_KEY,
-        Authorization: "Bearer " + ANON_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prefix: PREFIX, limit: 1000, sortBy: { column: "name", order: "asc" } }),
-    });
+    const res = await fetch("/js/data/media-manifest.json", { cache: "no-cache" });
     if (!res.ok) throw new Error("Gallery list failed: " + res.status);
-    return (await res.json())
-      .filter((o) => o && o.id && /\.(jpe?g|png|webp|avif)$/i.test(o.name))
-      .map((o) => o.name);
+    const names = (await res.json()).gallery || [];
+    return names.filter((n) => /\.(jpe?g|png|webp|avif)$/i.test(n));
   }
 
   const itemHTML = (it, w, h) =>

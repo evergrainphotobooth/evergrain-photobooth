@@ -20,20 +20,15 @@
   const track = section && section.querySelector("[data-ig-track]");
   if (!section || !track) return;
 
-  const SUPABASE_URL = "https://zjwobaopuhanqsyyilzb.supabase.co";
-  const ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpqd29iYW9wdWhhbnFzeXlpbHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NDk5NzUsImV4cCI6MjA5NTMyNTk3NX0.lsrtSS8XI4w2MSEnTY3k03Wi9V8xPFc3MIu40mBLyC0";
-  const BUCKET = "media";
-  const PREFIX = "images/instagram/";
+  const R2 = "https://pub-09ff8dfde6ef4e79bf4d6b9a00d6737d.r2.dev";
   const VIDEO = /\.(mp4|webm|mov|m4v)$/i;
   const IMAGE = /\.(jpe?g|png|webp|avif)$/i;
 
+  // Videos stream from R2 originals; image posts (if any) use an R2 thumbnail.
   const objectUrl = (name) =>
-    `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${PREFIX}${encodeURIComponent(name)}`;
+    `${R2}/images/instagram/${encodeURIComponent(name)}`;
   const imgThumb = (name) =>
-    `${SUPABASE_URL}/storage/v1/render/image/public/${BUCKET}/${PREFIX}${encodeURIComponent(
-      name
-    )}?width=560&height=700&resize=cover&quality=76`;
+    `${R2}/thumbs/instagram/${encodeURIComponent(name)}`;
   // Files are named "<order>. <shortcode>.<ext>" (e.g. "4. DbrlVuqvuU8.mp4");
   // the order number sorts them, the shortcode links to the post. "/p/" works
   // for both feed posts and reels. Bare "<shortcode>.<ext>" is also supported.
@@ -47,19 +42,10 @@
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   async function listFiles() {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
-      method: "POST",
-      headers: {
-        apikey: ANON_KEY,
-        Authorization: "Bearer " + ANON_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prefix: PREFIX, limit: 100, sortBy: { column: "created_at", order: "desc" } }),
-    });
+    const res = await fetch("/js/data/media-manifest.json", { cache: "no-cache" });
     if (!res.ok) throw new Error("Instagram list failed: " + res.status);
-    return (await res.json())
-      .filter((o) => o && o.id && (VIDEO.test(o.name) || IMAGE.test(o.name)))
-      .map((o) => o.name);
+    return ((await res.json()).instagram || [])
+      .filter((n) => VIDEO.test(n) || IMAGE.test(n));
   }
 
   const card = (name) => {

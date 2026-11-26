@@ -21,11 +21,7 @@
   const cards = document.querySelectorAll("article.addon[data-addon-card]");
   if (!cards.length) return;
 
-  const SUPABASE_URL = "https://zjwobaopuhanqsyyilzb.supabase.co";
-  const ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpqd29iYW9wdWhhbnFzeXlpbHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NDk5NzUsImV4cCI6MjA5NTMyNTk3NX0.lsrtSS8XI4w2MSEnTY3k03Wi9V8xPFc3MIu40mBLyC0";
-  const BUCKET = "media";
-  const FOLDER = "images/add-ons/";
+  const R2 = "https://pub-09ff8dfde6ef4e79bf4d6b9a00d6737d.r2.dev";
 
   // Normalize a title/filename to a comparable key: lowercase, no
   // punctuation or spaces. "Glam FIlter" and "glam-filter" both -> "glamfilter".
@@ -37,31 +33,16 @@
 
   // resize=contain → the whole image is preserved (never cropped); it's shown
   // on a white 1:1 tile via CSS object-fit: contain.
-  const thumb = (name) =>
-    `${SUPABASE_URL}/storage/v1/render/image/public/${BUCKET}/${encodeURI(FOLDER)}${encodeURIComponent(
-      name
-    )}?width=560&height=560&resize=contain&quality=80`;
+  // Pre-generated thumbnails live in R2 under thumbs/addons/<file>
+  // (pixel-identical to the former Supabase on-the-fly render).
+  const thumb = (name) => `${R2}/thumbs/addons/${encodeURIComponent(name)}`;
 
   async function listImages() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
-        method: "POST",
-        headers: {
-          apikey: ANON_KEY,
-          Authorization: "Bearer " + ANON_KEY,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prefix: FOLDER,
-          limit: 1000,
-          sortBy: { column: "name", order: "asc" },
-        }),
-      });
+      const res = await fetch("/js/data/media-manifest.json", { cache: "no-cache" });
       if (!res.ok) return [];
-      const items = await res.json();
-      return items
-        .filter((o) => o && o.id && /\.(jpe?g|png|webp|avif)$/i.test(o.name))
-        .map((o) => o.name);
+      return ((await res.json()).addons || [])
+        .filter((n) => /\.(jpe?g|png|webp|avif)$/i.test(n));
     } catch (e) {
       return [];
     }

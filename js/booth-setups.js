@@ -15,12 +15,7 @@
   const mount = document.querySelector("[data-setups-marquee]");
   if (!mount) return;
 
-  const SUPABASE_URL = "https://zjwobaopuhanqsyyilzb.supabase.co";
-  const ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpqd29iYW9wdWhhbnFzeXlpbHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NDk5NzUsImV4cCI6MjA5NTMyNTk3NX0.lsrtSS8XI4w2MSEnTY3k03Wi9V8xPFc3MIu40mBLyC0";
-  const BUCKET = "media";
-  const FOLDER = "images/the booth/";
-  const MATCH = /a few past setup/i;
+  const R2 = "https://pub-09ff8dfde6ef4e79bf4d6b9a00d6737d.r2.dev";
 
   // Shown only if listing is blocked/empty (so the strip is never empty).
   const FALLBACK = [
@@ -31,8 +26,9 @@
     "A few past setup_birthday_5.jpg",
   ];
 
-  const thumb = (name) =>
-    `${SUPABASE_URL}/storage/v1/render/image/public/${BUCKET}/${encodeURI(FOLDER)}${encodeURIComponent(name)}?width=700&height=875&resize=cover&quality=72`;
+  // Pre-generated thumbnails live in R2 under thumbs/booth/<file>
+  // (pixel-identical to the former Supabase on-the-fly render).
+  const thumb = (name) => `${R2}/thumbs/booth/${encodeURIComponent(name)}`;
 
   function shuffle(arr) {
     const a = arr.slice();
@@ -45,20 +41,10 @@
 
   async function listNames() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
-        method: "POST",
-        headers: {
-          apikey: ANON_KEY,
-          Authorization: "Bearer " + ANON_KEY,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prefix: FOLDER, limit: 1000, sortBy: { column: "name", order: "asc" } }),
-      });
+      const res = await fetch("/js/data/media-manifest.json", { cache: "no-cache" });
       if (!res.ok) return null;
-      const items = await res.json();
-      const names = items
-        .filter((o) => o && o.id && /\.(jpe?g|png|webp)$/i.test(o.name) && MATCH.test(o.name))
-        .map((o) => o.name);
+      const names = ((await res.json()).booth || [])
+        .filter((n) => /\.(jpe?g|png|webp)$/i.test(n));
       return names.length ? names : null;
     } catch (e) {
       return null;
