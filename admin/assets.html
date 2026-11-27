@@ -12,9 +12,11 @@
 <link rel="icon" type="image/png" href="/assets/img/evergrain_favicon.png" />
 <style>
   .card-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; flex-wrap:wrap; }
-  .asset-toolbar { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
-  .asset-toolbar select, .asset-toolbar input { font:inherit; }
-  .asset-search { min-width:200px; }
+  .asset-toolbar { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+  /* Override the admin .field__* width:100% so controls sit on one row, not stacked. */
+  .asset-toolbar select, .asset-toolbar input { font:inherit; width:auto; padding:.5rem .7rem; }
+  .asset-toolbar .field__select { min-width:160px; }
+  .asset-search { width:220px; max-width:100%; }
   .dropzone { border:2px dashed var(--line,#ddd6c9); border-radius:14px; padding:1.1rem; text-align:center; color:var(--gray-500); font-size:.88rem; margin-bottom:1rem; transition:.15s; cursor:pointer; }
   .dropzone.is-over { border-color:var(--brass,#a47a2a); background:var(--wash,#faf7f1); color:var(--gray-700); }
   .asset-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:1rem; }

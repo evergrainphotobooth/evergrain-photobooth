@@ -79,6 +79,14 @@ export default async function middleware(request) {
     return;
   }
 
+  // Static assets (stylesheet, shell script, images, fonts) must stay public so
+  // the login page — and the browser's redirect target — can load its own CSS/JS.
+  // These files carry no secrets; the actual data is gated at the API layer.
+  // Admin pages use clean (extension-less) URLs, so they remain gated below.
+  if (/\.(css|js|mjs|map|png|jpe?g|svg|webp|gif|ico|woff2?|ttf|otf)$/i.test(path)) {
+    return;
+  }
+
   const cookies = parseCookies(request.headers.get("cookie") || "");
   const token = cookies[COOKIE_NAME];
   const user = await verifyToken(token, process.env.SESSION_SECRET || "");
